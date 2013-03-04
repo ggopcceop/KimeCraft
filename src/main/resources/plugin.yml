@@ -1,6 +1,6 @@
 name: KimeCraft
 main: me.Kime.KC.KC
-version: 0.5.4
+version: ${project.version}
 author: Kime
 load: POSTWORLD
 depend: [Vault]
