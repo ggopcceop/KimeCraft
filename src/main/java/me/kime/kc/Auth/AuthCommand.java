@@ -1,0 +1,80 @@
+package me.Kime.KC.Auth;
+
+import java.security.NoSuchAlgorithmException;
+
+import me.Kime.KC.KPlayer;
+import me.Kime.KC.Auth.Hash.PasswordSecurity;
+import me.Kime.KC.Util.KCLogger;
+import me.Kime.KC.Util.KCMessager;
+
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+/**
+ * login command executer
+ * 
+ * @author Kime
+ *
+ */
+public class AuthCommand implements CommandExecutor {
+
+	private Auth auth;
+
+	public AuthCommand(Auth instance){
+		this.auth = instance;
+	}
+
+	//login command executer
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] split) {
+		if (!(sender instanceof Player)) {
+			return true;
+		}
+		Player player = (Player) sender;
+
+		if (split.length != 1) {
+			KCMessager.sentError(player, "Usage /login [password]");
+			return true;
+		}
+		String password = split[0];
+		KPlayer kPlayer = auth.getOnlinePlayer(player.getName());
+		
+		if(kPlayer.isAuth()){
+			KCMessager.sentMessage(player, "You are already login!", ChatColor.GREEN);
+			return true;
+		}
+
+		String hash = kPlayer.getPassword();
+		String salt = kPlayer.getSalt();
+		int group = kPlayer.getGroup();
+		if(hash == null || group == -1){
+			KCMessager.sentError(kPlayer, "Please regiter at www.e7play.co!");
+			return true;
+		}
+		try {
+			if(group > 3 && group < 10){
+				KCMessager.sentError(kPlayer, "You are NOT an activate user!");
+				return true;
+			}
+			if (PasswordSecurity.comparePasswordWithHash(password, hash, salt)) {
+				
+				kPlayer.restoreCache();				
+				kPlayer.setAuth(true);
+				
+				KCMessager.sentMessage(player, "Successful login!", ChatColor.GREEN);
+				KCLogger.info(player.getDisplayName() + " logged in!");
+			} else {
+				KCLogger.info(player.getDisplayName() + " used the wrong password");
+				KCMessager.sentError(player, "Wrong password!");
+			}
+		} catch (NoSuchAlgorithmException ex) {
+			KCLogger.showError(ex.getMessage());
+			KCMessager.sentError(player, "An error ocurred; Please contact the admin");
+		}
+		return true;
+	}
+
+}

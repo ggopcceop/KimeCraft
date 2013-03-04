@@ -1,0 +1,19 @@
+name: KimeCraft
+main: me.Kime.KC.KC
+version: 0.5.4
+author: Kime
+load: POSTWORLD
+depend: [Vault]
+commands:
+    login:
+        description: Login into a account
+        usage: /login password
+    city:
+        description: go back to city
+        usage: /city
+    mine:
+        description: go to mine world
+        usage: /mine
+    skull:
+    pu:
+    pd:
