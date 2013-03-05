@@ -6,21 +6,20 @@ import me.Kime.KC.KC;
 
 public class SignTP {
 
-	private KC plugin;
+    private KC plugin;
+    protected static final String MAINDIRECTORY = "plugins/KC";
+    protected static final File VERSIONFILE = new File("plugins/KC" + File.separator + "VERSION");
 
-	protected static final String MAINDIRECTORY = "plugins/KC";
-	protected static final File VERSIONFILE = new File("plugins/KC" + File.separator + "VERSION");
+    public SignTP(KC plugin) {
+        this.plugin = plugin;
 
-	public SignTP(KC plugin) {
-		this.plugin = plugin;
-		
-		plugin.getConfig();
-		
-		plugin.getServer().getPluginManager().registerEvents(new SignTPListener(this), plugin);
+        plugin.getConfig();
 
-	}
+        plugin.getServer().getPluginManager().registerEvents(new SignTPListener(this), plugin);
 
-	public KC getPlugin(){
-		return plugin;
-	}
+    }
+
+    public KC getPlugin() {
+        return plugin;
+    }
 }

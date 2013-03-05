@@ -4,38 +4,36 @@ import me.Kime.KC.KC;
 
 public class ChopTree {
 
-	private KC plugin;
-	private String[] allowTools = {"WOOD_AXE", "STONE_AXE", "IRON_AXE", "GOLD_AXE"
-			, "DIAMOND_AXE"};
-	private int leafRadius = 1;
-	private boolean isPopLeaves = true;
-	private boolean isInterruptIfToolBreaks = true;
-	private boolean isMoreDamageToTools = true;
-	
-	public ChopTree(KC kc) {
-		this.plugin = kc;
-		
-		plugin.getPluginManager().registerEvents(new ChopTreeBlockListener(this), plugin);
-	}
+    private KC plugin;
+    private String[] allowTools = {"WOOD_AXE", "STONE_AXE", "IRON_AXE", "GOLD_AXE", "DIAMOND_AXE"};
+    private int leafRadius = 1;
+    private boolean isPopLeaves = true;
+    private boolean isInterruptIfToolBreaks = true;
+    private boolean isMoreDamageToTools = true;
 
-	public String[] getAllowedTools() {
-		return allowTools;
-	}
+    public ChopTree(KC kc) {
+        this.plugin = kc;
 
-	public int getLeafRadius() {
-		return leafRadius;
-	}
+        plugin.getPluginManager().registerEvents(new ChopTreeBlockListener(this), plugin);
+    }
 
-	public boolean isPopLeaves() {
-		return isPopLeaves;
-	}
+    public String[] getAllowedTools() {
+        return allowTools;
+    }
 
-	public boolean isInterruptIfToolBreaks() {
-		return isInterruptIfToolBreaks;
-	}
+    public int getLeafRadius() {
+        return leafRadius;
+    }
 
-	public boolean isMoreDamageToTools() {
-		return isMoreDamageToTools;
-	}
+    public boolean isPopLeaves() {
+        return isPopLeaves;
+    }
 
+    public boolean isInterruptIfToolBreaks() {
+        return isInterruptIfToolBreaks;
+    }
+
+    public boolean isMoreDamageToTools() {
+        return isMoreDamageToTools;
+    }
 }

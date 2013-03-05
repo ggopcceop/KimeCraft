@@ -36,362 +36,362 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Dispenser;
 
-public class FunLinstener implements Listener{
+public class FunLinstener implements Listener {
 
-	private Fun fun;
-	private EntityFunTask entityFunTask;
-	private final int R = 300;
+    private Fun fun;
+    private EntityFunTask entityFunTask;
+    private final int R = 300;
 
+    public FunLinstener(Fun fun) {
+        this.fun = fun;
+        entityFunTask = new EntityFunTask();
 
-	public FunLinstener(Fun fun) {
-		this.fun = fun;
-		entityFunTask = new EntityFunTask();
+        fun.getPlugin().registerTask(entityFunTask);
+    }
 
-		fun.getPlugin().registerTask(entityFunTask);
-	}
-	
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-	public void onBlockBreak(BlockBreakEvent event){
-		int id = event.getBlock().getTypeId();
-		switch(id){
-		case 144:
-			event.getBlock().setTypeId(0);
-			break;
-		case 47:
-			event.getBlock().setTypeId(0);
-			event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(340));
-			break;
-		}
-		
-		
-	}
-	
-	@EventHandler(ignoreCancelled = true)
-	public void onBlockDispense(BlockDispenseEvent event){
-		int id = event.getItem().getTypeId();
-		if(id == 328){
-			Dispenser dispenser = (Dispenser) event.getBlock().getState().getData();
-			Block block = event.getBlock().getRelative(dispenser.getFacing());
-			if(block.getTypeId()==27||block.getTypeId()==28||block.getTypeId()==66){
-				block.getWorld().spawn(block.getLocation(), Minecart.class);
-				event.setCancelled(true);
-				return;
-			}
-			else{
-				block = block.getRelative(BlockFace.DOWN);
-				if(block.getTypeId()==27||block.getTypeId()==28||block.getTypeId()==66){
-					block.getWorld().spawn(block.getLocation(), Minecart.class);
-					event.setCancelled(true);
-					return;
-				}
-			}
-		}
-	}
-	@EventHandler(ignoreCancelled = true)
-	public void onVehicleBlockCollision(VehicleBlockCollisionEvent event){
-		if(event.getVehicle() instanceof StorageMinecart){
-			return;
-		}
-		if(event.getBlock().getTypeId()==23){
-			event.getVehicle().eject();
-			event.getVehicle().remove();
-		}
-	}
-	
-	@EventHandler(ignoreCancelled = true)
-	public void onPlayerShearEntity(PlayerShearEntityEvent event){
-		if(event.getEntity() instanceof Sheep){
-			Sheep sheep = (Sheep) event.getEntity();
-			sheep.setSheared(true);
-			event.setCancelled(true);
-			int num = fun.getPlugin().getRandom().nextInt(3) + 2;
-			sheep.getWorld().dropItemNaturally(sheep.getLocation(),
-					new ItemStack(Material.WOOL, num, sheep.getColor().getWoolData()));
-			ItemStack item = event.getPlayer().getItemInHand();
-			item.setDurability((short) (item.getDurability() + 1));
-		}
-	}
-	
-	
-	@EventHandler
-	public void onBlockRedstoneChange(BlockRedstoneEvent event){
-		Block block = event.getBlock();
-		switch(block.getTypeId()){
-		case 55:
-			Location loc = block.getLocation();
-			if(fun.getRedstone().containsKey(loc)){
-				RedstoneC red = fun.getRedstone().get(loc);
-				if(event.getNewCurrent() == 0){
-					red.add();
-				}
-				if(red.isOver(System.currentTimeMillis())){
-					block.setTypeId(0);
-					loc.getWorld().createExplosion(loc, 3F, true);
-					fun.getRedstone().remove(loc);
-				}
-			}
-			else{
-				RedstoneC red = new RedstoneC();
-				red.setDate(System.currentTimeMillis());
-				fun.getRedstone().put(loc, red);				
-			}
-			return;
-		case 28:
-			if(block.getRelative(BlockFace.DOWN).getTypeId()==49){
-				boolean isOn = false;
-				for(Entity e : event.getBlock().getChunk().getEntities()){
-					if(!(e instanceof Player)){
-						continue;
-					}
-					if(!((Player)e).isInsideVehicle()){
-						continue;
-					}
-					if(e.getLocation().toVector().distance(event.getBlock().getLocation().toVector())<=1){
-						isOn=true;
-						break;
-					}
-				}
-				if(!isOn){
-					event.setNewCurrent(0);
-					return;
-				}	
-			}
-			break;
-		default:
-			break;
-		}
-	}
-
-	@EventHandler
-	public void onCreatureSpawn(CreatureSpawnEvent event){
-		if(event.isCancelled()) return;
-		
-		Chunk chunk;
-		int count;
-		switch(event.getSpawnReason()){
-		case CHUNK_GEN:
-			event.setCancelled(true);
-			return;
-		case BREEDING:
-			chunk = event.getLocation().getChunk();
-			count = getChunksEntityNum(event.getLocation().getWorld(), chunk.getX(), chunk.getZ());
-
-			if(count > 8){
-				event.setCancelled(true);
-				return;
-			}
-			break;
-		case SPAWNER:
-			if(event.getLocation().add(0, -1, 0).getBlock().isLiquid()){
-				event.setCancelled(true);
-				event.getLocation().getWorld().createExplosion(event.getLocation(), 6F, true);
-				return;
-			}
-			else if(event.getLocation().add(0, -1, 0).getBlock().isEmpty()){
-				event.setCancelled(true);
-				return;
-			}
-		case NATURAL:			
-			chunk = event.getLocation().getChunk();
-			count = getChunksEntityNum(event.getLocation().getWorld(), chunk.getX(), chunk.getZ());
-
-			if(count >= 100){
-				event.setCancelled(true);
-				return;
-			}
-			break;
-		default:
-			break;
-
-		}		
-		switch(event.getEntityType()){
-		case SHEEP:
-			entityFunTask.queue(event.getEntity());
-			break;
-		case ZOMBIE:
-			if(event.getEntity().getEntityId() % 100 == 13){
-				event.setCancelled(true);
-				Location loc = event.getLocation();
-				loc.getWorld().spawnEntity(loc, EntityType.GIANT);
-			}
-			break;
-		case SPIDER:
-			if(event.getEntity().getEntityId() % 100 == 40){
-				entityFunTask.queue(event.getEntity());
-			}
-			break;
-		case WOLF:
-			if(event.getEntity().getEntityId() % 200 != 140){
-				Wolf wolf = (Wolf) event.getEntity();
-				wolf.setAngry(true);
-			}
-			break;
-		case VILLAGER:
-			chunk = event.getLocation().getChunk();
-			count = getChunksEntityNum(event.getLocation().getWorld(), chunk.getX(), chunk.getZ());
-
-			if(count > 6){
-				event.setCancelled(true);
-				return;
-			}
-			break;
-		default:
-			break;
-		}
-	}
-	
-	@EventHandler
-	public void onChunkLoad(ChunkLoadEvent event) {
-		if (event.isNewChunk())
-		{
-			Chunk chunk = event.getChunk();
-			int x = chunk.getX();
-			int z = chunk.getZ();
-			if(((x * x) + (z * z)) >= (R * R)){
-				chunk.unload(false, false);
-			}			
-		}
-	}
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    public void onBlockBreak(BlockBreakEvent event) {
+        int id = event.getBlock().getTypeId();
+        switch (id) {
+            case 144:
+                event.getBlock().setTypeId(0);
+                break;
+            case 47:
+                event.getBlock().setTypeId(0);
+                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(340));
+                break;
+        }
 
 
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onEntityExplode(EntityExplodeEvent event){
-		if(event.isCancelled()) return;
-		Iterator<Block> destory = event.blockList().iterator();
-		while(destory.hasNext()){
-			Block block = destory.next();
-			if(canDamage(block)){
-				destory.remove();
-			}
-		}
-	}
+    }
 
-	private boolean canDamage(Block block){
-		switch(block.getTypeId()){
-		case 1:
-		case 3:
-		case 13:
-		case 97:
-		case 55:
-		case 46:
-		case 11:
-		case 10:
-		case 75:
-		case 76:
-		case 356:
-			return false;
-		case 52:
-			block.setType(Material.AIR);
-			return true;
-		default:
-			return true;
-		}
-	}
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockDispense(BlockDispenseEvent event) {
+        int id = event.getItem().getTypeId();
+        if (id == 328) {
+            Dispenser dispenser = (Dispenser) event.getBlock().getState().getData();
+            Block block = event.getBlock().getRelative(dispenser.getFacing());
+            if (block.getTypeId() == 27 || block.getTypeId() == 28 || block.getTypeId() == 66) {
+                block.getWorld().spawn(block.getLocation(), Minecart.class);
+                event.setCancelled(true);
+            } else {
+                block = block.getRelative(BlockFace.DOWN);
+                if (block.getTypeId() == 27 || block.getTypeId() == 28 || block.getTypeId() == 66) {
+                    block.getWorld().spawn(block.getLocation(), Minecart.class);
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
 
-	@EventHandler
-	public void onEntityDeath(EntityDeathEvent event){
-		if(event.getEntityType() != EntityType.PLAYER){
-			EntityDamageEvent lastEvent = event.getEntity().getLastDamageCause();
-			if(lastEvent == null) return;
-			switch(lastEvent.getCause()){			
-			case ENTITY_ATTACK:
-			case PROJECTILE:
-				break;
-			default:
-				event.getDrops().clear();
-				event.setDroppedExp(0);
-				break;			
-			}
-		}
-	}
-	
-	@EventHandler
-	public void onEntityDamage(EntityDamageEvent event){
-		if(event.isCancelled()) return;
-		
-		Entity entity = event.getEntity();
-		if(!(entity instanceof Player)){
-			if(event.getCause() == DamageCause.FALL){
-				event.setDamage(0);
-			}
-		}
-	}
+    @EventHandler(ignoreCancelled = true)
+    public void onVehicleBlockCollision(VehicleBlockCollisionEvent event) {
+        if (event.getVehicle() instanceof StorageMinecart) {
+            return;
+        }
+        if (event.getBlock().getTypeId() == 23) {
+            event.getVehicle().eject();
+            event.getVehicle().remove();
+        }
+    }
 
-	private int getChunksEntityNum(World world, int x, int z){
-		int count = 0;
-		Chunk chunk = null;
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerShearEntity(PlayerShearEntityEvent event) {
+        if (event.getEntity() instanceof Sheep) {
+            Sheep sheep = (Sheep) event.getEntity();
+            sheep.setSheared(true);
+            event.setCancelled(true);
+            int num = fun.getPlugin().getRandom().nextInt(3) + 2;
+            sheep.getWorld().dropItemNaturally(sheep.getLocation(),
+                    new ItemStack(Material.WOOL, num, sheep.getColor().getWoolData()));
+            ItemStack item = event.getPlayer().getItemInHand();
+            item.setDurability((short) (item.getDurability() + 1));
+        }
+    }
 
-		if((x * x) + (z * z) > ((R - 5) * (R - 5))){
-			return 1000;
-		}
+    @EventHandler
+    public void onBlockRedstoneChange(BlockRedstoneEvent event) {
+        Block block = event.getBlock();
+        switch (block.getTypeId()) {
+            case 55:
+                Location loc = block.getLocation();
+                if (fun.getRedstone().containsKey(loc)) {
+                    RedstoneC red = fun.getRedstone().get(loc);
+                    if (event.getNewCurrent() == 0) {
+                        red.add();
+                    }
+                    if (red.isOver(System.currentTimeMillis())) {
+                        block.setTypeId(0);
+                        loc.getWorld().createExplosion(loc, 3F, true);
+                        fun.getRedstone().remove(loc);
+                    }
+                } else {
+                    RedstoneC red = new RedstoneC();
+                    red.setDate(System.currentTimeMillis());
+                    fun.getRedstone().put(loc, red);
+                }
+                return;
+            case 28:
+                if (block.getRelative(BlockFace.DOWN).getTypeId() == 49) {
+                    boolean isOn = false;
+                    for (Entity e : event.getBlock().getChunk().getEntities()) {
+                        if (!(e instanceof Player)) {
+                            continue;
+                        }
+                        if (!((Player) e).isInsideVehicle()) {
+                            continue;
+                        }
+                        if (e.getLocation().toVector().distance(event.getBlock().getLocation().toVector()) <= 1) {
+                            isOn = true;
+                            break;
+                        }
+                    }
+                    if (!isOn) {
+                        event.setNewCurrent(0);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
-		chunk = world.getChunkAt(x, z);
-		if(chunk != null){
-			count += chunk.getEntities().length;
-		}
-		chunk = world.getChunkAt(x, z + 1);
-		if(chunk != null){
-			count += chunk.getEntities().length;
-		}
-		chunk = world.getChunkAt(x, z - 1);
-		if(chunk != null){
-			count += chunk.getEntities().length;
-		}
-		chunk = world.getChunkAt(x + 1, z);
-		if(chunk != null){
-			count += chunk.getEntities().length;
-		}
-		chunk = world.getChunkAt(x + 1, z + 1);
-		if(chunk != null){
-			count += chunk.getEntities().length;
-		}
-		chunk = world.getChunkAt(x + 1, z - 1);
-		if(chunk != null){
-			count += chunk.getEntities().length;
-		}
-		chunk = world.getChunkAt(x - 1, z);
-		if(chunk != null){
-			count += chunk.getEntities().length;
-		}
-		chunk = world.getChunkAt(x - 1, z + 1);
-		if(chunk != null){
-			count += chunk.getEntities().length;
-		}
-		chunk = world.getChunkAt(x - 1, z - 1);
-		if(chunk != null){
-			count += chunk.getEntities().length;
-		}
+    @EventHandler
+    public void onCreatureSpawn(CreatureSpawnEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
 
-		return count;
-	}
-	
-	@EventHandler
-	public void onBlockPistonExtend(BlockPistonExtendEvent event){
-		if(event.isCancelled()) return;
-		for(Block b:event.getBlocks())
-		{
-			if(b.getTypeId() == 12 || b.getTypeId() == 13){
-				b.setTypeId(0);
-			}
-		}
-	}
-	
-	@EventHandler
-	public void onBlockPistonRetract(BlockPistonRetractEvent event){
-		if(event.isCancelled()) return;
-		if(event.isSticky())
-		{
-			if(event.getBlock().getTypeId() == 12 || event.getBlock().getTypeId() == 13){
-				event.getBlock().setTypeId(0);
-			}
-		}
-	}
-	
-	@EventHandler
-	public void onVehicleCreate(VehicleCreateEvent event) {
-		if(event.getVehicle() instanceof Boat) {
-			Boat boat = (Boat) event.getVehicle();
-			boat.setMaxSpeed(0.8D);
-		}
-	}
+        Chunk chunk;
+        int count;
+        switch (event.getSpawnReason()) {
+            case CHUNK_GEN:
+                event.setCancelled(true);
+                return;
+            case BREEDING:
+                chunk = event.getLocation().getChunk();
+                count = getChunksEntityNum(event.getLocation().getWorld(), chunk.getX(), chunk.getZ());
+
+                if (count > 8) {
+                    event.setCancelled(true);
+                    return;
+                }
+                break;
+            case SPAWNER:
+                if (event.getLocation().add(0, -1, 0).getBlock().isLiquid()) {
+                    event.setCancelled(true);
+                    event.getLocation().getWorld().createExplosion(event.getLocation(), 6F, true);
+                    return;
+                } else if (event.getLocation().add(0, -1, 0).getBlock().isEmpty()) {
+                    event.setCancelled(true);
+                    return;
+                }
+            case NATURAL:
+                chunk = event.getLocation().getChunk();
+                count = getChunksEntityNum(event.getLocation().getWorld(), chunk.getX(), chunk.getZ());
+
+                if (count >= 100) {
+                    event.setCancelled(true);
+                    return;
+                }
+                break;
+            default:
+                break;
+
+        }
+        switch (event.getEntityType()) {
+            case SHEEP:
+                entityFunTask.queue(event.getEntity());
+                break;
+            case ZOMBIE:
+                if (event.getEntity().getEntityId() % 100 == 13) {
+                    event.setCancelled(true);
+                    Location loc = event.getLocation();
+                    loc.getWorld().spawnEntity(loc, EntityType.GIANT);
+                }
+                break;
+            case SPIDER:
+                if (event.getEntity().getEntityId() % 100 == 40) {
+                    entityFunTask.queue(event.getEntity());
+                }
+                break;
+            case WOLF:
+                if (event.getEntity().getEntityId() % 200 != 140) {
+                    Wolf wolf = (Wolf) event.getEntity();
+                    wolf.setAngry(true);
+                }
+                break;
+            case VILLAGER:
+                chunk = event.getLocation().getChunk();
+                count = getChunksEntityNum(event.getLocation().getWorld(), chunk.getX(), chunk.getZ());
+
+                if (count > 6) {
+                    event.setCancelled(true);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    @EventHandler
+    public void onChunkLoad(ChunkLoadEvent event) {
+        if (event.isNewChunk()) {
+            Chunk chunk = event.getChunk();
+            int x = chunk.getX();
+            int z = chunk.getZ();
+            if (((x * x) + (z * z)) >= (R * R)) {
+                chunk.unload(false, false);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onEntityExplode(EntityExplodeEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        Iterator<Block> destory = event.blockList().iterator();
+        while (destory.hasNext()) {
+            Block block = destory.next();
+            if (canDamage(block)) {
+                destory.remove();
+            }
+        }
+    }
+
+    private boolean canDamage(Block block) {
+        switch (block.getTypeId()) {
+            case 1:
+            case 3:
+            case 13:
+            case 97:
+            case 55:
+            case 46:
+            case 11:
+            case 10:
+            case 75:
+            case 76:
+            case 356:
+                return false;
+            case 52:
+                block.setType(Material.AIR);
+                return true;
+            default:
+                return true;
+        }
+    }
+
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent event) {
+        if (event.getEntityType() != EntityType.PLAYER) {
+            EntityDamageEvent lastEvent = event.getEntity().getLastDamageCause();
+            if (lastEvent == null) {
+                return;
+            }
+            switch (lastEvent.getCause()) {
+                case ENTITY_ATTACK:
+                case PROJECTILE:
+                    break;
+                default:
+                    event.getDrops().clear();
+                    event.setDroppedExp(0);
+                    break;
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamage(EntityDamageEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
+        Entity entity = event.getEntity();
+        if (!(entity instanceof Player)) {
+            if (event.getCause() == DamageCause.FALL) {
+                event.setDamage(0);
+            }
+        }
+    }
+
+    private int getChunksEntityNum(World world, int x, int z) {
+        int count = 0;
+        Chunk chunk;
+
+        if ((x * x) + (z * z) > ((R - 5) * (R - 5))) {
+            return 1000;
+        }
+
+        chunk = world.getChunkAt(x, z);
+        if (chunk != null) {
+            count += chunk.getEntities().length;
+        }
+        chunk = world.getChunkAt(x, z + 1);
+        if (chunk != null) {
+            count += chunk.getEntities().length;
+        }
+        chunk = world.getChunkAt(x, z - 1);
+        if (chunk != null) {
+            count += chunk.getEntities().length;
+        }
+        chunk = world.getChunkAt(x + 1, z);
+        if (chunk != null) {
+            count += chunk.getEntities().length;
+        }
+        chunk = world.getChunkAt(x + 1, z + 1);
+        if (chunk != null) {
+            count += chunk.getEntities().length;
+        }
+        chunk = world.getChunkAt(x + 1, z - 1);
+        if (chunk != null) {
+            count += chunk.getEntities().length;
+        }
+        chunk = world.getChunkAt(x - 1, z);
+        if (chunk != null) {
+            count += chunk.getEntities().length;
+        }
+        chunk = world.getChunkAt(x - 1, z + 1);
+        if (chunk != null) {
+            count += chunk.getEntities().length;
+        }
+        chunk = world.getChunkAt(x - 1, z - 1);
+        if (chunk != null) {
+            count += chunk.getEntities().length;
+        }
+
+        return count;
+    }
+
+    @EventHandler
+    public void onBlockPistonExtend(BlockPistonExtendEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        for (Block b : event.getBlocks()) {
+            if (b.getTypeId() == 12 || b.getTypeId() == 13) {
+                b.setTypeId(0);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBlockPistonRetract(BlockPistonRetractEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        if (event.isSticky()) {
+            if (event.getBlock().getTypeId() == 12 || event.getBlock().getTypeId() == 13) {
+                event.getBlock().setTypeId(0);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onVehicleCreate(VehicleCreateEvent event) {
+        if (event.getVehicle() instanceof Boat) {
+            Boat boat = (Boat) event.getVehicle();
+            boat.setMaxSpeed(0.8D);
+        }
+    }
 }

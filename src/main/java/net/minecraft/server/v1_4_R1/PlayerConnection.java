@@ -47,6 +47,7 @@ import org.bukkit.inventory.InventoryView;
 // CraftBukkit end
 
 public class PlayerConnection extends Connection {
+
     public static Logger logger = Logger.getLogger("Minecraft");
     public INetworkManager networkManager;
     public boolean disconnected = false;
@@ -59,7 +60,8 @@ public class PlayerConnection extends Connection {
     private long j;
     private static Random k = new Random();
     private long l;
-    private volatile int chatThrottle = 0; private static final AtomicIntegerFieldUpdater chatSpamField = AtomicIntegerFieldUpdater.newUpdater(PlayerConnection.class, "chatThrottle"); // CraftBukkit - multithreaded field
+    private volatile int chatThrottle = 0;
+    private static final AtomicIntegerFieldUpdater chatSpamField = AtomicIntegerFieldUpdater.newUpdater(PlayerConnection.class, "chatThrottle"); // CraftBukkit - multithreaded field
     private int x = 0;
     private double y;
     private double z;
@@ -77,13 +79,11 @@ public class PlayerConnection extends Connection {
         // CraftBukkit start
         this.server = minecraftserver.server;
     }
-
     private final org.bukkit.craftbukkit.v1_4_R1.CraftServer server;
     private int lastTick = MinecraftServer.currentTick;
     private int lastDropTick = MinecraftServer.currentTick;
     private int dropCount = 0;
     private static final int PLACE_DISTANCE_SQUARED = 6 * 6;
-
     // Get position of last block hit for BlockDamageLevel.STOPPED
     private double lastPosX = Double.MAX_VALUE;
     private double lastPosY = Double.MAX_VALUE;
@@ -91,10 +91,8 @@ public class PlayerConnection extends Connection {
     private float lastPitch = Float.MAX_VALUE;
     private float lastYaw = Float.MAX_VALUE;
     private boolean justTeleported = false;
-
     // For the packet15 hack :(
     Long lastPacket;
-
     // Store the last block right clicked and what type it was
     private int lastMaterial;
 
@@ -118,12 +116,12 @@ public class PlayerConnection extends Connection {
         }
 
         // CraftBukkit start
-        for (int spam; (spam = this.chatThrottle) > 0 && !chatSpamField.compareAndSet(this, spam, spam - 1); ) ;
+        for (int spam; (spam = this.chatThrottle) > 0 && !chatSpamField.compareAndSet(this, spam, spam - 1);) ;
         /* Use thread-safe field access instead
-        if (this.m > 0) {
-            --this.m;
-        }
-        */
+         if (this.m > 0) {
+         --this.m;
+         }
+         */
         // CraftBukkit end
 
         if (this.x > 0) {
@@ -224,15 +222,15 @@ public class PlayerConnection extends Connection {
                     }
 
                     /* If a Plugin has changed the To destination then we teleport the Player
-                    there to avoid any 'Moved wrongly' or 'Moved too quickly' errors.
-                    We only do this if the Event was not cancelled. */
+                     there to avoid any 'Moved wrongly' or 'Moved too quickly' errors.
+                     We only do this if the Event was not cancelled. */
                     if (!to.equals(event.getTo()) && !event.isCancelled()) {
                         this.player.getBukkitEntity().teleport(event.getTo(), PlayerTeleportEvent.TeleportCause.UNKNOWN);
                         return;
                     }
 
                     /* Check to see if the Players Location has some how changed during the call of the event.
-                    This can happen due to a plugin teleporting the player instead of using .setTo() */
+                     This can happen due to a plugin teleporting the player instead of using .setTo() */
                     if (!from.equals(this.getPlayer().getLocation()) && this.justTeleported) {
                         this.justTeleported = false;
                         return;
@@ -422,7 +420,9 @@ public class PlayerConnection extends Connection {
 
                 this.player.onGround = packet10flying.g;
                 this.minecraftServer.getPlayerList().d(this.player);
-                if (this.player.playerInteractManager.isCreative()) return; // CraftBukkit - fixed fall distance accumulating while being in Creative mode.
+                if (this.player.playerInteractManager.isCreative()) {
+                    return; // CraftBukkit - fixed fall distance accumulating while being in Creative mode.
+                }
                 this.player.b(this.player.locY - d0, packet10flying.g);
             }
         }
@@ -478,8 +478,9 @@ public class PlayerConnection extends Connection {
     }
 
     public void a(Packet14BlockDig packet14blockdig) {
-        if (this.player.dead) return; // CraftBukkit
-
+        if (this.player.dead) {
+            return; // CraftBukkit
+        }
         WorldServer worldserver = this.minecraftServer.getWorldServer(this.player.dimension);
 
         if (packet14blockdig.e == 4) {
@@ -579,7 +580,9 @@ public class PlayerConnection extends Connection {
         WorldServer worldserver = this.minecraftServer.getWorldServer(this.player.dimension);
 
         // CraftBukkit start
-        if (this.player.dead) return;
+        if (this.player.dead) {
+            return;
+        }
 
         // This is a horrible hack needed because the client sends 2 packets on 'right mouse click'
         // aimed at a block. We shouldn't need to get the second packet if the data is handled
@@ -708,8 +711,9 @@ public class PlayerConnection extends Connection {
     }
 
     public void a(String s, Object[] aobject) {
-        if (this.disconnected) return; // CraftBukkit - rarely it would send a disconnect line twice
-
+        if (this.disconnected) {
+            return; // CraftBukkit - rarely it would send a disconnect line twice
+        }
         logger.info(this.player.name + " lost connection: " + s);
         // CraftBukkit start - we need to handle custom quit messages
         String quitMessage = this.minecraftServer.getPlayerList().disconnect(this.player);
@@ -725,7 +729,9 @@ public class PlayerConnection extends Connection {
     }
 
     public void onUnhandledPacket(Packet packet) {
-        if (this.disconnected) return; // CraftBukkit
+        if (this.disconnected) {
+            return; // CraftBukkit
+        }
         logger.warning(this.getClass() + " wasn\'t prepared to deal with a " + packet.getClass());
         this.disconnect("Protocol error, unexpected packet");
     }
@@ -766,7 +772,9 @@ public class PlayerConnection extends Connection {
 
     public void a(Packet16BlockItemSwitch packet16blockitemswitch) {
         // CraftBukkit start
-        if (this.player.dead) return;
+        if (this.player.dead) {
+            return;
+        }
 
         if (packet16blockitemswitch.itemInHandIndex >= 0 && packet16blockitemswitch.itemInHandIndex < PlayerInventory.getHotbarSize()) {
             PlayerItemHeldEvent event = new PlayerItemHeldEvent(this.getPlayer(), this.player.inventory.itemInHandIndex, packet16blockitemswitch.itemInHandIndex);
@@ -925,7 +933,8 @@ public class PlayerConnection extends Connection {
                                 }
                             }
                             return null;
-                        }};
+                        }
+                    };
                     if (async) {
                         minecraftServer.processQueue.add(waitable);
                     } else {
@@ -986,13 +995,14 @@ public class PlayerConnection extends Connection {
         // CraftBukkit end
 
         /* CraftBukkit start - No longer needed as we have already handled it in server.dispatchServerCommand above.
-        this.minecraftServer.getCommandHandler().a(this.player, s);
-        // CraftBukkit end */
+         this.minecraftServer.getCommandHandler().a(this.player, s);
+         // CraftBukkit end */
     }
 
     public void a(Packet18ArmAnimation packet18armanimation) {
-        if (this.player.dead) return; // CraftBukkit
-
+        if (this.player.dead) {
+            return; // CraftBukkit
+        }
         if (packet18armanimation.b == 1) {
             // CraftBukkit start - raytrace to look for 'rogue armswings'
             float f = 1.0F;
@@ -1021,7 +1031,9 @@ public class PlayerConnection extends Connection {
             PlayerAnimationEvent event = new PlayerAnimationEvent(this.getPlayer());
             this.server.getPluginManager().callEvent(event);
 
-            if (event.isCancelled()) return;
+            if (event.isCancelled()) {
+                return;
+            }
             // CraftBukkit end
 
             this.player.bH();
@@ -1030,7 +1042,9 @@ public class PlayerConnection extends Connection {
 
     public void a(Packet19EntityAction packet19entityaction) {
         // CraftBukkit start
-        if (this.player.dead) return;
+        if (this.player.dead) {
+            return;
+        }
 
         if (packet19entityaction.animation == 1 || packet19entityaction.animation == 2) {
             PlayerToggleSneakEvent event = new PlayerToggleSneakEvent(this.getPlayer(), packet19entityaction.animation == 1);
@@ -1074,8 +1088,9 @@ public class PlayerConnection extends Connection {
     }
 
     public void a(Packet7UseEntity packet7useentity) {
-        if (this.player.dead) return; // CraftBukkit
-
+        if (this.player.dead) {
+            return; // CraftBukkit
+        }
         WorldServer worldserver = this.minecraftServer.getWorldServer(this.player.dimension);
         Entity entity = worldserver.getEntity(packet7useentity.target);
 
@@ -1151,11 +1166,13 @@ public class PlayerConnection extends Connection {
         return true;
     }
 
-    public void a(Packet9Respawn packet9respawn) {}
+    public void a(Packet9Respawn packet9respawn) {
+    }
 
     public void handleContainerClose(Packet101CloseWindow packet101closewindow) {
-        if (this.player.dead) return; // CraftBukkit
-
+        if (this.player.dead) {
+            return; // CraftBukkit
+        }
         // CraftBukkit start - INVENTORY_CLOSE hook
         InventoryCloseEvent event = new InventoryCloseEvent(this.player.activeContainer.getBukkitView());
         server.getPluginManager().callEvent(event);
@@ -1166,8 +1183,9 @@ public class PlayerConnection extends Connection {
     }
 
     public void a(Packet102WindowClick packet102windowclick) {
-        if (this.player.dead) return; // CraftBukkit
-
+        if (this.player.dead) {
+            return; // CraftBukkit
+        }
         if (this.player.activeContainer.windowId == packet102windowclick.a && this.player.activeContainer.c(this.player)) {
             // CraftBukkit start - fire InventoryClickEvent
             InventoryView inventory = this.player.activeContainer.getBukkitView();
@@ -1186,32 +1204,32 @@ public class PlayerConnection extends Connection {
             ItemStack itemstack = null;
             boolean defaultBehaviour = false;
 
-            switch(event.getResult()) {
-            case DEFAULT:
-                itemstack = this.player.activeContainer.clickItem(packet102windowclick.slot, packet102windowclick.button, packet102windowclick.shift, this.player);
-                defaultBehaviour = true;
-                break;
-            case DENY: // Deny any change, including changes from the event
-                break;
-            case ALLOW: // Allow changes unconditionally
-                org.bukkit.inventory.ItemStack cursor = event.getCursor();
-                if (cursor == null) {
-                    this.player.inventory.setCarried((ItemStack) null);
-                } else {
-                    this.player.inventory.setCarried(CraftItemStack.asNMSCopy(cursor));
-                }
-                org.bukkit.inventory.ItemStack item = event.getCurrentItem();
-                if (item != null) {
-                    itemstack = CraftItemStack.asNMSCopy(item);
-                    if (packet102windowclick.slot == -999) {
-                        this.player.drop(itemstack);
+            switch (event.getResult()) {
+                case DEFAULT:
+                    itemstack = this.player.activeContainer.clickItem(packet102windowclick.slot, packet102windowclick.button, packet102windowclick.shift, this.player);
+                    defaultBehaviour = true;
+                    break;
+                case DENY: // Deny any change, including changes from the event
+                    break;
+                case ALLOW: // Allow changes unconditionally
+                    org.bukkit.inventory.ItemStack cursor = event.getCursor();
+                    if (cursor == null) {
+                        this.player.inventory.setCarried((ItemStack) null);
                     } else {
-                        this.player.activeContainer.getSlot(packet102windowclick.slot).set(itemstack);
+                        this.player.inventory.setCarried(CraftItemStack.asNMSCopy(cursor));
                     }
-                } else if (packet102windowclick.slot != -999) {
-                    this.player.activeContainer.getSlot(packet102windowclick.slot).set((ItemStack) null);
-                }
-                break;
+                    org.bukkit.inventory.ItemStack item = event.getCurrentItem();
+                    if (item != null) {
+                        itemstack = CraftItemStack.asNMSCopy(item);
+                        if (packet102windowclick.slot == -999) {
+                            this.player.drop(itemstack);
+                        } else {
+                            this.player.activeContainer.getSlot(packet102windowclick.slot).set(itemstack);
+                        }
+                    } else if (packet102windowclick.slot != -999) {
+                        this.player.activeContainer.getSlot(packet102windowclick.slot).set((ItemStack) null);
+                    }
+                    break;
             }
             // CraftBukkit end
 
@@ -1234,8 +1252,9 @@ public class PlayerConnection extends Connection {
                 this.player.a(this.player.activeContainer, arraylist);
 
                 // CraftBukkit start - send a Set Slot to update the crafting result slot
-                if(type == SlotType.RESULT && itemstack != null)
+                if (type == SlotType.RESULT && itemstack != null) {
                     this.player.playerConnection.sendPacket((Packet) (new Packet103SetSlot(this.player.activeContainer.windowId, 0, itemstack)));
+                }
                 // CraftBukkit end
             }
         }
@@ -1270,28 +1289,28 @@ public class PlayerConnection extends Connection {
             org.bukkit.inventory.ItemStack item = event.getCurrentItem();
 
             switch (event.getResult()) {
-            case ALLOW:
-                if (slot == SlotType.QUICKBAR) {
-                    if (item == null) {
-                        this.player.defaultContainer.setItem(packet107setcreativeslot.slot, (ItemStack) null);
-                    } else {
-                        this.player.defaultContainer.setItem(packet107setcreativeslot.slot, CraftItemStack.asNMSCopy(item));
+                case ALLOW:
+                    if (slot == SlotType.QUICKBAR) {
+                        if (item == null) {
+                            this.player.defaultContainer.setItem(packet107setcreativeslot.slot, (ItemStack) null);
+                        } else {
+                            this.player.defaultContainer.setItem(packet107setcreativeslot.slot, CraftItemStack.asNMSCopy(item));
+                        }
+                    } else if (item != null) {
+                        this.player.drop(CraftItemStack.asNMSCopy(item));
                     }
-                } else if (item != null) {
-                    this.player.drop(CraftItemStack.asNMSCopy(item));
-                }
-                return;
-            case DENY:
-                // TODO: Will this actually work?
-                if (packet107setcreativeslot.slot > -1) {
-                    this.player.playerConnection.sendPacket(new Packet103SetSlot(this.player.defaultContainer.windowId, packet107setcreativeslot.slot, CraftItemStack.asNMSCopy(item)));
-                }
-                return;
-            case DEFAULT:
-                // We do the stuff below
-                break;
-            default:
-                return;
+                    return;
+                case DENY:
+                    // TODO: Will this actually work?
+                    if (packet107setcreativeslot.slot > -1) {
+                        this.player.playerConnection.sendPacket(new Packet103SetSlot(this.player.defaultContainer.windowId, packet107setcreativeslot.slot, CraftItemStack.asNMSCopy(item)));
+                    }
+                    return;
+                case DEFAULT:
+                    // We do the stuff below
+                    break;
+                default:
+                    return;
             }
             // CraftBukkit end
 
@@ -1315,7 +1334,9 @@ public class PlayerConnection extends Connection {
     }
 
     public void a(Packet106Transaction packet106transaction) {
-        if (this.player.dead) return; // CraftBukkit
+        if (this.player.dead) {
+            return; // CraftBukkit
+        }
         Short oshort = (Short) this.s.get(this.player.activeContainer.windowId);
 
         if (oshort != null && packet106transaction.b == oshort.shortValue() && this.player.activeContainer.windowId == packet106transaction.a && !this.player.activeContainer.c(this.player)) {
@@ -1324,8 +1345,9 @@ public class PlayerConnection extends Connection {
     }
 
     public void a(Packet130UpdateSign packet130updatesign) {
-        if (this.player.dead) return; // CraftBukkit
-
+        if (this.player.dead) {
+            return; // CraftBukkit
+        }
         WorldServer worldserver = this.minecraftServer.getWorldServer(this.player.dimension);
 
         if (worldserver.isLoaded(packet130updatesign.x, packet130updatesign.y, packet130updatesign.z)) {
@@ -1345,22 +1367,22 @@ public class PlayerConnection extends Connection {
             int j;
 
             /*for (j = 0; j < 4; ++j) {
-                boolean flag = true;
+             boolean flag = true;
 
-                if (packet130updatesign.lines[j].length() > 15) {
-                    flag = false;
-                } else {
-                    for (i = 0; i < packet130updatesign.lines[j].length(); ++i) {
-                        if (SharedConstants.allowedCharacters.indexOf(packet130updatesign.lines[j].charAt(i)) < 0) {
-                            flag = false;
-                        }
-                    }
-                }
+             if (packet130updatesign.lines[j].length() > 15) {
+             flag = false;
+             } else {
+             for (i = 0; i < packet130updatesign.lines[j].length(); ++i) {
+             if (SharedConstants.allowedCharacters.indexOf(packet130updatesign.lines[j].charAt(i)) < 0) {
+             flag = false;
+             }
+             }
+             }
 
-                if (!flag) {
-                    packet130updatesign.lines[j] = "!?";
-                }
-            }*/
+             if (!flag) {
+             packet130updatesign.lines[j] = "!?";
+             }
+             }*/
 
             if (tileentity instanceof TileEntitySign) {
                 j = packet130updatesign.x;
@@ -1377,7 +1399,7 @@ public class PlayerConnection extends Connection {
                 if (!event.isCancelled()) {
                     for (int l = 0; l < 4; ++l) {
                         tileentitysign1.lines[l] = event.getLine(l);
-                        if(tileentitysign1.lines[l] == null) {
+                        if (tileentitysign1.lines[l] == null) {
                             tileentitysign1.lines[l] = "";
                         }
                     }
@@ -1410,8 +1432,7 @@ public class PlayerConnection extends Connection {
             this.server.getPluginManager().callEvent(event);
             if (!event.isCancelled()) {
                 this.player.abilities.isFlying = packet202abilities.f(); // Actually set the player's flying status
-            }
-            else {
+            } else {
                 this.player.updateAbilities(); // Tell the player their ability was reverted
             }
         }
@@ -1557,8 +1578,7 @@ public class PlayerConnection extends Connection {
                     } else {
                         containeranvil.a("");
                     }
-                }
-                // CraftBukkit start
+                } // CraftBukkit start
                 else if (packet250custompayload.tag.equals("REGISTER")) {
                     try {
                         String channels = new String(packet250custompayload.data, "UTF8");

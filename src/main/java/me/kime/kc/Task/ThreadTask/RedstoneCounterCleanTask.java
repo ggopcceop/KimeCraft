@@ -11,48 +11,48 @@ import org.bukkit.Location;
 
 public class RedstoneCounterCleanTask extends TTask {
 
-	private Fun fun;
-	private int count = 0;
-	private Byte lock = Byte.MAX_VALUE;
+    private Fun fun;
+    private int count = 0;
+    private final Byte lock;
 
-	public RedstoneCounterCleanTask(Fun fun) {
-		this.fun = fun;
-	}
+    public RedstoneCounterCleanTask(Fun fun) {
+        this.lock = Byte.MAX_VALUE;
+        this.fun = fun;
+    }
 
-		public void run() {
-		count = 0;
-		synchronized(lock){
-			HashMap<Location, RedstoneC> list = fun.getRedstone();
-		    Iterator<Location> locs = list.keySet().iterator();
-		    LinkedList<Location> removeList = new LinkedList<Location>();
-		    long time = System.currentTimeMillis();
-		    
-		    while(locs.hasNext()){
-		    	Location loc = locs.next();
-		    	if(loc.getBlock().getTypeId() != 55){
-		    		removeList.add(loc);
-		    	}
-		    	else{
-		    		RedstoneC c = list.get(loc);
-		    		if((time - c.getTime()) > 120000){
-		    			removeList.add(loc);
-		    		}
-		    	}
-		    }
-		    while(!removeList.isEmpty()){
-		    	Location loc = removeList.removeFirst();
-		    	list.remove(loc);
-		    }	    
-		}	   
-	}
-	
-	public void queue(){
-		count++;
-	}
-	
-	@Override
-	public int queueSize() {
-		return count;
-	}
+    @Override
+    public void run() {
+        count = 0;
+        synchronized (lock) {
+            HashMap<Location, RedstoneC> list = fun.getRedstone();
+            Iterator<Location> locs = list.keySet().iterator();
+            LinkedList<Location> removeList = new LinkedList<>();
+            long time = System.currentTimeMillis();
 
+            while (locs.hasNext()) {
+                Location loc = locs.next();
+                if (loc.getBlock().getTypeId() != 55) {
+                    removeList.add(loc);
+                } else {
+                    RedstoneC c = list.get(loc);
+                    if ((time - c.getTime()) > 120000) {
+                        removeList.add(loc);
+                    }
+                }
+            }
+            while (!removeList.isEmpty()) {
+                Location loc = removeList.removeFirst();
+                list.remove(loc);
+            }
+        }
+    }
+
+    public void queue() {
+        count++;
+    }
+
+    @Override
+    public int queueSize() {
+        return count;
+    }
 }

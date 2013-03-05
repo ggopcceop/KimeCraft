@@ -11,41 +11,42 @@ import me.Kime.KC.Util.KCMessager;
 
 public class MinePaymentTask extends TTask {
 
-	private int count;
-	private KC plugin;
-	private Byte lock = Byte.MAX_VALUE;
-	DecimalFormat format;
-	
-	public MinePaymentTask(KC instance) {
-		this.plugin = instance;
-		format = new DecimalFormat("#.##");
-	}
+    private int count;
+    private KC plugin;
+    private final Byte lock;
+    DecimalFormat format;
 
-		public void run() {
-		count = 0;
-		synchronized(lock){
-			Player[] players = plugin.getServer().getOnlinePlayers();
-			for(int i = 0; i < players.length; i++){
-				KPlayer player = plugin.getOnlinePlayer(players[i].getName());
-				if(player.getSalary(false) > 0){
-					double mount = player.getSalary(true);
-					plugin.getEconomy().depositPlayer(players[i].getName(), mount);
-					if(mount >= 1){
-						KCMessager.sentMessage(players[i], "You earned $" + format.format(mount), ChatColor.DARK_AQUA);
-					}
-					
-				}
-			}
-		}		
-	}
+    public MinePaymentTask(KC instance) {
+        this.lock = Byte.MAX_VALUE;
+        this.plugin = instance;
+        format = new DecimalFormat("#.##");
+    }
 
-	@Override
-	public int queueSize() {
-		return count;
-	}
+    @Override
+    public void run() {
+        count = 0;
+        synchronized (lock) {
+            Player[] players = plugin.getServer().getOnlinePlayers();
+            for (int i = 0; i < players.length; i++) {
+                KPlayer player = plugin.getOnlinePlayer(players[i].getName());
+                if (player.getSalary(false) > 0) {
+                    double mount = player.getSalary(true);
+                    plugin.getEconomy().depositPlayer(players[i].getName(), mount);
+                    if (mount >= 1) {
+                        KCMessager.sentMessage(players[i], "You earned $" + format.format(mount), ChatColor.DARK_AQUA);
+                    }
 
-	public void queue() {
-		count++;
-	}
+                }
+            }
+        }
+    }
 
+    @Override
+    public int queueSize() {
+        return count;
+    }
+
+    public void queue() {
+        count++;
+    }
 }

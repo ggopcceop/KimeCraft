@@ -15,104 +15,105 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 public class NoobListener implements Listener {
-	
-	private Noob noob;
 
-	public NoobListener(Noob noob) {
-		this.noob = noob;
-	}
+    private Noob noob;
 
-	@EventHandler
-	public void onBlockPlace(BlockPlaceEvent event){
-		if(event.isCancelled()){
-			return;
-		}
-		if(event.getPlayer().getLocation().getWorld() == noob.getNoobWorld()){
-			switch(event.getItemInHand().getTypeId()){
-			case 331:
-			case 130:
-			case 76:
-			case 27:
-			case 28:
-			case 29:
-			case 33:
-			case 66:
-			case 23:
-				event.setCancelled(true);
-				break;
-			default:
-				break;
-			}			
-		}
-	}
-	
-	@EventHandler
-	public void onVehicleCreate(VehicleCreateEvent event){
-		if(event.getVehicle().getLocation().getWorld() == noob.getNoobWorld()){
-			event.getVehicle().remove();
-		}
-	}
-	
-	@EventHandler(ignoreCancelled = true)
-	public void onCreatureSpawn(CreatureSpawnEvent event){
-		if(event.getLocation().getWorld() == noob.getNoobWorld()){
-			event.setCancelled(true);
-		}
-	}
-	
-	@EventHandler
-	public void onExpBottle(ExpBottleEvent event){
-		if(event.getEntity().getLocation().getWorld() == noob.getNoobWorld()){
-			event.setExperience(0);
-			event.setShowEffect(false);
-		}
-	}
-	
-	@EventHandler
-	public void onPotionSplash(PotionSplashEvent event){
-		if(event.isCancelled()){
-			return;
-		}
-		if(event.getEntity().getLocation().getWorld() == noob.getNoobWorld()){
-			event.setCancelled(true);
-		}
-	}
-	
-	@EventHandler
-	public void onPlayerTeleport(PlayerTeleportEvent event){
-		if(event.isCancelled()) return;
-		
-		World currentWorld = event.getFrom().getWorld();
-		World toWorld = event.getTo().getWorld();
-		World noobWorld = noob.getNoobWorld();
-		Player player = event.getPlayer();
-		
-		if((toWorld == noobWorld) && (currentWorld != noobWorld)){
-			if(!event.getPlayer().hasPermission("kc.admin.noobitem")){
-				player.setGameMode(GameMode.CREATIVE);
-			}
-			
-		}
-		else if((toWorld != noobWorld) && (currentWorld == noobWorld)){
-			if(!event.getPlayer().hasPermission("kc.admin.noobitem")){
-				player.setGameMode(GameMode.SURVIVAL);
-				player.getInventory().clear();
-				player.getEnderChest().clear();
-				player.setExp(0);
-				player.setLevel(0);
-				
-				PlayerInventory inv = player.getInventory();
-				inv.setHelmet(new ItemStack(298));
-				inv.setChestplate(new ItemStack(299));
-				inv.setLeggings(new ItemStack(300));
-				inv.setBoots(new ItemStack(301));
-				inv.addItem(new ItemStack(270));
-				inv.addItem(new ItemStack(271));
-				inv.addItem(new ItemStack(268));
-				inv.addItem(new ItemStack(297, 10));
-				inv.addItem(new ItemStack(17, 10));
-				inv.addItem(new ItemStack(50, 20));
-			}
-		}
-	}
+    public NoobListener(Noob noob) {
+        this.noob = noob;
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        if (event.getPlayer().getLocation().getWorld() == noob.getNoobWorld()) {
+            switch (event.getItemInHand().getTypeId()) {
+                case 331:
+                case 130:
+                case 76:
+                case 27:
+                case 28:
+                case 29:
+                case 33:
+                case 66:
+                case 23:
+                    event.setCancelled(true);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    @EventHandler
+    public void onVehicleCreate(VehicleCreateEvent event) {
+        if (event.getVehicle().getLocation().getWorld() == noob.getNoobWorld()) {
+            event.getVehicle().remove();
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onCreatureSpawn(CreatureSpawnEvent event) {
+        if (event.getLocation().getWorld() == noob.getNoobWorld()) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onExpBottle(ExpBottleEvent event) {
+        if (event.getEntity().getLocation().getWorld() == noob.getNoobWorld()) {
+            event.setExperience(0);
+            event.setShowEffect(false);
+        }
+    }
+
+    @EventHandler
+    public void onPotionSplash(PotionSplashEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        if (event.getEntity().getLocation().getWorld() == noob.getNoobWorld()) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerTeleport(PlayerTeleportEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
+        World currentWorld = event.getFrom().getWorld();
+        World toWorld = event.getTo().getWorld();
+        World noobWorld = noob.getNoobWorld();
+        Player player = event.getPlayer();
+
+        if ((toWorld == noobWorld) && (currentWorld != noobWorld)) {
+            if (!event.getPlayer().hasPermission("kc.admin.noobitem")) {
+                player.setGameMode(GameMode.CREATIVE);
+            }
+
+        } else if ((toWorld != noobWorld) && (currentWorld == noobWorld)) {
+            if (!event.getPlayer().hasPermission("kc.admin.noobitem")) {
+                player.setGameMode(GameMode.SURVIVAL);
+                player.getInventory().clear();
+                player.getEnderChest().clear();
+                player.setExp(0);
+                player.setLevel(0);
+
+                PlayerInventory inv = player.getInventory();
+                inv.setHelmet(new ItemStack(298));
+                inv.setChestplate(new ItemStack(299));
+                inv.setLeggings(new ItemStack(300));
+                inv.setBoots(new ItemStack(301));
+                inv.addItem(new ItemStack(270));
+                inv.addItem(new ItemStack(271));
+                inv.addItem(new ItemStack(268));
+                inv.addItem(new ItemStack(297, 10));
+                inv.addItem(new ItemStack(17, 10));
+                inv.addItem(new ItemStack(50, 20));
+            }
+        }
+    }
 }

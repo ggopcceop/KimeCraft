@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package me.Kime.KC.Auth.Hash;
 
 import java.security.MessageDigest;
@@ -22,24 +21,19 @@ import java.security.NoSuchAlgorithmException;
 public class PasswordSecurity {
 
     public static boolean comparePasswordWithHash(String password, String hash, String salt) throws NoSuchAlgorithmException {
-    	MessageDigest m= MessageDigest.getInstance("MD5");
-    	byte[] byteData = m.digest(password.getBytes());
-    	StringBuffer sb = new StringBuffer();
-    	for (int i = 0; i < byteData.length; i++) {
-    		sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
-    	}
-    	String e1 = sb.append(salt).toString();
-    	byteData = m.digest(e1.getBytes());
-    	StringBuffer sb2 = new StringBuffer();
-    	for (int i = 0; i < byteData.length; i++) {
-    		sb2.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
-    	}
-    	
-    	//debug
-    	//System.out.println(sb2.toString());
-    	//System.out.println(hash);
-    	//System.out.println(salt);
-    	
-    	return hash.equalsIgnoreCase(sb2.toString());
+        MessageDigest m = MessageDigest.getInstance("MD5");
+        byte[] byteData = m.digest(password.getBytes());
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < byteData.length; i++) {
+            sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+        }
+        String e1 = sb.append(salt).toString();
+        byteData = m.digest(e1.getBytes());
+        StringBuilder sb2 = new StringBuilder();
+        for (int i = 0; i < byteData.length; i++) {
+            sb2.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+        }
+
+        return hash.equalsIgnoreCase(sb2.toString());
     }
 }

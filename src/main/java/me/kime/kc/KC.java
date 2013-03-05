@@ -32,7 +32,7 @@ public class KC extends JavaPlugin {
 
     private ThreadPool pool;
     private ThreadManager threadManager;
-    private static HashMap<String, KPlayer> onlineList = new HashMap<String, KPlayer>();
+    private static HashMap<String, KPlayer> onlineList = new HashMap<>();
     private Auth auth;
     private Fun fun;
     private Lander lander;
