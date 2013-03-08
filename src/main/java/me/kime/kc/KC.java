@@ -80,7 +80,6 @@ public class KC extends JavaPlugin {
         signTP = new SignTP(this);
         chopTree = new ChopTree(this);
         mine = new Mine(this);
-        //lander = new Lander(this);
 
         this.getServer().getLogger().setFilter(new KCLogFilter());
 
