@@ -78,7 +78,7 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>me.Kime</groupId>
             <artifactId>ThreadPool</artifactId>
             <version>1.0-SNAPSHOT</version>
