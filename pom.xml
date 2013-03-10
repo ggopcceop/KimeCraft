@@ -60,10 +60,6 @@
             <id>vault-repo</id>
             <url>http://ci.herocraftonline.com/plugin/repository/everything</url>
         </repository>
-        <repository>
-            <id>kime-repo</id>
-            <url>http://ci.kime.co/plugin/repository/everything</url>
-        </repository>
     </repositories>
     <dependencies>
         <!-- Dependency information -->
@@ -85,8 +81,6 @@
             <groupId>me.Kime</groupId>
             <artifactId>ThreadPool</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
