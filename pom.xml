@@ -57,8 +57,8 @@
             <url>http://repo.bukkit.org/content/groups/public/</url>
         </repository>
         <repository>
-            <id>milkbowl-repo</id>
-            <url>http://ci.milkbowl.net/plugin/repository/everything/</url>
+            <id>vault-repo</id>
+            <url>http://ci.herocraftonline.com/plugin/repository/everything</url>
         </repository>
     </repositories>
     <dependencies>
