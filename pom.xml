@@ -61,7 +61,7 @@
             <url>http://ci.herocraftonline.com/plugin/repository/everything</url>
         </repository>
         <repository>
-            <id>kime-repo</id>>
+            <id>kime-repo</id>
             <url>http://ci.kime.co/plugin/repository/everything/</url>
         </repository>
     </repositories>
