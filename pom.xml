@@ -4,7 +4,7 @@
 
     <groupId>me.Kime</groupId>
     <artifactId>KC</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.5.5</version>
     <packaging>jar</packaging>
 
     <name>KC</name>
