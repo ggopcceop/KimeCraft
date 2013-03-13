@@ -63,7 +63,7 @@
         </repository>
         <repository>
             <id>kime-repo</id>
-            <url>http://ci.kime.co/plugin/repository/everything/</url>
+            <url>https://ci.kime.co/plugin/repository/everything/</url>
         </repository>
     </repositories>
     <dependencies>
