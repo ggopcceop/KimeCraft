@@ -18,11 +18,11 @@ import me.Kime.KC.Util.KCLogger;
  */
 public class DataSource {
 
-    private final String database = "e7playbbssql";
-    private final String host = "e7playbbssql.db.7835405.hostedresource.com";
+    private final String database = "e7playbbs";
+    private final String host = "localhost";
     private final String port = "3306";
-    private final String username = "e7playbbssql";
-    private final String password = "Kime-125456";
+    private final String username = "bbsuser";
+    private final String password = "125456";
     private final String tableName = "pre_ucenter_members";
     private final String columnName = "username";
     private final String columnPassword = "password";
