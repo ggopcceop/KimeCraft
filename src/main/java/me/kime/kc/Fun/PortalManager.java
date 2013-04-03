@@ -2,8 +2,8 @@ package me.Kime.KC.Fun;
 
 import java.util.Collection;
 import java.util.HashSet;
-import net.minecraft.server.v1_4_R1.Block;
-import net.minecraft.server.v1_4_R1.World;
+import net.minecraft.server.v1_5_R2.Block;
+import net.minecraft.server.v1_5_R2.World;
 
 public class PortalManager {
 

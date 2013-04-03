@@ -63,7 +63,7 @@
         </repository>
         <repository>
             <id>kime-repo</id>
-            <url>https://ci.kime.co/plugin/repository/everything/</url>
+            <url>http://ci.kime.co/plugin/repository/everything/</url>
         </repository>
     </repositories>
     <dependencies>
@@ -71,7 +71,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>1.4.7-R1.0</version>
+            <version>1.5.1-R0.1-SNAPSHOT</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
