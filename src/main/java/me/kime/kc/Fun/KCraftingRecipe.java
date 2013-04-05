@@ -53,8 +53,5 @@ public class KCraftingRecipe {
         bookshelf.setIngredient('P', Material.PAPER);
 
         server.addRecipe(bookshelf);
-
-        FurnaceRecipe netherBrick = new FurnaceRecipe(new ItemStack(Material.NETHER_BRICK), Material.NETHERRACK);
-        server.addRecipe(netherBrick);
     }
 }

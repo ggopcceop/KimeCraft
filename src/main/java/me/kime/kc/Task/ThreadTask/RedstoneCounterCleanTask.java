@@ -31,13 +31,9 @@ public class RedstoneCounterCleanTask extends TTask {
 
             while (locs.hasNext()) {
                 Location loc = locs.next();
-                if (loc.getBlock().getTypeId() != 55) {
+                RedstoneC c = list.get(loc);
+                if ((time - c.getTime()) > 120000) {
                     removeList.add(loc);
-                } else {
-                    RedstoneC c = list.get(loc);
-                    if ((time - c.getTime()) > 120000) {
-                        removeList.add(loc);
-                    }
                 }
             }
             while (!removeList.isEmpty()) {
