@@ -212,7 +212,8 @@ public class FunLinstener implements Listener {
                 break;
             case SPIDER:
                 if (event.getEntity().getEntityId() % 100 == 40) {
-                    entityFunTask.queue(event.getEntity());
+                    Entity skeleton = event.getEntity().getWorld().spawnEntity(event.getEntity().getLocation(), EntityType.SKELETON);
+                    event.getEntity().setPassenger(skeleton);
                 }
                 break;
             case WOLF:
