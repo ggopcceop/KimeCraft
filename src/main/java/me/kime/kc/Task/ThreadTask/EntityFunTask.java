@@ -5,9 +5,7 @@ import java.util.Random;
 
 import org.bukkit.DyeColor;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Sheep;
-import org.bukkit.entity.Spider;
 
 public class EntityFunTask extends TTask {
 
