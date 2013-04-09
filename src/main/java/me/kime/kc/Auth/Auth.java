@@ -40,8 +40,10 @@ public class Auth {
 
     private void config() {
 
-        plugin.getConfig().options().copyDefaults(true);
-                
+        if (!plugin.getConfig().contains("auth.mysql")) {
+            plugin.getConfig().options().copyDefaults(true);
+        }
+
         plugin.getConfig().addDefault("auth.mysql.database", "minecraft");
         plugin.getConfig().addDefault("auth.mysql.host", "localhost");
         plugin.getConfig().addDefault("auth.mysql.port", "3306");
