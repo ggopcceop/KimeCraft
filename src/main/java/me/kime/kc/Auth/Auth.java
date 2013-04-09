@@ -20,18 +20,37 @@ public class Auth {
     public Auth(KC instance) {
         this.plugin = instance;
 
+        config();
+        
         //start sql connection
         try {
-            dataSource = new DataSource();
+            dataSource = new DataSource(plugin.getConfig());
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
 
         //login command executor
-        plugin.getCommand("login").setExecutor(new AuthCommand(this));
+        plugin.getCommand(
+                "login").setExecutor(new AuthCommand(this));
 
         //login event
-        plugin.getPluginManager().registerEvents(new AuthLinstener(this), plugin);
+        plugin.getPluginManager()
+                .registerEvents(new AuthLinstener(this), plugin);
+    }
+
+    private void config() {
+        plugin.getConfig().addDefault("auth.mysql.database", "minecraft");
+        plugin.getConfig().addDefault("auth.mysql.host", "localhost");
+        plugin.getConfig().addDefault("auth.mysql.port", "3306");
+        plugin.getConfig().addDefault("auth.mysql.username", "minecraft");
+        plugin.getConfig().addDefault("auth.mysql.password", "minecraft");
+        plugin.getConfig().addDefault("auth.mysql.tableName", "pre_ucenter_members");
+        plugin.getConfig().addDefault("auth.mysql.columnName", "username");
+        plugin.getConfig().addDefault("auth.mysql.columnPassword", "password");
+        plugin.getConfig().addDefault("auth.mysql.columnIp", "lloginip");
+        plugin.getConfig().addDefault("auth.mysql.columnLastLogin", "llogindate");
+        
+        plugin.saveConfig();
     }
 
     public KPlayer getOnlinePlayer(String name) {

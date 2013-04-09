@@ -9,6 +9,7 @@ import java.sql.Statement;
 
 import me.Kime.KC.KPlayer;
 import me.Kime.KC.Util.KCLogger;
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * SQL connecter to Auth
@@ -18,19 +19,31 @@ import me.Kime.KC.Util.KCLogger;
  */
 public class DataSource {
 
-    private final String database = "e7playbbs";
-    private final String host = "localhost";
-    private final String port = "3306";
-    private final String username = "bbsuser";
-    private final String password = "125456";
-    private final String tableName = "pre_ucenter_members";
-    private final String columnName = "username";
-    private final String columnPassword = "password";
-    private final String columnIp = "lloginip";
-    private final String columnLastLogin = "llogindate";
+    private final String database;
+    private final String host;
+    private final String port;
+    private final String username;
+    private final String password;
+    private final String tableName;
+    private final String columnName;
+    private final String columnPassword;
+    private final String columnIp;
+    private final String columnLastLogin;
+    
     private Connection connection;
 
-    public DataSource() throws ClassNotFoundException, SQLException {
+    public DataSource(FileConfiguration config) throws ClassNotFoundException, SQLException {
+        database = config.getString("auth.mysql.database");
+        host = config.getString("auth.mysql.host");
+        port = config.getString("auth.mysql.port");
+        username = config.getString("auth.mysql.username");
+        password = config.getString("auth.mysql.password");
+        tableName = config.getString("auth.mysql.tableName");
+        columnName = config.getString("auth.mysql.columnName");
+        columnPassword = config.getString("auth.mysql.columnPassword");
+        columnIp = config.getString("auth.mysql.columnIp");
+        columnLastLogin = config.getString("auth.mysql.columnLastLogin");
+
         connect();
     }
 
