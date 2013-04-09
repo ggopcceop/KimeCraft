@@ -14,8 +14,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
-import org.bukkit.entity.StorageMinecart;
 import org.bukkit.entity.Wolf;
+import org.bukkit.entity.minecart.RideableMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -41,6 +41,9 @@ public class FunLinstener implements Listener {
     private Fun fun;
     private EntityFunTask entityFunTask;
     private final int R = 300;
+    private final int RR = R * R;
+    private final int sRR = (R - 2) * (R - 2);
+    private final int BreedLimit = 12;
 
     public FunLinstener(Fun fun) {
         this.fun = fun;
@@ -86,12 +89,11 @@ public class FunLinstener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onVehicleBlockCollision(VehicleBlockCollisionEvent event) {
-        if (event.getVehicle() instanceof StorageMinecart) {
-            return;
-        }
-        if (event.getBlock().getTypeId() == 23) {
-            event.getVehicle().eject();
-            event.getVehicle().remove();
+        if (event.getVehicle() instanceof RideableMinecart) {
+            if (event.getBlock().getTypeId() == 23) {
+                event.getVehicle().eject();
+                event.getVehicle().remove();
+            }
         }
     }
 
@@ -169,10 +171,11 @@ public class FunLinstener implements Listener {
                 event.setCancelled(true);
                 return;
             case BREEDING:
+            case EGG:
                 chunk = event.getLocation().getChunk();
                 count = getChunksEntityNum(event.getLocation().getWorld(), chunk.getX(), chunk.getZ());
 
-                if (count > 8) {
+                if (count > BreedLimit) {
                     event.setCancelled(true);
                     return;
                 }
@@ -241,7 +244,7 @@ public class FunLinstener implements Listener {
             Chunk chunk = event.getChunk();
             int x = chunk.getX();
             int z = chunk.getZ();
-            if (((x * x) + (z * z)) >= (R * R)) {
+            if (((x * x) + (z * z)) >= RR) {
                 chunk.unload(false, false);
             }
         }
@@ -320,7 +323,7 @@ public class FunLinstener implements Listener {
         int count = 0;
         Chunk chunk;
 
-        if ((x * x) + (z * z) > ((R - 5) * (R - 5))) {
+        if ((x * x) + (z * z) > sRR) {
             return 1000;
         }
 
