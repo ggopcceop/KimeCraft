@@ -322,7 +322,6 @@ public class FunLinstener implements Listener {
 
     private int getChunksEntityNum(World world, int x, int z, boolean isAnimal) {
         int count = 0;
-        Chunk chunk;
 
         if ((x * x) + (z * z) > sRR) {
             return 1000;
