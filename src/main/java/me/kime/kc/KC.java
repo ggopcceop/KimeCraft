@@ -33,6 +33,8 @@ public class KC extends JavaPlugin {
     private ThreadPool pool;
     private ThreadManager threadManager;
     private static HashMap<String, KPlayer> onlineList = new HashMap<>();
+    
+    /* modules of KC plugin */
     private Auth auth;
     private Fun fun;
     private Lander lander;
@@ -41,6 +43,7 @@ public class KC extends JavaPlugin {
     private SignTP signTP;
     private ChopTree chopTree;
     private Mine mine;
+    
     private Random rand;
     public static Economy economy = null;
 
