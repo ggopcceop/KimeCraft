@@ -167,6 +167,7 @@ public class FunLinstener implements Listener {
 
         Chunk chunk;
         int count;
+        
         switch (event.getSpawnReason()) {
             case CHUNK_GEN:
                 event.setCancelled(true);
@@ -190,19 +191,8 @@ public class FunLinstener implements Listener {
                     event.setCancelled(true);
                     return;
                 }
-            case NATURAL:
-                chunk = event.getLocation().getChunk();
-                count = getChunksEntityNum(event.getLocation().getWorld(), chunk.getX(), chunk.getZ(), false);
-
-                if (count >= 100) {
-                    event.setCancelled(true);
-                    return;
-                }
-                break;
-            default:
-                break;
-
         }
+        
         switch (event.getEntityType()) {
             case SHEEP:
                 entityFunTask.queue(event.getEntity());
