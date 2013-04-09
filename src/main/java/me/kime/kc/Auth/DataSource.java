@@ -29,7 +29,6 @@ public class DataSource {
     private final String columnPassword;
     private final String columnIp;
     private final String columnLastLogin;
-    
     private Connection connection;
 
     public DataSource(FileConfiguration config) throws ClassNotFoundException, SQLException {
@@ -51,14 +50,14 @@ public class DataSource {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            KCLogger.showError(e.getMessage());
         }
         KCLogger.info("MySQL driver loaded");
 
         try {
             connection = DriverManager.getConnection(getConnString(), username, password);
         } catch (SQLException e) {
-            e.printStackTrace();
+            KCLogger.showError(e.getMessage());
         }
         KCLogger.info("Connection ready");
     }
@@ -67,7 +66,7 @@ public class DataSource {
         try {
             connection = DriverManager.getConnection(getConnString(), username, password);
         } catch (SQLException e) {
-            e.printStackTrace();
+            KCLogger.showError(e.getMessage());
         }
     }
 
@@ -126,8 +125,8 @@ public class DataSource {
             pst.setLong(2, System.currentTimeMillis());
             pst.setString(3, kPlayer.getNameLowCase());
             pst.executeUpdate();
-        } catch (SQLException ex) {
-            KCLogger.showError(ex.getMessage());
+        } catch (SQLException e) {
+            KCLogger.showError(e.getMessage());
             return false;
         } finally {
             close(pst);
@@ -150,8 +149,8 @@ public class DataSource {
         if (st != null) {
             try {
                 st.close();
-            } catch (SQLException ex) {
-                KCLogger.showError(ex.getMessage());
+            } catch (SQLException e) {
+                KCLogger.showError(e.getMessage());
             }
         }
     }
@@ -160,8 +159,8 @@ public class DataSource {
         if (rs != null) {
             try {
                 rs.close();
-            } catch (SQLException ex) {
-                KCLogger.showError(ex.getMessage());
+            } catch (SQLException e) {
+                KCLogger.showError(e.getMessage());
             }
         }
     }
