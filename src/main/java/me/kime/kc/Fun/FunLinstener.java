@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Animals;
 import org.bukkit.entity.Boat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -43,7 +44,7 @@ public class FunLinstener implements Listener {
     private final int R = 300;
     private final int RR = R * R;
     private final int sRR = (R - 2) * (R - 2);
-    private final int BreedLimit = 12;
+    private final int BreedLimit = 8;
 
     public FunLinstener(Fun fun) {
         this.fun = fun;
@@ -173,7 +174,7 @@ public class FunLinstener implements Listener {
             case BREEDING:
             case EGG:
                 chunk = event.getLocation().getChunk();
-                count = getChunksEntityNum(event.getLocation().getWorld(), chunk.getX(), chunk.getZ());
+                count = getChunksEntityNum(event.getLocation().getWorld(), chunk.getX(), chunk.getZ(), true);
 
                 if (count > BreedLimit) {
                     event.setCancelled(true);
@@ -191,7 +192,7 @@ public class FunLinstener implements Listener {
                 }
             case NATURAL:
                 chunk = event.getLocation().getChunk();
-                count = getChunksEntityNum(event.getLocation().getWorld(), chunk.getX(), chunk.getZ());
+                count = getChunksEntityNum(event.getLocation().getWorld(), chunk.getX(), chunk.getZ(), false);
 
                 if (count >= 100) {
                     event.setCancelled(true);
@@ -227,7 +228,7 @@ public class FunLinstener implements Listener {
                 break;
             case VILLAGER:
                 chunk = event.getLocation().getChunk();
-                count = getChunksEntityNum(event.getLocation().getWorld(), chunk.getX(), chunk.getZ());
+                count = getChunksEntityNum(event.getLocation().getWorld(), chunk.getX(), chunk.getZ(), true);
 
                 if (count > 6) {
                     event.setCancelled(true);
@@ -319,7 +320,7 @@ public class FunLinstener implements Listener {
         }
     }
 
-    private int getChunksEntityNum(World world, int x, int z) {
+    private int getChunksEntityNum(World world, int x, int z, boolean isAnimal) {
         int count = 0;
         Chunk chunk;
 
@@ -327,44 +328,35 @@ public class FunLinstener implements Listener {
             return 1000;
         }
 
-        chunk = world.getChunkAt(x, z);
-        if (chunk != null) {
-            count += chunk.getEntities().length;
-        }
-        chunk = world.getChunkAt(x, z + 1);
-        if (chunk != null) {
-            count += chunk.getEntities().length;
-        }
-        chunk = world.getChunkAt(x, z - 1);
-        if (chunk != null) {
-            count += chunk.getEntities().length;
-        }
-        chunk = world.getChunkAt(x + 1, z);
-        if (chunk != null) {
-            count += chunk.getEntities().length;
-        }
-        chunk = world.getChunkAt(x + 1, z + 1);
-        if (chunk != null) {
-            count += chunk.getEntities().length;
-        }
-        chunk = world.getChunkAt(x + 1, z - 1);
-        if (chunk != null) {
-            count += chunk.getEntities().length;
-        }
-        chunk = world.getChunkAt(x - 1, z);
-        if (chunk != null) {
-            count += chunk.getEntities().length;
-        }
-        chunk = world.getChunkAt(x - 1, z + 1);
-        if (chunk != null) {
-            count += chunk.getEntities().length;
-        }
-        chunk = world.getChunkAt(x - 1, z - 1);
-        if (chunk != null) {
-            count += chunk.getEntities().length;
-        }
+        count += getEntityNumByChunk(world, x - 1, z - 1, isAnimal);
+        count += getEntityNumByChunk(world, x - 1, z, isAnimal);
+        count += getEntityNumByChunk(world, x - 1, z + 1, isAnimal);
+        count += getEntityNumByChunk(world, x, z - 1, isAnimal);
+        count += getEntityNumByChunk(world, x, z, isAnimal);
+        count += getEntityNumByChunk(world, x, z + 1, isAnimal);
+        count += getEntityNumByChunk(world, x + 1, z - 1, isAnimal);
+        count += getEntityNumByChunk(world, x + 1, z, isAnimal);
+        count += getEntityNumByChunk(world, x + 1, z + 1, isAnimal);
 
         return count;
+    }
+
+    private int getEntityNumByChunk(World world, int x, int z, boolean isAnimal) {
+        Chunk chunk = world.getChunkAt(x, z);
+        if (chunk != null) {
+            if (isAnimal) {
+                int count = 0;
+                for (Entity e : chunk.getEntities()) {
+                    if (e instanceof Animals) {
+                        count++;
+                    }
+                }
+                return count;
+            } else {
+                return chunk.getEntities().length;
+            }
+        }
+        return 0;
     }
 
     @EventHandler
