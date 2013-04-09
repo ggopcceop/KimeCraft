@@ -36,10 +36,6 @@ public class EntityFunTask extends TTask {
         if (entity instanceof Sheep) {
             Sheep sheep = (Sheep) entity;
             sheep.setColor(DyeColor.values()[rnd.nextInt(DyeColor.values().length)]);
-        } else if (entity instanceof Spider) {
-            Spider spider = (Spider) entity;
-            Entity skeleton = spider.getWorld().spawnEntity(spider.getLocation(), EntityType.SKELETON);
-            spider.setPassenger(skeleton);
         }
     }
 
