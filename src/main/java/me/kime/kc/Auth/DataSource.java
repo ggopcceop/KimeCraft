@@ -79,21 +79,23 @@ public class DataSource {
     public void getAuth(KPlayer kPlayer) {
         String user = kPlayer.getPlayer().getName().toLowerCase();
 
-        Connection con = null;
+        Connection con;
         PreparedStatement pst = null;
-        ResultSet rs = null, rs2 = null;
+        ResultSet rs = null;
         try {
             con = getConnection();
 
-            pst = con.prepareStatement("SELECT * FROM " + tableName + " WHERE " + columnName + "=?;");
+            pst = con.prepareStatement("SELECT pre_ucenter_members.username, "
+                    + "pre_ucenter_members.password, pre_ucenter_members.salt, "
+                    + "pre_common_member.groupid, pre_ucenter_members.lloginip, "
+                    + "pre_ucenter_members.llogindate FROM pre_ucenter_members,"
+                    + " pre_common_member  WHERE pre_ucenter_members.username=? "
+                    + "AND pre_common_member.username=?;");
             pst.setString(1, user);
+            pst.setString(2, user);
             rs = pst.executeQuery();
 
-            pst = con.prepareStatement("SELECT * FROM pre_common_member WHERE username=?;");
-            pst.setString(1, user);
-            rs2 = pst.executeQuery();
-
-            if (rs.next() && rs2.next()) {
+            if (rs.next()) {
                 if (rs.getString(columnIp) == null || rs.getString(columnIp).isEmpty()) {
                     kPlayer.setLoginIp("198.18.0.1");
                 } else {
@@ -102,24 +104,24 @@ public class DataSource {
                 kPlayer.setPassword(rs.getString(columnPassword));
                 kPlayer.setLoginDate(rs.getLong(columnLastLogin));
                 kPlayer.setSalt(rs.getString("salt"));
-                kPlayer.setGroupId(rs2.getInt("groupid"));
+                kPlayer.setGroupId(rs.getInt("groupid"));
             }
         } catch (SQLException ex) {
             KCLogger.showError(ex.getMessage());
         } finally {
             close(rs);
-            close(rs2);
             close(pst);
         }
 
     }
 
     public boolean updateSession(KPlayer kPlayer) {
-        Connection con = null;
+        Connection con;
         PreparedStatement pst = null;
         try {
             con = getConnection();
-            pst = con.prepareStatement("UPDATE " + tableName + " SET " + columnIp + "=?, " + columnLastLogin + "=? WHERE " + columnName + "=?;");
+            pst = con.prepareStatement("UPDATE " + tableName + " SET " + columnIp
+                    + "=?, " + columnLastLogin + "=? WHERE " + columnName + "=?;");
             pst.setString(1, kPlayer.getPlayer().getAddress().getHostString());
             pst.setLong(2, System.currentTimeMillis());
             pst.setString(3, kPlayer.getNameLowCase());
