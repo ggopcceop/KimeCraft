@@ -21,7 +21,7 @@ public class Auth {
         this.plugin = instance;
 
         config();
-        
+
         //start sql connection
         try {
             dataSource = new DataSource(plugin.getConfig());
@@ -39,6 +39,9 @@ public class Auth {
     }
 
     private void config() {
+
+        plugin.getConfig().options().copyDefaults(true);
+                
         plugin.getConfig().addDefault("auth.mysql.database", "minecraft");
         plugin.getConfig().addDefault("auth.mysql.host", "localhost");
         plugin.getConfig().addDefault("auth.mysql.port", "3306");
@@ -49,7 +52,7 @@ public class Auth {
         plugin.getConfig().addDefault("auth.mysql.columnPassword", "password");
         plugin.getConfig().addDefault("auth.mysql.columnIp", "lloginip");
         plugin.getConfig().addDefault("auth.mysql.columnLastLogin", "llogindate");
-        
+
         plugin.saveConfig();
     }
 
