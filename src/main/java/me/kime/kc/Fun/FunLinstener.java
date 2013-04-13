@@ -74,17 +74,54 @@ public class FunLinstener implements Listener {
         int id = event.getItem().getTypeId();
         if (id == 328) {
             Dispenser dispenser = (Dispenser) event.getBlock().getState().getData();
-            Block block = event.getBlock().getRelative(dispenser.getFacing());
-            if (block.getTypeId() == 27 || block.getTypeId() == 28 || block.getTypeId() == 66) {
-                block.getWorld().spawn(block.getLocation(), Minecart.class);
-                event.setCancelled(true);
-            } else {
-                block = block.getRelative(BlockFace.DOWN);
-                if (block.getTypeId() == 27 || block.getTypeId() == 28 || block.getTypeId() == 66) {
-                    block.getWorld().spawn(block.getLocation(), Minecart.class);
-                    event.setCancelled(true);
-                }
+
+            switch (dispenser.getFacing()) {
+                case UP:
+                    Block block = event.getBlock().getRelative(BlockFace.UP, 2);
+                    if (isRail(block.getTypeId())) {
+                        block.getWorld().spawn(block.getLocation(), Minecart.class);
+                        event.setCancelled(true);
+                    }
+                    break;
+                case DOWN:
+                    block = event.getBlock().getRelative(BlockFace.DOWN);
+                    if (isRail(block.getTypeId())) {
+                        block.getWorld().spawn(block.getLocation(), Minecart.class);
+                        event.setCancelled(true);
+                    } else {
+                        block = block.getRelative(BlockFace.DOWN);
+                        if (isRail(block.getTypeId())) {
+                            block.getWorld().spawn(block.getLocation(), Minecart.class);
+                            event.setCancelled(true);
+                        }
+                    }
+                    break;
+                default:
+                    block = event.getBlock().getRelative(dispenser.getFacing());
+                    if (isRail(block.getTypeId())) {
+                        block.getWorld().spawn(block.getLocation(), Minecart.class);
+                        event.setCancelled(true);
+                    } else {
+                        block = block.getRelative(BlockFace.DOWN);
+                        if (isRail(block.getTypeId())) {
+                            block.getWorld().spawn(block.getLocation(), Minecart.class);
+                            event.setCancelled(true);
+                        }
+                    }
             }
+
+        }
+    }
+
+    private boolean isRail(int id) {
+        switch (id) {
+            case 27:
+            case 28:
+            case 66:
+            case 157:
+                return true;
+            default:
+                return false;
         }
     }
 
@@ -167,7 +204,7 @@ public class FunLinstener implements Listener {
 
         Chunk chunk;
         int count;
-        
+
         switch (event.getSpawnReason()) {
             case CHUNK_GEN:
                 event.setCancelled(true);
@@ -192,7 +229,7 @@ public class FunLinstener implements Listener {
                     return;
                 }
         }
-        
+
         switch (event.getEntityType()) {
             case SHEEP:
                 entityFunTask.queue(event.getEntity());
