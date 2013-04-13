@@ -2,7 +2,6 @@ package me.Kime.KC.Fun;
 
 import org.bukkit.Material;
 import org.bukkit.Server;
-import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 

@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import me.Kime.KC.KC;
 import me.Kime.KC.KPlayer;
+import me.Kime.KC.Util.KCLogger;
 
 /**
  * Auth plugin
@@ -26,7 +27,7 @@ public class Auth {
         try {
             dataSource = new DataSource(plugin.getConfig());
         } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+            KCLogger.showError(e.getMessage());
         }
 
         //login command executor

@@ -1,7 +1,5 @@
 package me.Kime.KC.Fun;
 
-import java.util.Collection;
-import java.util.HashSet;
 import net.minecraft.server.v1_5_R2.Block;
 import net.minecraft.server.v1_5_R2.World;
 
@@ -23,9 +21,6 @@ public class PortalManager {
             return false;
         }
 
-        Collection blocks = new HashSet();
-        org.bukkit.World bworld = world.getWorld();
-
         if (world.getTypeId(i - b0, j, k - b1) == 0) {
             i -= b0;
             k -= b1;
@@ -42,7 +37,6 @@ public class PortalManager {
                         if (j1 != Block.OBSIDIAN.id) {
                             return false;
                         }
-                        blocks.add(bworld.getBlockAt(i + b0 * l, j + i1, k + b1 * l));
                     } else if ((j1 != 0) && (j1 != Block.FIRE.id)) {
                         return false;
                     }

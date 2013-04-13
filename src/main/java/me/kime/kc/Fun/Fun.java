@@ -28,8 +28,6 @@ public class Fun {
             }
         }, 305L, 6001L);
 
-        KCraftingRecipe kCraftingRecipe = new KCraftingRecipe(this);
-
         FunCommand funCommand = new FunCommand(this);
         plugin.getCommand("skull").setExecutor(funCommand);
 
