@@ -22,11 +22,8 @@ public class NoobListener implements Listener {
         this.noob = noob;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (event.getPlayer().getLocation().getWorld() == noob.getNoobWorld()) {
             switch (event.getItemInHand().getTypeId()) {
                 case 331:
@@ -68,22 +65,15 @@ public class NoobListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPotionSplash(PotionSplashEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (event.getEntity().getLocation().getWorld() == noob.getNoobWorld()) {
             event.setCancelled(true);
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
         World currentWorld = event.getFrom().getWorld();
         World toWorld = event.getTo().getWorld();
         World noobWorld = noob.getNoobWorld();

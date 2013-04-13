@@ -24,12 +24,8 @@ public class ChopTreeBlockListener
         this.chopTree = chopTree;
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
         Block block = event.getBlock();
         if (block.getType() == Material.LOG && block.getData() != 3) {
             if (denyPermission(event.getPlayer())) {
@@ -51,7 +47,7 @@ public class ChopTreeBlockListener
         }
     }
 
-    public boolean Chop(Block block, Player player, World world) {
+    private boolean Chop(Block block, Player player, World world) {
         List<Block> blocks = new LinkedList<>();
         Block highest = getHighestLog(block);
         if (isTree(highest, player, block)) {
@@ -66,7 +62,7 @@ public class ChopTreeBlockListener
         return true;
     }
 
-    public void getBlocksToChop(Block block, Block highest, List<Block> blocks) {
+    private void getBlocksToChop(Block block, Block highest, List<Block> blocks) {
         while (block.getY() <= highest.getY()) {
             if (!blocks.contains(block)) {
                 blocks.add(block);
@@ -137,20 +133,20 @@ public class ChopTreeBlockListener
         }
     }
 
-    public void getBranches(Block block, List<Block> blocks, Block other) {
+    private void getBranches(Block block, List<Block> blocks, Block other) {
         if ((!blocks.contains(other)) && (other.getType() == Material.LOG)) {
             getBlocksToChop(other, getHighestLog(other), blocks);
         }
     }
 
-    public Block getHighestLog(Block block) {
+    private Block getHighestLog(Block block) {
         while (block.getRelative(BlockFace.UP).getType() == Material.LOG) {
             block = block.getRelative(BlockFace.UP);
         }
         return block;
     }
 
-    public boolean isTree(Block block, Player player, Block first) {
+    private boolean isTree(Block block, Player player, Block first) {
         int counter = 0;
         if (block.getRelative(BlockFace.UP).getType() == Material.LEAVES) {
             counter++;
@@ -197,7 +193,7 @@ public class ChopTreeBlockListener
         return false;
     }
 
-    public void popLogs(Block block, List<Block> blocks, World world, Player player) {
+    private void popLogs(Block block, List<Block> blocks, World world, Player player) {
         ItemStack item = new ItemStack(1, 1, (short) 0);
         item.setAmount(1);
         for (int counter = 0; counter < blocks.size(); counter++) {
@@ -219,7 +215,7 @@ public class ChopTreeBlockListener
         }
     }
 
-    public void popLeaves(Block block) {
+    private void popLeaves(Block block) {
         for (int y = -chopTree.getLeafRadius(); y < chopTree.getLeafRadius() + 1; y++) {
             for (int x = -chopTree.getLeafRadius(); x < chopTree.getLeafRadius() + 1; x++) {
                 for (int z = -chopTree.getLeafRadius(); z < chopTree.getLeafRadius() + 1; z++) {
@@ -232,7 +228,7 @@ public class ChopTreeBlockListener
         }
     }
 
-    public boolean breaksTool(Player player, ItemStack item) {
+    private boolean breaksTool(Player player, ItemStack item) {
         if ((item != null)
                 && (isTool(item.getTypeId()))) {
             short damage = item.getDurability();
@@ -250,15 +246,15 @@ public class ChopTreeBlockListener
         return false;
     }
 
-    public boolean isTool(int ID) {
+    private boolean isTool(int ID) {
         return (ID == 256) || (ID == 257) || (ID == 258) || (ID == 267) || (ID == 268) || (ID == 269) || (ID == 270) || (ID == 271) || (ID == 272) || (ID == 273) || (ID == 274) || (ID == 275) || (ID == 276) || (ID == 277) || (ID == 278) || (ID == 279) || (ID == 283) || (ID == 284) || (ID == 285) || (ID == 286);
     }
 
-    public boolean isAxe(int ID) {
+    private boolean isAxe(int ID) {
         return (ID == 258) || (ID == 271) || (ID == 275) || (ID == 278) || (ID == 286);
     }
 
-    public boolean isLoneLog(Block block) {
+    private boolean isLoneLog(Block block) {
         if (block.getRelative(BlockFace.UP).getType() == Material.LOG) {
             return false;
         }
@@ -274,7 +270,7 @@ public class ChopTreeBlockListener
         return !hasHorizontalCompany(block.getRelative(BlockFace.DOWN));
     }
 
-    public boolean hasHorizontalCompany(Block block) {
+    private boolean hasHorizontalCompany(Block block) {
         if (block.getRelative(BlockFace.NORTH).getType() == Material.LOG) {
             return true;
         }
@@ -299,11 +295,11 @@ public class ChopTreeBlockListener
         return block.getRelative(BlockFace.NORTH_WEST).getType() == Material.LOG;
     }
 
-    public boolean denyPermission(Player player) {
+    private boolean denyPermission(Player player) {
         return !player.hasPermission("choptree.chop");
     }
 
-    public boolean denyItem(Player player) {
+    private boolean denyItem(Player player) {
         ItemStack item = player.getItemInHand();
         if (item != null) {
             for (String tool : chopTree.getAllowedTools()) {
@@ -315,7 +311,7 @@ public class ChopTreeBlockListener
         return true;
     }
 
-    public boolean interruptWhenBreak(Player player) {
+    private boolean interruptWhenBreak(Player player) {
         return chopTree.isInterruptIfToolBreaks();
     }
 }

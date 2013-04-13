@@ -32,7 +32,7 @@ public class SignTPListener implements Listener {
         this.config = signTP.getPlugin().getConfig();
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         Block blockBroken = event.getBlock();
@@ -76,11 +76,8 @@ public class SignTPListener implements Listener {
 
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         Iterator<Block> destory = event.blockList().iterator();
         while (destory.hasNext()) {
             Block block = destory.next();
@@ -117,7 +114,7 @@ public class SignTPListener implements Listener {
         return true;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Block clickedBlock = event.getClickedBlock();
         Player player = event.getPlayer();

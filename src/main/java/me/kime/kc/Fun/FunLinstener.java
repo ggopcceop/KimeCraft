@@ -333,12 +333,8 @@ public class FunLinstener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
         Entity entity = event.getEntity();
         if (!(entity instanceof Player)) {
             if (event.getCause() == DamageCause.FALL) {
@@ -385,11 +381,8 @@ public class FunLinstener implements Listener {
         return 0;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         for (Block b : event.getBlocks()) {
             if (b.getTypeId() == 12 || b.getTypeId() == 13) {
                 b.setTypeId(0);
@@ -397,11 +390,8 @@ public class FunLinstener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (event.isSticky()) {
             if (event.getBlock().getTypeId() == 12 || event.getBlock().getTypeId() == 13) {
                 event.getBlock().setTypeId(0);
