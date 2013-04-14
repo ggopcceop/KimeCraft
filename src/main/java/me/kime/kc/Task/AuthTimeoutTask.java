@@ -25,7 +25,7 @@ public class AuthTimeoutTask implements Runnable {
         if (kPlayer != null) {
             kPlayer.setTimeoutTaskId(-1);
             if (!kPlayer.isAuth()) {
-                kPlayer.getPlayer().kickPlayer("Timeout");
+                kPlayer.getPlayer().kickPlayer("Timeout, You have not logined!");
             }
         }
         //debug
