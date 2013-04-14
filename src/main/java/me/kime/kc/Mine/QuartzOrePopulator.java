@@ -5,7 +5,6 @@
 package me.kime.kc.Mine;
 
 import java.util.Random;
-import net.minecraft.server.v1_5_R2.MathHelper;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
