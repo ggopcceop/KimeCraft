@@ -24,7 +24,7 @@ public class QuartzOrePopulator extends BlockPopulator {
 
     @Override
     public void populate(World world, Random random, Chunk chunk) {
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 6; i++) {
             int centerX = (chunk.getX() << 4) + random.nextInt(16);
             int centerZ = (chunk.getZ() << 4) + random.nextInt(16);
             int centerY = random.nextInt(world.getHighestBlockYAt(centerX, centerZ) - 16) + 8;
