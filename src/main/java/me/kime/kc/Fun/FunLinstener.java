@@ -193,12 +193,8 @@ public class FunLinstener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
         Chunk chunk;
         int count;
 
@@ -275,11 +271,8 @@ public class FunLinstener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         Iterator<Block> destory = event.blockList().iterator();
         while (destory.hasNext()) {
             Block block = destory.next();
