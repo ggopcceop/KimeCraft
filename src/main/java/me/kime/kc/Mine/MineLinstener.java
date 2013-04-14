@@ -3,11 +3,15 @@ package me.kime.kc.Mine;
 import me.kime.kc.Task.ThreadTask.MinePayTask;
 
 import org.bukkit.GameMode;
+import org.bukkit.World;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 
 public class MineLinstener implements Listener {
 
@@ -70,6 +74,15 @@ public class MineLinstener implements Listener {
                 }
             }
         }
+    }
 
+    @EventHandler(ignoreCancelled = true)
+    public void onCreatureSpawn(CreatureSpawnEvent event) {
+        World world = event.getLocation().getWorld();
+        if (world == mine.getMineWorld()) {
+            if (event.getSpawnReason() == SpawnReason.NATURAL) {
+                world.spawnEntity(event.getLocation(), event.getEntityType());
+            }
+        }
     }
 }
