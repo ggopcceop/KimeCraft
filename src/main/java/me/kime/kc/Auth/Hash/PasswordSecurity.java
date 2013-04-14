@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package me.Kime.KC.Auth.Hash;
+package me.kime.kc.Auth.Hash;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

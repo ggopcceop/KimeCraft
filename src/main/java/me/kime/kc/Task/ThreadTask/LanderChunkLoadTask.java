@@ -1,10 +1,10 @@
-package me.Kime.KC.Task.ThreadTask;
+package me.kime.kc.Task.ThreadTask;
 
 import java.util.LinkedList;
 
-import me.Kime.KC.Lander.KChunk;
-import me.Kime.KC.Lander.KLand;
-import me.Kime.KC.Lander.Lander;
+import me.kime.kc.Lander.KChunk;
+import me.kime.kc.Lander.KLand;
+import me.kime.kc.Lander.Lander;
 import org.bukkit.Chunk;
 
 public class LanderChunkLoadTask extends TTask {

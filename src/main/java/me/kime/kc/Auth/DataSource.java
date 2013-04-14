@@ -1,4 +1,4 @@
-package me.Kime.KC.Auth;
+package me.kime.kc.Auth;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import me.Kime.KC.KPlayer;
-import me.Kime.KC.Util.KCLogger;
+import me.kime.kc.KPlayer;
+import me.kime.kc.Util.KCLogger;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**

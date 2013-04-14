@@ -1,4 +1,4 @@
-package me.Kime.KC.Fun;
+package me.kime.kc.Fun;
 
 import org.bukkit.Material;
 import org.bukkit.Server;

@@ -1,19 +1,19 @@
-package me.Kime.KC;
+package me.kime.kc;
 
 import java.util.HashMap;
 import java.util.Random;
 
-import me.Kime.KC.Auth.Auth;
-import me.Kime.KC.ChopTree.ChopTree;
-import me.Kime.KC.Fun.Fun;
-import me.Kime.KC.Lander.Lander;
-import me.Kime.KC.Mine.Mine;
-import me.Kime.KC.Noob.Noob;
-import me.Kime.KC.SignTP.SignTP;
-import me.Kime.KC.Task.ThreadTask.TTask;
-import me.Kime.KC.Task.ThreadTask.ThreadManager;
-import me.Kime.KC.Util.KCLogFilter;
-import me.Kime.KC.Util.KCLogger;
+import me.kime.kc.Auth.Auth;
+import me.kime.kc.ChopTree.ChopTree;
+import me.kime.kc.Fun.Fun;
+import me.kime.kc.Lander.Lander;
+import me.kime.kc.Mine.Mine;
+import me.kime.kc.Noob.Noob;
+import me.kime.kc.SignTP.SignTP;
+import me.kime.kc.Task.ThreadTask.TTask;
+import me.kime.kc.Task.ThreadTask.ThreadManager;
+import me.kime.kc.Util.KCLogFilter;
+import me.kime.kc.Util.KCLogger;
 import me.kime.Threadpool.ThreadPool;
 import net.milkbowl.vault.economy.Economy;
 

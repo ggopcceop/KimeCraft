@@ -1,8 +1,8 @@
-package me.Kime.KC.SignTP;
+package me.kime.kc.SignTP;
 
 import java.io.File;
 
-import me.Kime.KC.KC;
+import me.kime.kc.KC;
 
 public class SignTP {
 

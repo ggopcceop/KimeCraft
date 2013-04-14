@@ -1,6 +1,6 @@
-package me.Kime.KC.Mine;
+package me.kime.kc.Mine;
 
-import me.Kime.KC.Task.ThreadTask.MinePayTask;
+import me.kime.kc.Task.ThreadTask.MinePayTask;
 
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;

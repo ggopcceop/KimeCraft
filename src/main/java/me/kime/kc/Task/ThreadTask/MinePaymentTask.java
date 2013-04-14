@@ -1,13 +1,13 @@
-package me.Kime.KC.Task.ThreadTask;
+package me.kime.kc.Task.ThreadTask;
 
 import java.text.DecimalFormat;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import me.Kime.KC.KC;
-import me.Kime.KC.KPlayer;
-import me.Kime.KC.Util.KCMessager;
+import me.kime.kc.KC;
+import me.kime.kc.KPlayer;
+import me.kime.kc.Util.KCMessager;
 
 public class MinePaymentTask extends TTask {
 

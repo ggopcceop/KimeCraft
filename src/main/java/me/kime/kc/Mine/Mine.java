@@ -1,12 +1,12 @@
-package me.Kime.KC.Mine;
+package me.kime.kc.Mine;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 
-import me.Kime.KC.KC;
-import me.Kime.KC.Task.ThreadTask.MinePaymentTask;
+import me.kime.kc.KC;
+import me.kime.kc.Task.ThreadTask.MinePaymentTask;
 
 public class Mine {
 

@@ -1,4 +1,4 @@
-package me.Kime.KC.Noob;
+package me.kime.kc.Noob;
 
 import org.bukkit.GameMode;
 import org.bukkit.World;

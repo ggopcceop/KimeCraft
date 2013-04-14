@@ -1,12 +1,12 @@
-package me.Kime.KC.Task.ThreadTask;
+package me.kime.kc.Task.ThreadTask;
 
 import java.util.LinkedList;
 
 import org.bukkit.ChatColor;
 
-import me.Kime.KC.KC;
-import me.Kime.KC.KPlayer;
-import me.Kime.KC.Util.KCMessager;
+import me.kime.kc.KC;
+import me.kime.kc.KPlayer;
+import me.kime.kc.Util.KCMessager;
 
 public class LoginSQLTask extends TTask {
 

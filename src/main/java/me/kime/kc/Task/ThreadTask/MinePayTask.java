@@ -1,9 +1,9 @@
-package me.Kime.KC.Task.ThreadTask;
+package me.kime.kc.Task.ThreadTask;
 
 import java.util.LinkedList;
 
-import me.Kime.KC.KPlayer;
-import me.Kime.KC.Mine.Mine;
+import me.kime.kc.KPlayer;
+import me.kime.kc.Mine.Mine;
 
 public class MinePayTask extends TTask {
 

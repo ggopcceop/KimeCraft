@@ -1,10 +1,10 @@
-package me.Kime.KC.Noob;
+package me.kime.kc.Noob;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 
-import me.Kime.KC.KC;
+import me.kime.kc.KC;
 
 public class Noob {
 

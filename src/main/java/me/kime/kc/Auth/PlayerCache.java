@@ -1,4 +1,4 @@
-package me.Kime.KC.Auth;
+package me.kime.kc.Auth;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

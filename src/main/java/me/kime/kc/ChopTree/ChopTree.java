@@ -1,6 +1,6 @@
-package me.Kime.KC.ChopTree;
+package me.kime.kc.ChopTree;
 
-import me.Kime.KC.KC;
+import me.kime.kc.KC;
 
 public class ChopTree {
 

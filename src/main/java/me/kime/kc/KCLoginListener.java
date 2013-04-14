@@ -1,10 +1,11 @@
-package me.Kime.KC;
+package me.kime.kc;
 
 import java.util.HashMap;
 
-import me.Kime.KC.Task.AuthTimeoutTask;
-import me.Kime.KC.Task.ThreadTask.LoginSQLTask;
-import me.Kime.KC.Task.ThreadTask.SessionSQLTask;
+import me.kime.kc.Task.AuthTimeoutTask;
+import me.kime.kc.Task.BorderCheckTask;
+import me.kime.kc.Task.ThreadTask.LoginSQLTask;
+import me.kime.kc.Task.ThreadTask.SessionSQLTask;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -77,6 +78,10 @@ public class KCLoginListener implements Listener {
         KPlayer kPlayer = new KPlayer(player);
         onlineList.put(player.getName().toLowerCase(), kPlayer);
 
+        int borderCheckTaskId = plugin.getServer().getScheduler()
+                .scheduleSyncRepeatingTask(plugin, new BorderCheckTask(kPlayer, plugin.getFun().sRR), 100L, 100L);
+        kPlayer.setBorderCheckTaskId(borderCheckTaskId);
+
         kPlayer.cache();
 
         loginSQLTask.queue(kPlayer);
@@ -116,6 +121,11 @@ public class KCLoginListener implements Listener {
         if (kPlayer == null) {
             return;
         }
+
+        //cancel border check task
+        int id = kPlayer.getBorderCheckTaskId();
+        plugin.getServer().getScheduler().cancelTask(id);
+        
         if (!kPlayer.isAuth()) {
             kPlayer.restoreCache();
             if (kPlayer.getTimeoutTaskId() != -1) {

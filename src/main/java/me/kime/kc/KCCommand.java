@@ -1,6 +1,6 @@
-package me.Kime.KC;
+package me.kime.kc;
 
-import me.Kime.KC.Util.KCMessager;
+import me.kime.kc.Util.KCMessager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

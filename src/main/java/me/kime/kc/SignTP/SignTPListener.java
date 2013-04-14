@@ -1,9 +1,9 @@
-package me.Kime.KC.SignTP;
+package me.kime.kc.SignTP;
 
 import java.util.Iterator;
 
-import me.Kime.KC.Util.KCMessager;
-import me.Kime.KC.Util.KCTPer;
+import me.kime.kc.Util.KCMessager;
+import me.kime.kc.Util.KCTPer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

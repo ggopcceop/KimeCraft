@@ -1,9 +1,9 @@
-package me.Kime.KC.Mine;
+package me.kime.kc.Mine;
 
 import java.text.DecimalFormat;
 
-import me.Kime.KC.KPlayer;
-import me.Kime.KC.Util.KCMessager;
+import me.kime.kc.KPlayer;
+import me.kime.kc.Util.KCMessager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

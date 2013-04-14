@@ -1,4 +1,4 @@
-package me.Kime.KC.Util;
+package me.kime.kc.Util;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

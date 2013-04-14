@@ -1,4 +1,4 @@
-package me.Kime.KC.Lander;
+package me.kime.kc.Lander;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

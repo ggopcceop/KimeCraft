@@ -1,11 +1,11 @@
-package me.Kime.KC.Auth;
+package me.kime.kc.Auth;
 
 import java.security.NoSuchAlgorithmException;
 
-import me.Kime.KC.KPlayer;
-import me.Kime.KC.Auth.Hash.PasswordSecurity;
-import me.Kime.KC.Util.KCLogger;
-import me.Kime.KC.Util.KCMessager;
+import me.kime.kc.KPlayer;
+import me.kime.kc.Auth.Hash.PasswordSecurity;
+import me.kime.kc.Util.KCLogger;
+import me.kime.kc.Util.KCMessager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

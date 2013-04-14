@@ -1,6 +1,8 @@
-package me.Kime.KC;
+package me.kime.kc;
 
-import me.Kime.KC.Auth.PlayerCache;
+import me.kime.kc.Auth.PlayerCache;
+import me.kime.kc.Util.KCTPer;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 /**
@@ -24,10 +26,17 @@ public class KPlayer {
     private double payRate = 0;
     private double salary = 0;
     private double totalSalary = 0;
+    private int borderCheckTaskId;
+    private double lastX;
+    private double lastY;
+    private double lastZ;
+    private float lastYaw;
+    private float lastPitch;
 
     public KPlayer(Player player) {
         this.player = player;
         isAuth = false;
+        borderCheckTaskId = -1;
         timeoutTaskId = -1;
     }
 
@@ -140,5 +149,27 @@ public class KPlayer {
 
     public double getTotalSalary() {
         return totalSalary;
+    }
+
+    void setBorderCheckTaskId(int borderCheckTaskId) {
+        this.borderCheckTaskId = borderCheckTaskId;
+    }
+
+    int getBorderCheckTaskId() {
+        return borderCheckTaskId;
+    }
+
+    public void setLastLoc() {
+        Location loc = player.getLocation();
+        this.lastX = loc.getX();
+        this.lastY = loc.getY();
+        this.lastZ = loc.getZ();
+        this.lastYaw = loc.getYaw();
+        this.lastPitch = loc.getPitch();
+    }
+
+    public void tpLastLoc() {
+        Location loc = new Location(player.getWorld(), lastX, lastY, lastZ, lastYaw, lastPitch);
+        KCTPer.tp(player, loc);
     }
 }

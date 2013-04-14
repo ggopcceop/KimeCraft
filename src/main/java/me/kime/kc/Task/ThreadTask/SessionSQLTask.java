@@ -1,9 +1,9 @@
-package me.Kime.KC.Task.ThreadTask;
+package me.kime.kc.Task.ThreadTask;
 
 import java.util.LinkedList;
 
-import me.Kime.KC.KPlayer;
-import me.Kime.KC.Auth.Auth;
+import me.kime.kc.KPlayer;
+import me.kime.kc.Auth.Auth;
 
 public class SessionSQLTask extends TTask {
 

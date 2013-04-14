@@ -1,11 +1,11 @@
-package me.Kime.KC.Task.ThreadTask;
+package me.kime.kc.Task.ThreadTask;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import me.Kime.KC.Fun.Fun;
-import me.Kime.KC.Fun.RedstoneC;
+import me.kime.kc.Fun.Fun;
+import me.kime.kc.Fun.RedstoneC;
 
 import org.bukkit.Location;
 

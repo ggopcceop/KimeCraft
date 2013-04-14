@@ -1,6 +1,6 @@
-package me.Kime.KC.Noob;
+package me.kime.kc.Noob;
 
-import me.Kime.KC.KPlayer;
+import me.kime.kc.KPlayer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

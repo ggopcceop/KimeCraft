@@ -1,4 +1,4 @@
-package me.Kime.KC.Task.ThreadTask;
+package me.kime.kc.Task.ThreadTask;
 
 import java.util.LinkedList;
 import me.kime.Threadpool.ThreadPool;

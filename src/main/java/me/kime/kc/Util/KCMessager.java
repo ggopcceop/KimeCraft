@@ -1,6 +1,6 @@
-package me.Kime.KC.Util;
+package me.kime.kc.Util;
 
-import me.Kime.KC.KPlayer;
+import me.kime.kc.KPlayer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -28,6 +28,12 @@ public class KCMessager {
     public static void sentMessage(Player player, String msg, ChatColor color) {
         if (player != null) {
             player.sendMessage(color + msg);
+        }
+    }
+
+    public static void sentMessage(KPlayer player, String msg, ChatColor color) {
+        if (player != null) {
+            sentMessage(player.getPlayer(), msg, color);
         }
     }
 }

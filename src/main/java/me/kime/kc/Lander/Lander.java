@@ -1,9 +1,9 @@
-package me.Kime.KC.Lander;
+package me.kime.kc.Lander;
 
 import java.sql.SQLException;
 import java.util.HashMap;
 
-import me.Kime.KC.KC;
+import me.kime.kc.KC;
 
 public class Lander {
 

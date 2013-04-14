@@ -1,11 +1,11 @@
-package me.Kime.KC.Lander;
+package me.kime.kc.Lander;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import me.Kime.KC.Util.KCLogger;
+import me.kime.kc.Util.KCLogger;
 
 /**
  * SQL connecter to Auth

@@ -1,7 +1,7 @@
-package me.Kime.KC.Lander;
+package me.kime.kc.Lander;
 
-import me.Kime.KC.Task.ThreadTask.LanderChunkLoadTask;
-import me.Kime.KC.Util.KCMessager;
+import me.kime.kc.Task.ThreadTask.LanderChunkLoadTask;
+import me.kime.kc.Util.KCMessager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;

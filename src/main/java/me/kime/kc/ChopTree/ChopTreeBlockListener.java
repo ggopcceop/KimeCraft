@@ -1,4 +1,4 @@
-package me.Kime.KC.ChopTree;
+package me.kime.kc.ChopTree;
 
 import java.util.LinkedList;
 import java.util.List;

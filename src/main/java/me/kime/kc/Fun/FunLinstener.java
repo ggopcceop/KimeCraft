@@ -1,7 +1,7 @@
-package me.Kime.KC.Fun;
+package me.kime.kc.Fun;
 
 import java.util.Iterator;
-import me.Kime.KC.Task.ThreadTask.EntityFunTask;
+import me.kime.kc.Task.ThreadTask.EntityFunTask;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -41,9 +41,6 @@ public class FunLinstener implements Listener {
 
     private Fun fun;
     private EntityFunTask entityFunTask;
-    private final int R = 300;
-    private final int RR = R * R;
-    private final int sRR = (R - 2) * (R - 2);
     private final int BreedLimit = 8;
 
     public FunLinstener(Fun fun) {
@@ -272,7 +269,7 @@ public class FunLinstener implements Listener {
             Chunk chunk = event.getChunk();
             int x = chunk.getX();
             int z = chunk.getZ();
-            if (((x * x) + (z * z)) >= RR) {
+            if (((x * x) + (z * z)) >= fun.RR) {
                 chunk.unload(false, false);
             }
         }
@@ -346,7 +343,7 @@ public class FunLinstener implements Listener {
     private int getChunksEntityNum(World world, int x, int z, boolean isAnimal) {
         int count = 0;
 
-        if ((x * x) + (z * z) > sRR) {
+        if ((x * x) + (z * z) > fun.sRR) {
             return 1000;
         }
 

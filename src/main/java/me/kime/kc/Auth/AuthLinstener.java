@@ -1,7 +1,7 @@
-package me.Kime.KC.Auth;
+package me.kime.kc.Auth;
 
-import me.Kime.KC.KPlayer;
-import me.Kime.KC.Util.KCMessager;
+import me.kime.kc.KPlayer;
+import me.kime.kc.Util.KCMessager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

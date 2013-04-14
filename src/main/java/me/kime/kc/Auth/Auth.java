@@ -1,10 +1,10 @@
-package me.Kime.KC.Auth;
+package me.kime.kc.Auth;
 
 import java.sql.SQLException;
 
-import me.Kime.KC.KC;
-import me.Kime.KC.KPlayer;
-import me.Kime.KC.Util.KCLogger;
+import me.kime.kc.KC;
+import me.kime.kc.KPlayer;
+import me.kime.kc.Util.KCLogger;
 
 /**
  * Auth plugin

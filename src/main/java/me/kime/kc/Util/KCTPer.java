@@ -1,4 +1,4 @@
-package me.Kime.KC.Util;
+package me.kime.kc.Util;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
