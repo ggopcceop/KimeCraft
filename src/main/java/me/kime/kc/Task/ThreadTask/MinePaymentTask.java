@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import me.kime.kc.KC;
 import me.kime.kc.KPlayer;
 import me.kime.kc.Util.KCMessager;
+import net.milkbowl.vault.economy.Economy;
 
 public class MinePaymentTask extends TTask {
 
@@ -31,7 +32,12 @@ public class MinePaymentTask extends TTask {
                 KPlayer player = plugin.getOnlinePlayer(players[i].getName());
                 if (player.getSalary(false) > 0) {
                     double mount = player.getSalary(true);
-                    plugin.getEconomy().depositPlayer(players[i].getName(), mount);
+                    
+                    Economy eco = plugin.getEconomy();
+                    if (eco != null) {
+                        eco.depositPlayer(players[i].getName(), mount);
+                    }
+                    
                     if (mount >= 1) {
                         KCMessager.sentMessage(players[i], "You earned $" + format.format(mount), ChatColor.DARK_AQUA);
                     }
