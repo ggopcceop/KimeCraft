@@ -7,6 +7,7 @@ import org.bukkit.WorldCreator;
 
 import me.kime.kc.KC;
 import me.kime.kc.Task.ThreadTask.MinePaymentTask;
+import org.bukkit.Difficulty;
 
 public class Mine {
 
@@ -19,7 +20,10 @@ public class Mine {
 
         mineWorld = plugin.getServer().createWorld(
                 new WorldCreator("MineWorld").environment(Environment.NORMAL).generateStructures(true));
+        mineWorld.getPopulators().add(new QuartzOrePopulator());
         mineWorld.setSpawnFlags(true, false);
+        mineWorld.setDifficulty(Difficulty.HARD);
+        
         Location loc = mineWorld.getSpawnLocation();
         mineWorld.loadChunk(loc.getChunk().getX(), loc.getChunk().getZ());
 
