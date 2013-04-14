@@ -48,9 +48,7 @@ public class AuthLinstener implements Listener {
             Location from = event.getFrom();
             Location to = event.getTo();
             if (from.getX() == to.getX() && from.getZ() == to.getZ()) {
-                if (from.getY() > to.getY()) {
-                    return;
-                }
+                return;
             }
             event.setTo(event.getFrom());
         }
