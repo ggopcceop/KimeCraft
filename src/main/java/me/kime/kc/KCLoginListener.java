@@ -78,6 +78,7 @@ public class KCLoginListener implements Listener {
         KPlayer kPlayer = new KPlayer(player);
         onlineList.put(player.getName().toLowerCase(), kPlayer);
 
+        //add border check task
         int borderCheckTaskId = plugin.getServer().getScheduler()
                 .scheduleSyncRepeatingTask(plugin, new BorderCheckTask(kPlayer, plugin.getFun().sRR), 100L, 100L);
         kPlayer.setBorderCheckTaskId(borderCheckTaskId);
