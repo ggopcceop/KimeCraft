@@ -3,7 +3,6 @@ package me.kime.kc.Mine;
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
@@ -21,7 +20,9 @@ public class Mine {
 
     public Mine(KC instance) {
         this.plugin = instance;
-
+        
+        plugin.getPluginManager().registerEvents(new MineLinstener(this), plugin);
+        
         //delete mine world every Sunday 
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
@@ -38,12 +39,9 @@ public class Mine {
 
         mineWorld = plugin.getServer().createWorld(
                 new WorldCreator("MineWorld").environment(Environment.NORMAL).generateStructures(true));
-        mineWorld.getPopulators().add(new QuartzOrePopulator());
+
         mineWorld.setSpawnFlags(true, false);
         mineWorld.setDifficulty(Difficulty.HARD);
-
-        Location loc = mineWorld.getSpawnLocation();
-        mineWorld.loadChunk(loc.getChunk().getX(), loc.getChunk().getZ());
 
         minePaymentTask = new MinePaymentTask(plugin);
         plugin.registerTask(minePaymentTask);
@@ -58,7 +56,7 @@ public class Mine {
         MineCommand mineCommand = new MineCommand(this);
         plugin.getCommand("mine").setExecutor(mineCommand);
 
-        plugin.getPluginManager().registerEvents(new MineLinstener(this), plugin);
+
     }
 
     public KC getPlugin() {

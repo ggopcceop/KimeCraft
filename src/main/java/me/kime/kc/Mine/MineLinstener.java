@@ -12,6 +12,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.world.WorldInitEvent;
 
 public class MineLinstener implements Listener {
 
@@ -83,6 +84,13 @@ public class MineLinstener implements Listener {
             if (event.getSpawnReason() == SpawnReason.NATURAL) {
                 world.spawnEntity(event.getLocation(), event.getEntityType());
             }
+        }
+    }
+
+    @EventHandler
+    public void onWorldInit(WorldInitEvent event) {
+        if ("MineWorld".equals(event.getWorld().getName())) {
+            event.getWorld().getPopulators().add(new QuartzOrePopulator());
         }
     }
 }
