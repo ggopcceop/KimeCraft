@@ -26,7 +26,8 @@ public class QuartzOrePopulator extends BlockPopulator {
         for (int i = 0; i < 6; i++) {
             int centerX = (chunk.getX() << 4) + random.nextInt(16);
             int centerZ = (chunk.getZ() << 4) + random.nextInt(16);
-            int centerY = random.nextInt(world.getHighestBlockYAt(centerX, centerZ) - 16) + 8;
+            int hight = world.getHighestBlockYAt(centerX, centerZ) - 10;
+            int centerY = random.nextInt(Math.abs(hight)) + 5;
             createOre(world, random, centerX, centerY, centerZ);
         }
     }
