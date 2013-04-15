@@ -4,7 +4,6 @@ import me.kime.kc.Task.ThreadTask.MinePayTask;
 
 import org.bukkit.GameMode;
 import org.bukkit.World;
-import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
