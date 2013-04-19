@@ -29,11 +29,12 @@ public class Auth {
         } catch (ClassNotFoundException | SQLException e) {
             KCLogger.showError(e.getMessage());
         }
-
+        
         //login command executor
-        plugin.getCommand(
-                "login").setExecutor(new AuthCommand(this));
-
+        AuthCommand command = new AuthCommand(this);
+        plugin.getCommand("login").setExecutor(command);
+        plugin.getCommand("login").setTabCompleter(command);
+        
         //login event
         plugin.getPluginManager()
                 .registerEvents(new AuthLinstener(this), plugin);

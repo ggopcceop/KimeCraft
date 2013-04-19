@@ -1,6 +1,9 @@
 package me.kime.kc.Auth;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import me.kime.kc.KPlayer;
 import me.kime.kc.Auth.Hash.PasswordSecurity;
@@ -11,6 +14,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 /**
@@ -19,7 +23,7 @@ import org.bukkit.entity.Player;
  * @author Kime
  *
  */
-public class AuthCommand implements CommandExecutor {
+public class AuthCommand implements CommandExecutor, TabCompleter {
 
     private Auth auth;
 
@@ -39,8 +43,12 @@ public class AuthCommand implements CommandExecutor {
             KCMessager.sentError(player, "Usage /login [password]");
             return true;
         }
-        String password = split[0];
+
         KPlayer kPlayer = auth.getOnlinePlayer(player.getName());
+
+        kPlayer.setTypedPassword(split[0]);
+        String password = kPlayer.getTypedPassword();
+
 
         if (kPlayer.isAuth()) {
             KCMessager.sentMessage(player, "You are already login!", ChatColor.GREEN);
@@ -75,5 +83,19 @@ public class AuthCommand implements CommandExecutor {
             KCMessager.sentError(player, "An error ocurred; Please contact the admin");
         }
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] split) {
+
+        if (split.length == 1) {
+            if (sender instanceof Player) {
+                KPlayer player = auth.getOnlinePlayer(sender.getName());
+                String star = player.setTypedPassword(split[0]);
+                return Arrays.asList(new String[]{star});
+            }
+        }
+
+        return null;
     }
 }

@@ -1,6 +1,7 @@
 package me.kime.kc;
 
 import me.kime.kc.Auth.PlayerCache;
+import me.kime.kc.Util.KCLogger;
 import me.kime.kc.Util.KCTPer;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -32,6 +33,8 @@ public class KPlayer {
     private double lastZ;
     private float lastYaw;
     private float lastPitch;
+    private StringBuilder TypedPassword;
+    private int TypedPasswordLenght = 0;
 
     public KPlayer(Player player) {
         this.player = player;
@@ -171,5 +174,46 @@ public class KPlayer {
     public void tpLastLoc() {
         Location loc = new Location(player.getWorld(), lastX, lastY, lastZ, lastYaw, lastPitch);
         KCTPer.tp(player, loc);
+    }
+
+    public String setTypedPassword(String pass) {
+        if (TypedPasswordLenght == 0) {
+            this.TypedPasswordLenght = pass.length();
+            this.TypedPassword = new StringBuilder();
+            TypedPassword.append(pass);
+        } else {
+            char[] array = pass.toCharArray();
+            int i = 0;
+            while (i < TypedPasswordLenght && i < pass.length()) {
+                if (array[i] != '*') {
+                    break;
+                }
+                i++;
+            }
+            if (i < TypedPasswordLenght) {
+                TypedPassword.delete(i, TypedPassword.length());
+            }
+            while (i < pass.length()) {
+                TypedPassword.append(array[i]);
+                i++;
+            }
+
+            TypedPasswordLenght = TypedPassword.length();
+        }
+        StringBuilder replace = new StringBuilder();
+        for (int i = 0; i < pass.length(); i++) {
+            replace.append("*");
+        }
+        return replace.toString();
+    }
+
+    public String getTypedPassword() {
+        if (TypedPassword == null) {
+            return null;
+        } else {
+            String p = TypedPassword.toString();
+            TypedPassword = null;
+            return p;
+        }
     }
 }
