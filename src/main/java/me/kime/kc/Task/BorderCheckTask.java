@@ -4,7 +4,6 @@ import me.kime.kc.KPlayer;
 import me.kime.kc.Util.KCMessager;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 
 /**
  * check player location to prevent player go out of the border
