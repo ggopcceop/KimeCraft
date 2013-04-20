@@ -254,6 +254,10 @@ public class FunLinstener implements Listener {
                     event.setCancelled(true);
                 }
                 break;
+            case WITHER:
+                if(event.getLocation().getWorld() != fun.getPlugin().getMine().getMineWorld()){
+                    event.setCancelled(true);
+                }
             default:
                 break;
         }
