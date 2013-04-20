@@ -17,3 +17,6 @@ commands:
     skull:
     pu:
     pd:
+    roll:
+      description: roll a number between 1 - 100
+      usage: /roll
