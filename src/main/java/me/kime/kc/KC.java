@@ -18,6 +18,7 @@ import me.kime.Threadpool.ThreadPool;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,7 +34,6 @@ public class KC extends JavaPlugin {
     private ThreadPool pool;
     private ThreadManager threadManager;
     private static HashMap<String, KPlayer> onlineList = new HashMap<>();
-    
     /* modules of KC plugin */
     private Auth auth;
     private Fun fun;
@@ -43,9 +43,9 @@ public class KC extends JavaPlugin {
     private SignTP signTP;
     private ChopTree chopTree;
     private Mine mine;
-    
     private Random rand;
-    public static Economy economy = null;
+    private static Economy economy = null;
+    private FileConfiguration config;
 
     @Override
     public void onDisable() {
@@ -66,6 +66,9 @@ public class KC extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        //config
+        config();
+
         //thread pool for maxmize cpu performce
         pool = new ThreadPool(8, 100);
         threadManager = new ThreadManager(pool);
@@ -77,19 +80,30 @@ public class KC extends JavaPlugin {
 
         world = getServer().getWorld("world");
 
-        noob = new Noob(this);
-        auth = new Auth(this);
-        fun = new Fun(this);
-        signTP = new SignTP(this);
-        chopTree = new ChopTree(this);
-        mine = new Mine(this);
+        if (config.getBoolean("noob.enable", true)) {
+            noob = new Noob(this);
+        }
+        if (config.getBoolean("auth.enable", true)) {
+            auth = new Auth(this, onlineList);
+        }
+        if (config.getBoolean("fun.enable", true)) {
+            fun = new Fun(this);
+        }
+        if (config.getBoolean("signTP.enable", true)) {
+            signTP = new SignTP(this);
+        }
+        if (config.getBoolean("chopTree.enable", true)) {
+            chopTree = new ChopTree(this);
+        }
+
+        if (config.getBoolean("mine.enable", true)) {
+            mine = new Mine(this);
+        }
 
         this.getServer().getLogger().setFilter(new KCLogFilter());
 
         KCCommand kcCommand = new KCCommand(this);
         getCommand("city").setExecutor(kcCommand);
-
-        getServer().getPluginManager().registerEvents(new KCLoginListener(this, onlineList), this);
 
         KCLogger.info("KimeCraft Loaded!");
     }
@@ -103,9 +117,16 @@ public class KC extends JavaPlugin {
         return (economy != null);
     }
 
+    private void config() {
+        this.saveDefaultConfig();
+        config = this.getConfig();
+    }
+
     public KPlayer getOnlinePlayer(String name) {
         return onlineList.get(name.toLowerCase());
     }
+    
+    
 
     public PluginManager getPluginManager() {
         return getServer().getPluginManager();

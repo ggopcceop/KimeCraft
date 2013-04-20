@@ -1,6 +1,8 @@
 package me.kime.kc.Fun;
 
 import java.util.Iterator;
+import me.kime.kc.KPlayer;
+import me.kime.kc.Task.BorderCheckTask;
 import me.kime.kc.Task.ThreadTask.EntityFunTask;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -30,6 +32,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.vehicle.VehicleBlockCollisionEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
@@ -48,6 +52,25 @@ public class FunLinstener implements Listener {
         entityFunTask = new EntityFunTask();
 
         fun.getPlugin().registerTask(entityFunTask);
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        KPlayer kPlayer = fun.getPlugin().getOnlinePlayer(player.getName());
+        //add border check task
+        int borderCheckTaskId = fun.getPlugin().getServer().getScheduler()
+                .scheduleSyncRepeatingTask(fun.getPlugin(), new BorderCheckTask(kPlayer, fun.sRR), 100L, 100L);
+        kPlayer.setBorderCheckTaskId(borderCheckTaskId);
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        KPlayer kPlayer = fun.getPlugin().getOnlinePlayer(player.getName());
+        //cancel border check task
+        int id = kPlayer.getBorderCheckTaskId();
+        fun.getPlugin().getServer().getScheduler().cancelTask(id);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
@@ -255,7 +278,7 @@ public class FunLinstener implements Listener {
                 }
                 break;
             case WITHER:
-                if(event.getLocation().getWorld() != fun.getPlugin().getMine().getMineWorld()){
+                if (event.getLocation().getWorld() != fun.getPlugin().getMine().getMineWorld()) {
                     event.setCancelled(true);
                 }
             default:

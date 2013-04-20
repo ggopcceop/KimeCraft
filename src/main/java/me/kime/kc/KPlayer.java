@@ -1,7 +1,6 @@
 package me.kime.kc;
 
 import me.kime.kc.Auth.PlayerCache;
-import me.kime.kc.Util.KCLogger;
 import me.kime.kc.Util.KCTPer;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -154,11 +153,11 @@ public class KPlayer {
         return totalSalary;
     }
 
-    void setBorderCheckTaskId(int borderCheckTaskId) {
+    public void setBorderCheckTaskId(int borderCheckTaskId) {
         this.borderCheckTaskId = borderCheckTaskId;
     }
 
-    int getBorderCheckTaskId() {
+    public int getBorderCheckTaskId() {
         return borderCheckTaskId;
     }
 

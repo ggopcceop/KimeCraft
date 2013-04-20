@@ -1,6 +1,7 @@
 package me.kime.kc.Auth;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 
 import me.kime.kc.KC;
 import me.kime.kc.KPlayer;
@@ -18,10 +19,8 @@ public class Auth {
     private KC plugin;
     private DataSource dataSource = null;
 
-    public Auth(KC instance) {
+    public Auth(KC instance, HashMap<String, KPlayer> onlineList) {
         this.plugin = instance;
-
-        config();
 
         //start sql connection
         try {
@@ -29,35 +28,15 @@ public class Auth {
         } catch (ClassNotFoundException | SQLException e) {
             KCLogger.showError(e.getMessage());
         }
-        
+
         //login command executor
         AuthCommand command = new AuthCommand(this);
         plugin.getCommand("login").setExecutor(command);
         plugin.getCommand("login").setTabCompleter(command);
-        
+
         //login event
         plugin.getPluginManager()
-                .registerEvents(new AuthLinstener(this), plugin);
-    }
-
-    private void config() {
-
-        if (!plugin.getConfig().contains("auth.mysql")) {
-            plugin.getConfig().options().copyDefaults(true);
-        }
-
-        plugin.getConfig().addDefault("auth.mysql.database", "minecraft");
-        plugin.getConfig().addDefault("auth.mysql.host", "localhost");
-        plugin.getConfig().addDefault("auth.mysql.port", "3306");
-        plugin.getConfig().addDefault("auth.mysql.username", "minecraft");
-        plugin.getConfig().addDefault("auth.mysql.password", "minecraft");
-        plugin.getConfig().addDefault("auth.mysql.tableName", "pre_ucenter_members");
-        plugin.getConfig().addDefault("auth.mysql.columnName", "username");
-        plugin.getConfig().addDefault("auth.mysql.columnPassword", "password");
-        plugin.getConfig().addDefault("auth.mysql.columnIp", "lloginip");
-        plugin.getConfig().addDefault("auth.mysql.columnLastLogin", "llogindate");
-
-        plugin.saveConfig();
+                .registerEvents(new AuthLinstener(this, onlineList), plugin);
     }
 
     public KPlayer getOnlinePlayer(String name) {

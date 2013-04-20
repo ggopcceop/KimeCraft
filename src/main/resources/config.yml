@@ -1,0 +1,23 @@
+auth:
+  enable: true
+  mysql:
+    database: bbs
+    host: localhost
+    port: '3306'
+    username: bbs
+    password: password
+    tableName: pre_ucenter_members
+    columnName: username
+    columnPassword: password
+    columnIp: lloginip
+    columnLastLogin: llogindate
+noob:
+  enable: true
+fun:
+  enable: true
+signTP:
+  enable: true
+chopTree:
+  enable: true
+mine:
+  enable: true

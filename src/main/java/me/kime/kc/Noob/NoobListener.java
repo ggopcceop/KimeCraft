@@ -1,5 +1,7 @@
 package me.kime.kc.Noob;
 
+import me.kime.kc.KPlayer;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -9,6 +11,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.ExpBottleEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.inventory.ItemStack;
@@ -20,6 +23,27 @@ public class NoobListener implements Listener {
 
     public NoobListener(Noob noob) {
         this.noob = noob;
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        if (player.getLastPlayed() == 0) {
+            final String name = player.getName();
+            event.setJoinMessage(ChatColor.GREEN + "New player " + ChatColor.YELLOW + name + ChatColor.GREEN + " joined the server!");
+
+            //move new player to noob world
+            noob.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(noob.getPlugin(), new Runnable() {
+                @Override
+                public void run() {
+                    KPlayer kp = noob.getPlugin().getOnlinePlayer(name);
+                    if (kp.getPlayer().isOnline()) {
+                        kp.getPlayer().teleport(noob.getPlugin().getNoob().getNoobWorld().getSpawnLocation());
+                        kp.getPlayer().setGameMode(GameMode.CREATIVE);
+                    }
+                }
+            }, 10L);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
