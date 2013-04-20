@@ -26,6 +26,7 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -34,22 +35,23 @@ import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.vehicle.VehicleBlockCollisionEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Dispenser;
 
 public class FunLinstener implements Listener {
-
+    
     private Fun fun;
     private EntityFunTask entityFunTask;
     private final int BreedLimit = 8;
-
+    
     public FunLinstener(Fun fun) {
         this.fun = fun;
         entityFunTask = new EntityFunTask();
-
+        
         fun.getPlugin().registerTask(entityFunTask);
     }
-
+    
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onBlockBreak(BlockBreakEvent event) {
         int id = event.getBlock().getTypeId();
@@ -62,16 +64,16 @@ public class FunLinstener implements Listener {
                 event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(340));
                 break;
         }
-
-
+        
+        
     }
-
+    
     @EventHandler(ignoreCancelled = true)
     public void onBlockDispense(BlockDispenseEvent event) {
         int id = event.getItem().getTypeId();
         if (id == 328) {
             Dispenser dispenser = (Dispenser) event.getBlock().getState().getData();
-
+            
             switch (dispenser.getFacing()) {
                 case UP:
                     Block block = event.getBlock().getRelative(BlockFace.UP, 2);
@@ -106,10 +108,10 @@ public class FunLinstener implements Listener {
                         }
                     }
             }
-
+            
         }
     }
-
+    
     private boolean isRail(int id) {
         switch (id) {
             case 27:
@@ -121,7 +123,7 @@ public class FunLinstener implements Listener {
                 return false;
         }
     }
-
+    
     @EventHandler(ignoreCancelled = true)
     public void onVehicleBlockCollision(VehicleBlockCollisionEvent event) {
         if (event.getVehicle() instanceof RideableMinecart) {
@@ -131,7 +133,7 @@ public class FunLinstener implements Listener {
             }
         }
     }
-
+    
     @EventHandler(ignoreCancelled = true)
     public void onPlayerShearEntity(PlayerShearEntityEvent event) {
         if (event.getEntity() instanceof Sheep) {
@@ -145,7 +147,7 @@ public class FunLinstener implements Listener {
             item.setDurability((short) (item.getDurability() + 1));
         }
     }
-
+    
     @EventHandler
     public void onBlockRedstoneChange(BlockRedstoneEvent event) {
         Block block = event.getBlock();
@@ -192,12 +194,12 @@ public class FunLinstener implements Listener {
                 break;
         }
     }
-
+    
     @EventHandler(ignoreCancelled = true)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         Chunk chunk;
         int count;
-
+        
         switch (event.getSpawnReason()) {
             case CHUNK_GEN:
                 event.setCancelled(true);
@@ -206,7 +208,7 @@ public class FunLinstener implements Listener {
             case EGG:
                 chunk = event.getLocation().getChunk();
                 count = getChunksEntityNum(event.getLocation().getWorld(), chunk.getX(), chunk.getZ(), true);
-
+                
                 if (count > BreedLimit) {
                     event.setCancelled(true);
                     return;
@@ -222,7 +224,7 @@ public class FunLinstener implements Listener {
                     return;
                 }
         }
-
+        
         switch (event.getEntityType()) {
             case SHEEP:
                 entityFunTask.queue(event.getEntity());
@@ -249,7 +251,7 @@ public class FunLinstener implements Listener {
             case VILLAGER:
                 chunk = event.getLocation().getChunk();
                 count = getChunksEntityNum(event.getLocation().getWorld(), chunk.getX(), chunk.getZ(), true);
-
+                
                 if (count > 6) {
                     event.setCancelled(true);
                 }
@@ -258,7 +260,7 @@ public class FunLinstener implements Listener {
                 break;
         }
     }
-
+    
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
         if (event.isNewChunk()) {
@@ -270,7 +272,7 @@ public class FunLinstener implements Listener {
             }
         }
     }
-
+    
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent event) {
         Iterator<Block> destory = event.blockList().iterator();
@@ -281,7 +283,17 @@ public class FunLinstener implements Listener {
             }
         }
     }
-
+    
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onEntityChangeBlock(EntityChangeBlockEvent event) {
+        EntityType type = event.getEntity().getType();
+        if (type == EntityType.WITHER) {
+            if (event.getBlock().getState() instanceof InventoryHolder) {
+                event.setCancelled(true);
+            }
+        }
+    }
+    
     private boolean canDamage(Block block) {
         switch (block.getTypeId()) {
             case 1:
@@ -303,7 +315,7 @@ public class FunLinstener implements Listener {
                 return true;
         }
     }
-
+    
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         if (event.getEntityType() != EntityType.PLAYER) {
@@ -322,7 +334,7 @@ public class FunLinstener implements Listener {
             }
         }
     }
-
+    
     @EventHandler(ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {
         Entity entity = event.getEntity();
@@ -332,14 +344,14 @@ public class FunLinstener implements Listener {
             }
         }
     }
-
+    
     private int getChunksEntityNum(World world, int x, int z, boolean isAnimal) {
         int count = 0;
-
+        
         if ((x * x) + (z * z) > fun.sRR) {
             return 1000;
         }
-
+        
         count += getEntityNumByChunk(world, x - 1, z - 1, isAnimal);
         count += getEntityNumByChunk(world, x - 1, z, isAnimal);
         count += getEntityNumByChunk(world, x - 1, z + 1, isAnimal);
@@ -349,10 +361,10 @@ public class FunLinstener implements Listener {
         count += getEntityNumByChunk(world, x + 1, z - 1, isAnimal);
         count += getEntityNumByChunk(world, x + 1, z, isAnimal);
         count += getEntityNumByChunk(world, x + 1, z + 1, isAnimal);
-
+        
         return count;
     }
-
+    
     private int getEntityNumByChunk(World world, int x, int z, boolean isAnimal) {
         Chunk chunk = world.getChunkAt(x, z);
         if (chunk != null) {
@@ -370,7 +382,7 @@ public class FunLinstener implements Listener {
         }
         return 0;
     }
-
+    
     @EventHandler(ignoreCancelled = true)
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
         for (Block b : event.getBlocks()) {
@@ -379,7 +391,7 @@ public class FunLinstener implements Listener {
             }
         }
     }
-
+    
     @EventHandler(ignoreCancelled = true)
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
         if (event.isSticky()) {
@@ -388,7 +400,7 @@ public class FunLinstener implements Listener {
             }
         }
     }
-
+    
     @EventHandler
     public void onVehicleCreate(VehicleCreateEvent event) {
         if (event.getVehicle() instanceof Boat) {
