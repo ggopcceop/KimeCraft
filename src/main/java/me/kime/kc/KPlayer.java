@@ -213,6 +213,7 @@ public class KPlayer {
         } else {
             String p = TypedPassword.toString();
             TypedPassword = null;
+            TypedPasswordLenght = 0;
             return p;
         }
     }
