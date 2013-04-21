@@ -34,6 +34,7 @@ public class Fun {
 
         FunCommand funCommand = new FunCommand(this);
         plugin.getCommand("skull").setExecutor(funCommand);
+        plugin.getCommand("roll").setExecutor(funCommand);
 
         plugin.getPluginManager().registerEvents(new FunLinstener(this), plugin);
     }
