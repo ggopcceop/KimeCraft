@@ -300,11 +300,13 @@ public class FunLinstener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent event) {
-        Iterator<Block> destory = event.blockList().iterator();
-        while (destory.hasNext()) {
-            Block block = destory.next();
-            if (canDamage(block)) {
-                destory.remove();
+        if (event.getLocation().getWorld() == fun.getPlugin().getDefaultWorld()) {
+            Iterator<Block> destory = event.blockList().iterator();
+            while (destory.hasNext()) {
+                Block block = destory.next();
+                if (canDamage(block)) {
+                    destory.remove();
+                }
             }
         }
     }
