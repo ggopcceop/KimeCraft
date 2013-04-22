@@ -1,6 +1,6 @@
 package me.kime.kc.Fun;
 
-import java.util.Random;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,12 +10,10 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 public class FunCommand implements CommandExecutor {
 
-    private final Random rnd;
     private final Fun fun;
 
     public FunCommand(Fun fun) {
         this.fun = fun;
-        rnd = new Random();
     }
 
     @Override
@@ -35,8 +33,8 @@ public class FunCommand implements CommandExecutor {
             }
             return true;
         } else if ("roll".equalsIgnoreCase(label)) {
-            int num = rnd.nextInt(99) + 1;
-            fun.getPlugin().getServer().broadcastMessage(player.getName() + " rolled " + num);
+            int num = fun.getPlugin().getRandom().nextInt(99) + 1;
+            fun.getPlugin().getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + " rolled " + num);
         }
         return true;
 
