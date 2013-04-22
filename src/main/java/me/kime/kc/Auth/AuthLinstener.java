@@ -83,7 +83,7 @@ public class AuthLinstener implements Listener {
      *
      * @param event PlayerJoinEvent
      */
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
@@ -108,13 +108,12 @@ public class AuthLinstener implements Listener {
      *
      * @param event PlayerQuitEvent
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
         KPlayer kPlayer = onlineList.remove(event.getPlayer().getName().toLowerCase());
         if (kPlayer == null) {
             return;
         }
-
 
         if (!kPlayer.isAuth()) {
             kPlayer.restoreCache();
