@@ -56,7 +56,7 @@ public class KFireworkMarker {
                 type = Type.STAR;
         }
 
-        int power = random.nextInt(4) + 2;
+        int power = random.nextInt(3) + 2;
         FireworkEffect fe = FireworkEffect.builder()
                 .withColor(Color.fromRGB(r, g, b)).with(type)
                 .trail(random.nextBoolean()).flicker(random.nextBoolean())
