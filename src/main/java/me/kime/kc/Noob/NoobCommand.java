@@ -45,6 +45,11 @@ public class NoobCommand implements CommandExecutor {
                         if (p.isAuth()) {
                             Location loc = new Location(noob.getPlugin().getDefaultWorld(), -308, 216, 22, 0, 0);
                             p.getPlayer().teleport(loc);
+                            
+                            loc = new Location(noob.getPlugin().getDefaultWorld(), -308, 216, 30, 0, 0);
+                            //play firework to welcome noobs
+                            noob.playFirework(loc, 10);
+                            
                             player.sendMessage(ChatColor.YELLOW + p.getPlayer().getName() + " is in City now!");
                         } else {
                             sender.sendMessage(ChatColor.RED + split[0] + " is not login");

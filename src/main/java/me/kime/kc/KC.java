@@ -124,9 +124,7 @@ public class KC extends JavaPlugin {
 
     public KPlayer getOnlinePlayer(String name) {
         return onlineList.get(name.toLowerCase());
-    }
-    
-    
+    }   
 
     public PluginManager getPluginManager() {
         return getServer().getPluginManager();

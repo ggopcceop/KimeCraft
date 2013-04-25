@@ -1,5 +1,6 @@
 package me.kime.kc.Noob;
 
+import me.kime.kc.Task.FireworkDelayTask;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -33,5 +34,12 @@ public class Noob {
 
     public World getNoobWorld() {
         return noobWorld;
+    }
+
+    public void playFirework(Location loc, int num) {
+        FireworkDelayTask task = new FireworkDelayTask(plugin.getRandom(), loc);
+        for (int i = 1; i <= num; i++) {
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, task, i * 20L);
+        }
     }
 }
