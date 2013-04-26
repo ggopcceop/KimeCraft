@@ -1,49 +1,26 @@
 package me.kime.kc.SignTP;
 
-import biz.source_code.miniConnectionPoolManager.MiniConnectionPoolManager;
-import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import me.kime.kc.Database.DataSource;
 import me.kime.kc.Util.KCLogger;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  *
  * @author Kime
  */
-public class SignTpDataSource {
+public class SignTpDataSource extends DataSource {
 
-    private final MiniConnectionPoolManager pool;
     private final SignTP signtp;
 
-    public SignTpDataSource(SignTP signtp, FileConfiguration config) {
+    public SignTpDataSource(String host, String user, String pass, String db
+            , int maxConnections, SignTP signtp) {
+        super(host, user, pass, db, maxConnections);
         this.signtp = signtp;
-
-        int maxConnections = config.getInt("signTP.maxconection", 2);
-        String host = config.getString("signTP.host", "localhost");
-        String user = config.getString("signTP.username", "minecraft");
-        String pass = config.getString("signTP.password", "123456");
-        String db = config.getString("signTP.database", "minecraft");
-
-        MysqlConnectionPoolDataSource dataSource = new MysqlConnectionPoolDataSource();
-        dataSource.setServerName(host);
-        dataSource.setUser(user);
-        dataSource.setPassword(pass);
-        dataSource.setDatabaseName(db);
-        pool = new MiniConnectionPoolManager(dataSource, maxConnections);
-    }
-
-    public void close() {
-        try {
-            pool.dispose();
-        } catch (SQLException ex) {
-            KCLogger.showError(ex.getMessage());
-        }
     }
 
     public Location getLocationByName(String name) {
@@ -111,36 +88,6 @@ public class SignTpDataSource {
         } finally {
             close(conn);
             close(pst);
-        }
-    }
-
-    private void close(Connection conn) {
-        if (conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                KCLogger.showError(e.getMessage());
-            }
-        }
-    }
-
-    private void close(Statement st) {
-        if (st != null) {
-            try {
-                st.close();
-            } catch (SQLException e) {
-                KCLogger.showError(e.getMessage());
-            }
-        }
-    }
-
-    private void close(ResultSet rs) {
-        if (rs != null) {
-            try {
-                rs.close();
-            } catch (SQLException e) {
-                KCLogger.showError(e.getMessage());
-            }
         }
     }
 }

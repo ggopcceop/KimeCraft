@@ -1,11 +1,9 @@
 package me.kime.kc.Auth;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 
 import me.kime.kc.KC;
 import me.kime.kc.KPlayer;
-import me.kime.kc.Util.KCLogger;
 
 /**
  * Auth plugin
@@ -17,17 +15,19 @@ public class Auth {
 
     private final long sessionTime = 1000 * 120;
     private KC plugin;
-    private DataSource dataSource = null;
+    private AuthDataSource dataSource = null;
 
     public Auth(KC instance, HashMap<String, KPlayer> onlineList) {
         this.plugin = instance;
 
         //start sql connection
-        try {
-            dataSource = new DataSource(plugin.getConfig());
-        } catch (ClassNotFoundException | SQLException e) {
-            KCLogger.showError(e.getMessage());
-        }
+        String db = plugin.getConfig().getString("auth.mysql.database");
+        String host = plugin.getConfig().getString("auth.mysql.host");
+        String user = plugin.getConfig().getString("auth.mysql.username");
+        String pass = plugin.getConfig().getString("auth.mysql.password");
+        int max = plugin.getConfig().getInt("auth.mysql.maxconection", 2);
+
+        dataSource = new AuthDataSource(host, user, pass, db, max);
 
         //login command executor
         AuthCommand command = new AuthCommand(this);
@@ -43,7 +43,7 @@ public class Auth {
         return plugin.getOnlinePlayer(name);
     }
 
-    public DataSource getDataSource() {
+    public AuthDataSource getDataSource() {
         return dataSource;
     }
 

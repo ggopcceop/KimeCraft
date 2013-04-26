@@ -1,27 +1,23 @@
 auth:
   enable: true
   mysql:
-    database: bbs
+    maxconection: 2
     host: localhost
-    port: '3306'
+    database: bbs    
     username: bbs
     password: password
-    tableName: pre_ucenter_members
-    columnName: username
-    columnPassword: password
-    columnIp: lloginip
-    columnLastLogin: llogindate
 noob:
   enable: true
 fun:
   enable: true
 signTP:
   enable: true
-  maxconection: 2
-  host: localhost
-  username: minecraft
-  password: '123456'
-  database: minecraft
+  mysql:
+    maxconection: 2
+    host: localhost
+    database: minecraft
+    username: minecraft
+    password: password    
 chopTree:
   enable: true
 mine:
