@@ -25,6 +25,10 @@ public class DataSource {
         pool = new MiniConnectionPoolManager(dataSource, maxConnections);
     }
 
+    protected DataSource(MiniConnectionPoolManager pool) {
+        this.pool = pool;
+    }
+
     public void close() {
         try {
             pool.dispose();
