@@ -151,7 +151,9 @@ public class AuthLinstener implements Listener {
             return;
         }
         if (!kPlayer.isAuth()) {
-            if (event.getMessage().startsWith("/login")) {
+            if (event.getMessage().startsWith("/login ")) {
+                return;
+            } else if (event.getMessage().startsWith("/l ")) {
                 return;
             }
             KCMessager.sentMessage(kPlayer.getPlayer(), "Type '/login [password]' to login", ChatColor.GREEN);

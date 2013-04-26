@@ -1,7 +1,6 @@
 package me.kime.kc.Auth;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
