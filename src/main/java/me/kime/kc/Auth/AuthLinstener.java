@@ -63,6 +63,7 @@ public class AuthLinstener implements Listener {
         String name = event.getPlayer().getName();
         if (onlineList.get(name) != null) {
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Player already online! If you are not playing, please contact admin");
+            return;
         }
         int min = 3;
         int max = 16;
@@ -74,6 +75,14 @@ public class AuthLinstener implements Listener {
         }
         if (!name.matches(regex) || name.equals("Player")) {
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Your nickname contains illegal characters. Allowed chars: " + regex);
+            return;
+        }
+
+        //add hard player limit to server at 200
+        if (event.getResult() == PlayerLoginEvent.Result.KICK_FULL) {
+            if (auth.getPlugin().getServer().getOnlinePlayers().length < 200) {
+                event.allow();
+            }
         }
     }
 
