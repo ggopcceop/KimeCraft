@@ -57,7 +57,7 @@ public class SignTPListener implements Listener {
                         event.setCancelled(true);
                     }
                 } else {
-                    KCMessager.sentError(player, "You  have to sneak to break the TP sign");
+                    KCMessager.sentError(player, "You have to sneak to break the TP sign");
                     event.setCancelled(true);
                 }
             }
@@ -66,7 +66,7 @@ public class SignTPListener implements Listener {
                 || !checkSign(blockBroken, BlockFace.WEST)
                 || !checkSign(blockBroken, BlockFace.EAST)
                 || !checkSign(blockBroken, BlockFace.UP)) {
-            KCMessager.sentError(player, "You you have to destory TP sign first");
+            KCMessager.sentError(player, "You have to destory TP sign first");
             event.setCancelled(true);
         }
 

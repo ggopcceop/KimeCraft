@@ -17,6 +17,11 @@ fun:
   enable: true
 signTP:
   enable: true
+  maxconection: 2
+  host: localhost
+  username: minecraft
+  password: '123456'
+  database: minecraft
 chopTree:
   enable: true
 mine:
