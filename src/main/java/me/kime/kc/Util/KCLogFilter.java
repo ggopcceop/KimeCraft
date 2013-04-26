@@ -7,6 +7,7 @@ public class KCLogFilter implements Filter {
 
     @Override
     public boolean isLoggable(LogRecord logRecord) {
-        return !logRecord.getMessage().contains("issued server command: /login");
+        return ((!logRecord.getMessage().contains("issued server command: /login"))
+                && (!logRecord.getMessage().contains("issued server command: /l ")));
     }
 }
