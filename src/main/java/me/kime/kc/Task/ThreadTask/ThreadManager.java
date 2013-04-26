@@ -1,35 +1,36 @@
 package me.kime.kc.Task.ThreadTask;
 
 import java.util.LinkedList;
-import me.kime.Threadpool.ThreadPool;
+import java.util.concurrent.Executor;
+import me.kime.kc.Util.KCLogger;
 
 public class ThreadManager extends Thread {
-
-    private ThreadPool pool;
-    private LinkedList<TTask> taskList;
+    
+    private Executor pool;
+    private LinkedList<Task> taskList;
     private final Byte lock;
-
-    public ThreadManager(ThreadPool pool) {
+    
+    public ThreadManager(Executor pool) {
         this.lock = Byte.MAX_VALUE;
         this.pool = pool;
         taskList = new LinkedList<>();
     }
-
-    public void registerTask(TTask task) {
+    
+    public void registerTask(Task task) {
         taskList.add(task);
     }
-
+    
     @Override
     public void run() {
         boolean hasTask;
         while (true) {
             synchronized (lock) {
                 hasTask = false;
-                for (TTask task : taskList) {
+                for (Task task : taskList) {
                     int taskSize = task.queueSize();
                     for (int i = 0; i < taskSize; i++) {
                         //hasTask = true;
-                        pool.addTask(task);
+                        pool.execute(task);
                     }
                 }
             }
@@ -37,15 +38,15 @@ public class ThreadManager extends Thread {
                 try {
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    KCLogger.showError(e.getMessage());
                 }
             }
         }
     }
-
+    
     public boolean isDone() {
         synchronized (lock) {
-            for (TTask task : taskList) {
+            for (Task task : taskList) {
                 if (task.queueSize() > 0) {
                     return false;
                 }

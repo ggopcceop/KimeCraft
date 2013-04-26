@@ -2,6 +2,8 @@ package me.kime.kc;
 
 import java.util.HashMap;
 import java.util.Random;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import me.kime.kc.Auth.Auth;
 import me.kime.kc.ChopTree.ChopTree;
@@ -10,11 +12,10 @@ import me.kime.kc.Lander.Lander;
 import me.kime.kc.Mine.Mine;
 import me.kime.kc.Noob.Noob;
 import me.kime.kc.SignTP.SignTP;
-import me.kime.kc.Task.ThreadTask.TTask;
+import me.kime.kc.Task.ThreadTask.Task;
 import me.kime.kc.Task.ThreadTask.ThreadManager;
 import me.kime.kc.Util.KCLogFilter;
 import me.kime.kc.Util.KCLogger;
-import me.kime.Threadpool.ThreadPool;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.World;
@@ -31,7 +32,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class KC extends JavaPlugin {
 
-    private ThreadPool pool;
+    private Executor pool;
     private ThreadManager threadManager;
     private static HashMap<String, KPlayer> onlineList = new HashMap<>();
     /* modules of KC plugin */
@@ -68,7 +69,7 @@ public class KC extends JavaPlugin {
         config();
 
         //thread pool for maxmize cpu performce
-        pool = new ThreadPool(8, 100);
+        pool = Executors.newFixedThreadPool(8);
         threadManager = new ThreadManager(pool);
         threadManager.start();
 
@@ -122,7 +123,7 @@ public class KC extends JavaPlugin {
 
     public KPlayer getOnlinePlayer(String name) {
         return onlineList.get(name.toLowerCase());
-    }   
+    }
 
     public PluginManager getPluginManager() {
         return getServer().getPluginManager();
@@ -156,7 +157,7 @@ public class KC extends JavaPlugin {
         return mine;
     }
 
-    public void registerTask(TTask task) {
+    public void registerTask(Task task) {
         threadManager.registerTask(task);
     }
 

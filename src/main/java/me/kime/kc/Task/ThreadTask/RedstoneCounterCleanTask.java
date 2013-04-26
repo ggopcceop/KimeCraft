@@ -9,14 +9,12 @@ import me.kime.kc.Fun.RedstoneC;
 
 import org.bukkit.Location;
 
-public class RedstoneCounterCleanTask extends TTask {
+public class RedstoneCounterCleanTask extends Task {
 
     private Fun fun;
     private int count = 0;
-    private final Byte lock;
 
     public RedstoneCounterCleanTask(Fun fun) {
-        this.lock = Byte.MAX_VALUE;
         this.fun = fun;
     }
 

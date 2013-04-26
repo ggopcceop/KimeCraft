@@ -10,15 +10,13 @@ import me.kime.kc.KPlayer;
 import me.kime.kc.Util.KCMessager;
 import net.milkbowl.vault.economy.Economy;
 
-public class MinePaymentTask extends TTask {
+public class MinePaymentTask extends Task {
 
     private int count;
     private KC plugin;
-    private final Byte lock;
     DecimalFormat format;
 
     public MinePaymentTask(KC instance) {
-        this.lock = Byte.MAX_VALUE;
         this.plugin = instance;
         format = new DecimalFormat("#.##");
     }

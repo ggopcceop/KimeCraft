@@ -13,15 +13,13 @@ import org.bukkit.entity.Player;
  *
  * @author Kime
  */
-public class SignTPTask extends TTask {
+public class SignTPTask extends Task {
 
-    private LinkedList<Task> list;
-    private final Byte lock;
+    private LinkedList<subTask> list;
     private final SignTpDataSource dataSource;
     private final SignTP signtp;
 
     public SignTPTask(SignTP signtp, SignTpDataSource dataSource) {
-        lock = Byte.MAX_VALUE;
         list = new LinkedList();
         this.signtp = signtp;
         this.dataSource = dataSource;
@@ -35,7 +33,7 @@ public class SignTPTask extends TTask {
     @Override
     public void run() {
         synchronized (lock) {
-            final Task t = list.remove();
+            final subTask t = list.remove();
             if (t.type == 0) {
                 Location loc = dataSource.getLocationByName(t.name);
                 if (loc == null) {
@@ -66,17 +64,17 @@ public class SignTPTask extends TTask {
     }
 
     public void queue(Player player, String name, int type) {
-        list.add(new Task(player, name, type));
+        list.add(new subTask(player, name, type));
     }
 }
 
-class Task {
+class subTask {
 
     public Player player;
     public String name;
     public int type;
 
-    public Task(Player p, String n, int t) {
+    public subTask(Player p, String n, int t) {
         player = p;
         name = n;
         type = t;

@@ -5,15 +5,13 @@ import java.util.LinkedList;
 import me.kime.kc.KPlayer;
 import me.kime.kc.Mine.Mine;
 
-public class MinePayTask extends TTask {
+public class MinePayTask extends Task {
 
     private LinkedList<MineData> list;
     private Mine mine;
     private final double payPerItem;
-    private final Byte lock;
 
     public MinePayTask(Mine mine, double payPerItem) {
-        this.lock = Byte.MAX_VALUE;
         this.mine = mine;
         this.payPerItem = payPerItem;
 

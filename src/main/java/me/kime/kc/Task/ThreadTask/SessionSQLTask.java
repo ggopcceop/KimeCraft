@@ -5,14 +5,12 @@ import java.util.LinkedList;
 import me.kime.kc.KPlayer;
 import me.kime.kc.Auth.Auth;
 
-public class SessionSQLTask extends TTask {
+public class SessionSQLTask extends Task {
 
     private Auth plugin;
     private LinkedList<KPlayer> list;
-    private final Byte lock;
 
     public SessionSQLTask(Auth auth) {
-        this.lock = Byte.MAX_VALUE;
         this.list = new LinkedList<>();
         this.plugin = auth;
     }

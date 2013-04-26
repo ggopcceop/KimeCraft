@@ -8,14 +8,12 @@ import me.kime.kc.KC;
 import me.kime.kc.KPlayer;
 import me.kime.kc.Util.KCMessager;
 
-public class LoginSQLTask extends TTask {
+public class LoginSQLTask extends Task {
 
     private KC plugin;
     private LinkedList<KPlayer> list;
-    private final Byte lock;
 
     public LoginSQLTask(KC instance) {
-        this.lock = Byte.MAX_VALUE;
         this.list = new LinkedList<>();
         this.plugin = instance;
     }

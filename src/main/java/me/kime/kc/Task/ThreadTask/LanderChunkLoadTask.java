@@ -7,14 +7,12 @@ import me.kime.kc.Lander.KLand;
 import me.kime.kc.Lander.Lander;
 import org.bukkit.Chunk;
 
-public class LanderChunkLoadTask extends TTask {
+public class LanderChunkLoadTask extends Task {
 
     private LinkedList<Chunk> list;
     private Lander lander;
-    private final Byte lock;
 
     public LanderChunkLoadTask(Lander lander) {
-        this.lock = Byte.MAX_VALUE;
         this.lander = lander;
         list = new LinkedList<>();
     }

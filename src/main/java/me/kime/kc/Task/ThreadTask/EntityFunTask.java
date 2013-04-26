@@ -7,14 +7,12 @@ import org.bukkit.DyeColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Sheep;
 
-public class EntityFunTask extends TTask {
+public class EntityFunTask extends Task {
 
     private LinkedList<Entity> list;
     private Random rnd;
-    private final Byte lock;
 
     public EntityFunTask() {
-        this.lock = Byte.MAX_VALUE;
         list = new LinkedList<>();
         rnd = new Random();
     }
