@@ -1,19 +1,16 @@
 package me.kime.kc.SignTP;
 
-import java.io.File;
-
 import me.kime.kc.KC;
 
 public class SignTP {
 
     private KC plugin;
-    protected static final String MAINDIRECTORY = "plugins/KC";
-    protected static final File VERSIONFILE = new File("plugins/KC" + File.separator + "VERSION");
+    private final SignTpDataSource datasource;
 
     public SignTP(KC plugin) {
         this.plugin = plugin;
 
-        plugin.getConfig();
+        datasource = new SignTpDataSource(this, plugin.getConfig());
 
         plugin.getServer().getPluginManager().registerEvents(new SignTPListener(this), plugin);
 
@@ -21,5 +18,9 @@ public class SignTP {
 
     public KC getPlugin() {
         return plugin;
+    }
+
+    public SignTpDataSource getDataSource() {
+        return datasource;
     }
 }

@@ -1,6 +1,7 @@
 package me.kime.kc.SignTP;
 
 import java.util.Iterator;
+import me.kime.kc.Task.ThreadTask.SignTPTask;
 
 import me.kime.kc.Util.KCMessager;
 import me.kime.kc.Util.KCTPer;
@@ -8,11 +9,9 @@ import me.kime.kc.Util.KCTPer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,11 +24,13 @@ import org.bukkit.event.player.PlayerInteractEvent;
 public class SignTPListener implements Listener {
 
     private SignTP signTP;
-    private FileConfiguration config;
+    private final SignTPTask task;
 
     public SignTPListener(SignTP signTP) {
         this.signTP = signTP;
-        this.config = signTP.getPlugin().getConfig();
+
+        task = new SignTPTask(signTP, signTP.getDataSource());
+        signTP.getPlugin().registerTask(task);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -49,11 +50,7 @@ public class SignTPListener implements Listener {
 
                     if (player.hasPermission("kc.admin.sign")) {
                         if (line1.equals("signtp_hub")) {
-                            if (config.contains("signs.normal." + line2)) {
-                                config.set("signs.normal." + line2, null);
-                                player.sendMessage("Removed " + line2 + " from the Hub List");
-                                signTP.getPlugin().saveConfig();
-                            }
+                            task.queue(player, line2, 2);
                         }
                     } else {
                         KCMessager.sentError(player, "You don't have permission to destory TP sign");
@@ -130,22 +127,8 @@ public class SignTPListener implements Listener {
                     lines[1] = clickedSign.getLine(1).toLowerCase().replace(' ', '_');
 
                     if (lines[0].startsWith("signtp")) {
-                        World currentWorld = player.getWorld();
                         if (lines[0].endsWith("branch")) {
-                            String tpString = "signs.normal." + lines[1];
-                            if (config.contains(tpString)) {
-                                Location tpLoc = new Location(currentWorld,
-                                        config.getDouble(tpString + ".x"),
-                                        config.getDouble(tpString + ".y"),
-                                        config.getDouble(tpString + ".z"),
-                                        (float) config.getDouble(tpString + ".yaw"), 0);
-
-                                if (!KCTPer.tp(player, tpLoc)) {
-                                    KCMessager.sentMessage(player, "Dont have enough space", ChatColor.RED);
-                                }
-                            } else {
-                                KCMessager.sentMessage(player, "No Hub found by that name.", ChatColor.BLUE);
-                            }
+                            task.queue(player, lines[1], 0);
                         } else if (lines[0].endsWith("hub")) {
                             KCMessager.sentMessage(player, "This is a hub sign", ChatColor.BLUE);
                         } else if (lines[0].endsWith("up")) {
@@ -210,17 +193,7 @@ public class SignTPListener implements Listener {
 
             if (event.getPlayer().hasPermission("kc.admin.sign")) {
                 if (lines[0].equals("signtp_hub")) {
-                    String tpString = "signs.normal." + lines[1];
-                    if (!config.contains("signs.normal." + lines[1])) {
-                        config.set(tpString + ".x", Double.valueOf(player.getLocation().getX()));
-                        config.set(tpString + ".y", Double.valueOf(player.getLocation().getY()));
-                        config.set(tpString + ".z", Double.valueOf(player.getLocation().getZ()));
-                        config.set(tpString + ".yaw", Float.valueOf((player.getLocation().getYaw() + 180F)));
-                        player.sendMessage("Added " + lines[1] + " to the Hub List");
-                        signTP.getPlugin().saveConfig();
-                    } else {
-                        player.sendMessage("That hub already exists, please destroy the old one first.");
-                    }
+                    task.queue(player, lines[1], 1);
                 }
             } else {
                 KCMessager.sentError(player, "You don't have permission to create sign tp");

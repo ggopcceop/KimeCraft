@@ -58,8 +58,6 @@ public class KC extends JavaPlugin {
             }
         }
 
-        saveConfig();
-
         //pool.close();
         KCLogger.info("KimeCraft! Disabled");
     }
