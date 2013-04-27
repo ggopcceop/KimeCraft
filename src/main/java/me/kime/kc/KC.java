@@ -11,12 +11,15 @@ import me.kime.kc.Fun.Fun;
 import me.kime.kc.Lander.Lander;
 import me.kime.kc.Mine.Mine;
 import me.kime.kc.Noob.Noob;
+import me.kime.kc.Portal.Portal;
 import me.kime.kc.SignTP.SignTP;
 import me.kime.kc.Task.ThreadTask.Task;
 import me.kime.kc.Task.ThreadTask.ThreadManager;
 import me.kime.kc.Util.KCLogFilter;
 import me.kime.kc.Util.KCLogger;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Difficulty;
+import org.bukkit.Location;
 
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -35,14 +38,17 @@ public class KC extends JavaPlugin {
     private Executor pool;
     private ThreadManager threadManager;
     private static HashMap<String, KPlayer> onlineList = new HashMap<>();
+    private World world;
+    private World nether;
+    private World end;
     /* modules of KC plugin */
     private Auth auth;
     private Fun fun;
     private Lander lander;
     private Noob noob;
-    private World world;
     private SignTP signTP;
     private ChopTree chopTree;
+    private Portal portal;
     private Mine mine;
     private Random rand;
     private static Economy economy = null;
@@ -78,6 +84,10 @@ public class KC extends JavaPlugin {
         setupEconomy();
 
         world = getServer().getWorld("world");
+        nether = getServer().getWorld("world_nether");
+        nether.setDifficulty(Difficulty.HARD);
+        end = getServer().getWorld("world_the_end");
+        end.setDifficulty(Difficulty.HARD);
 
         if (config.getBoolean("noob.enable", true)) {
             noob = new Noob(this);
@@ -94,7 +104,9 @@ public class KC extends JavaPlugin {
         if (config.getBoolean("chopTree.enable", true)) {
             chopTree = new ChopTree(this);
         }
-
+        if (config.getBoolean("portal.enable", true)) {
+            portal = new Portal(this);
+        }
         if (config.getBoolean("mine.enable", true)) {
             mine = new Mine(this);
         }
@@ -161,12 +173,28 @@ public class KC extends JavaPlugin {
         return mine;
     }
 
+    public Portal getPortal() {
+        return portal;
+    }
+
     public void registerTask(Task task) {
         threadManager.registerTask(task);
     }
 
+    public Location getCity() {
+        return new Location(world, -308, 216, 22, 0, 0);
+    }
+
     public World getDefaultWorld() {
         return world;
+    }
+
+    public World getNether() {
+        return nether;
+    }
+
+    public World getEnd() {
+        return end;
     }
 
     public Random getRandom() {
