@@ -1,6 +1,5 @@
 package me.kime.kc.Auth;
 
-import java.util.HashMap;
 import me.kime.kc.KPlayer;
 import me.kime.kc.Task.AuthTimeoutTask;
 import me.kime.kc.Task.ThreadTask.LoginSQLTask;
@@ -38,13 +37,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class AuthLinstener implements Listener {
 
     private final Auth auth;
-    private final HashMap<String, KPlayer> onlineList;
     private final SessionSQLTask sessionSQLTask;
     private final LoginSQLTask loginSQLTask;
 
-    public AuthLinstener(Auth instance, HashMap<String, KPlayer> onlineList) {
+    public AuthLinstener(Auth instance) {
         this.auth = instance;
-        this.onlineList = onlineList;
 
         loginSQLTask = new LoginSQLTask(auth.getPlugin());
         sessionSQLTask = new SessionSQLTask(auth);
@@ -61,7 +58,7 @@ public class AuthLinstener implements Listener {
     @EventHandler
     public void onPlayerLogin(PlayerLoginEvent event) {
         String name = event.getPlayer().getName();
-        if (onlineList.get(name) != null) {
+        if (auth.getOnlinePlayer(name) != null) {
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Player already online! If you are not playing, please contact admin");
             return;
         }
@@ -92,12 +89,9 @@ public class AuthLinstener implements Listener {
      *
      * @param event PlayerJoinEvent
      */
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-
-        KPlayer kPlayer = new KPlayer(player);
-        onlineList.put(player.getName().toLowerCase(), kPlayer);
+        KPlayer kPlayer = auth.getOnlinePlayer(event.getPlayer().getName());
 
         kPlayer.cache();
 
@@ -106,7 +100,7 @@ public class AuthLinstener implements Listener {
         //timeout task for each login player
         int timeout = 120 * 20;
         int timeoutTaskId = auth.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(
-                auth.getPlugin(), new AuthTimeoutTask(auth.getPlugin().getAuth(), player.getName()), timeout);
+                auth.getPlugin(), new AuthTimeoutTask(auth.getPlugin().getAuth(), kPlayer.getPlayer().getName()), timeout);
 
         kPlayer.setTimeoutTaskId(timeoutTaskId);
     }
@@ -117,9 +111,9 @@ public class AuthLinstener implements Listener {
      *
      * @param event PlayerQuitEvent
      */
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        KPlayer kPlayer = onlineList.remove(event.getPlayer().getName().toLowerCase());
+        KPlayer kPlayer = auth.getOnlinePlayer(event.getPlayer().getName());
         if (kPlayer == null) {
             return;
         }

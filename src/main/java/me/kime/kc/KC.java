@@ -83,7 +83,7 @@ public class KC extends JavaPlugin {
             noob = new Noob(this);
         }
         if (config.getBoolean("auth.enable", true)) {
-            auth = new Auth(this, onlineList);
+            auth = new Auth(this);
         }
         if (config.getBoolean("fun.enable", true)) {
             fun = new Fun(this);
@@ -100,6 +100,10 @@ public class KC extends JavaPlugin {
         }
 
         this.getServer().getLogger().setFilter(new KCLogFilter());
+
+        getServer().getLogger().setFilter(new KCLogFilter());
+
+        getPluginManager().registerEvents(new KCLinstener(this, onlineList), this);
 
         KCCommand kcCommand = new KCCommand(this);
         getCommand("city").setExecutor(kcCommand);

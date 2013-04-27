@@ -1,7 +1,5 @@
 package me.kime.kc.Auth;
 
-import java.util.HashMap;
-
 import me.kime.kc.KC;
 import me.kime.kc.KPlayer;
 
@@ -17,7 +15,7 @@ public class Auth {
     private KC plugin;
     private AuthDataSource dataSource = null;
 
-    public Auth(KC instance, HashMap<String, KPlayer> onlineList) {
+    public Auth(KC instance) {
         this.plugin = instance;
 
         //start sql connection
@@ -36,7 +34,7 @@ public class Auth {
 
         //login event
         plugin.getPluginManager()
-                .registerEvents(new AuthLinstener(this, onlineList), plugin);
+                .registerEvents(new AuthLinstener(this), plugin);
     }
 
     public KPlayer getOnlinePlayer(String name) {
