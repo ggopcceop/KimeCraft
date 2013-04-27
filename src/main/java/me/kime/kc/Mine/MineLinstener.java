@@ -90,6 +90,8 @@ public class MineLinstener implements Listener {
     public void onWorldInit(WorldInitEvent event) {
         if ("MineWorld".equals(event.getWorld().getName())) {
             event.getWorld().getPopulators().add(new QuartzOrePopulator());
+            event.getWorld().getPopulators().add(new EnderCrystalPopulator());
+            event.getWorld().getPopulators().add(new LobbyPopulator());
         }
     }
 }

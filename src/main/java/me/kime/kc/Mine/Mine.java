@@ -11,6 +11,7 @@ import me.kime.kc.KC;
 import me.kime.kc.Task.ThreadTask.MinePaymentTask;
 import me.kime.kc.Util.KCLogger;
 import org.bukkit.Difficulty;
+import org.bukkit.WorldType;
 
 public class Mine {
 
@@ -38,7 +39,7 @@ public class Mine {
         }
 
         mineWorld = plugin.getServer().createWorld(
-                new WorldCreator("MineWorld").environment(Environment.NORMAL).generateStructures(true));
+                new WorldCreator("MineWorld").environment(Environment.NORMAL).generateStructures(true).type(WorldType.LARGE_BIOMES));
 
         mineWorld.setSpawnFlags(true, false);
         mineWorld.setDifficulty(Difficulty.HARD);
