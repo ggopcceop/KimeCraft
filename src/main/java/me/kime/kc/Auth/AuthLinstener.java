@@ -80,7 +80,7 @@ public class AuthLinstener implements Listener {
 
         //add hard player limit to server at 200
         if (event.getResult() == PlayerLoginEvent.Result.KICK_FULL) {
-            if (auth.getPlugin().getServer().getOnlinePlayers().length < 200) {
+            if (auth.getPlugin().getServer().getOnlinePlayers().length <= 200) {
                 event.allow();
             }
         }
