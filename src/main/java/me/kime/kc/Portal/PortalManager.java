@@ -9,6 +9,8 @@ public class PortalManager {
 
     private static final int MAX_WIDTH = 4;
     private static final int MAX_HIGHT = 6;
+    private static final BlockFace[] axis = {BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
+    private static final BlockFace[] radial = {BlockFace.NORTH, BlockFace.NORTH_EAST, BlockFace.EAST, BlockFace.SOUTH_EAST, BlockFace.SOUTH, BlockFace.SOUTH_WEST, BlockFace.WEST, BlockFace.NORTH_WEST};
 
     public static boolean isPortalBase(int id) {
         switch (id) {
@@ -35,7 +37,6 @@ public class PortalManager {
     public static void createPortalByFrame(Block block, int blockid) {
         byte facingEastWest = 0;
         byte facingNorthSouth = 0;
-        int x = block.getX(), y = block.getY(), z = block.getZ();
         if ((block.getRelative(BlockFace.EAST).getTypeId() == blockid)
                 || (block.getRelative(BlockFace.WEST).getTypeId() == blockid)) {
             facingEastWest = 1;
@@ -83,7 +84,6 @@ public class PortalManager {
     public static boolean isPortal(Block block, int blockid) {
         byte facingEastWest = 0;
         byte facingNorthSouth = 0;
-        int x = block.getX(), y = block.getY(), z = block.getZ();
         if ((block.getRelative(BlockFace.EAST).getTypeId() == blockid)
                 || (block.getRelative(BlockFace.WEST).getTypeId() == blockid)) {
             facingEastWest = 1;
@@ -298,8 +298,6 @@ public class PortalManager {
             tmp = loc.getBlock().getRelative(BlockFace.UP, (h + 1));
         }
     }
-    private static final BlockFace[] axis = {BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
-    private static final BlockFace[] radial = {BlockFace.NORTH, BlockFace.NORTH_EAST, BlockFace.EAST, BlockFace.SOUTH_EAST, BlockFace.SOUTH, BlockFace.SOUTH_WEST, BlockFace.WEST, BlockFace.NORTH_WEST};
 
     /**
      * Gets the horizontal Block Face from a given yaw angle<br>
