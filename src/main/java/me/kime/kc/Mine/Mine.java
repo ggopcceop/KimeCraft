@@ -7,7 +7,7 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 
-import me.kime.kc.KC;
+import me.kime.kc.KimeCraft;
 import me.kime.kc.Task.ThreadTask.MinePaymentTask;
 import me.kime.kc.Util.KCLogger;
 import org.bukkit.Difficulty;
@@ -15,11 +15,11 @@ import org.bukkit.WorldType;
 
 public class Mine {
 
-    private KC plugin;
+    private KimeCraft plugin;
     private World mineWorld;
     private MinePaymentTask minePaymentTask;
 
-    public Mine(KC instance) {
+    public Mine(KimeCraft instance) {
         this.plugin = instance;
         
         plugin.getPluginManager().registerEvents(new MineLinstener(this), plugin);
@@ -60,7 +60,7 @@ public class Mine {
 
     }
 
-    public KC getPlugin() {
+    public KimeCraft getPlugin() {
         return plugin;
     }
 

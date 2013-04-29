@@ -5,14 +5,14 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 
-import me.kime.kc.KC;
+import me.kime.kc.KimeCraft;
 
 public class Noob {
 
-    private KC plugin;
+    private KimeCraft plugin;
     private World noobWorld;
 
-    public Noob(KC instance) {
+    public Noob(KimeCraft instance) {
         this.plugin = instance;
 
         noobWorld = plugin.getServer().createWorld(new WorldCreator("NoobTown").generator("PlotMe"));
@@ -28,7 +28,7 @@ public class Noob {
         plugin.getPluginManager().registerEvents(new NoobListener(this), plugin);
     }
 
-    public KC getPlugin() {
+    public KimeCraft getPlugin() {
         return plugin;
     }
 

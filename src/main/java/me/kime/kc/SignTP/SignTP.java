@@ -1,13 +1,13 @@
 package me.kime.kc.SignTP;
 
-import me.kime.kc.KC;
+import me.kime.kc.KimeCraft;
 
 public class SignTP {
 
-    private KC plugin;
+    private KimeCraft plugin;
     private final SignTpDataSource datasource;
 
-    public SignTP(KC plugin) {
+    public SignTP(KimeCraft plugin) {
         this.plugin = plugin;
 
         int max = plugin.getConfig().getInt("signTP.mysql.maxconection", 2);
@@ -21,7 +21,7 @@ public class SignTP {
 
     }
 
-    public KC getPlugin() {
+    public KimeCraft getPlugin() {
         return plugin;
     }
 

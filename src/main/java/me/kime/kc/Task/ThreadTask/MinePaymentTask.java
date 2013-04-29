@@ -5,7 +5,7 @@ import java.text.DecimalFormat;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import me.kime.kc.KC;
+import me.kime.kc.KimeCraft;
 import me.kime.kc.KPlayer;
 import me.kime.kc.Util.KCMessager;
 import net.milkbowl.vault.economy.Economy;
@@ -13,10 +13,10 @@ import net.milkbowl.vault.economy.Economy;
 public class MinePaymentTask extends Task {
 
     private int count;
-    private KC plugin;
+    private KimeCraft plugin;
     DecimalFormat format;
 
-    public MinePaymentTask(KC instance) {
+    public MinePaymentTask(KimeCraft instance) {
         this.plugin = instance;
         format = new DecimalFormat("#.##");
     }

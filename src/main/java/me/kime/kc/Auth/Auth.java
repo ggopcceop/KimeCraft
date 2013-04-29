@@ -1,6 +1,6 @@
 package me.kime.kc.Auth;
 
-import me.kime.kc.KC;
+import me.kime.kc.KimeCraft;
 import me.kime.kc.KPlayer;
 
 /**
@@ -12,10 +12,10 @@ import me.kime.kc.KPlayer;
 public class Auth {
 
     private final long sessionTime = 1000 * 120;
-    private KC plugin;
+    private KimeCraft plugin;
     private AuthDataSource dataSource = null;
 
-    public Auth(KC instance) {
+    public Auth(KimeCraft instance) {
         this.plugin = instance;
 
         //start sql connection
@@ -45,7 +45,7 @@ public class Auth {
         return dataSource;
     }
 
-    public KC getPlugin() {
+    public KimeCraft getPlugin() {
         return plugin;
     }
 

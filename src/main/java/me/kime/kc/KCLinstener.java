@@ -14,10 +14,10 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class KCLinstener implements Listener {
 
-    private final KC plugin;
+    private final KimeCraft plugin;
     private final HashMap<String, KPlayer> onlineList;
 
-    KCLinstener(KC instance, HashMap<String, KPlayer> onlineList) {
+    KCLinstener(KimeCraft instance, HashMap<String, KPlayer> onlineList) {
         this.plugin = instance;
         this.onlineList = onlineList;
     }

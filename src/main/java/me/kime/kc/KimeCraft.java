@@ -28,12 +28,12 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * KC plugin
+ * KimeCraft plugin
  *
  * @author Kime
  *
  */
-public class KC extends JavaPlugin {
+public class KimeCraft extends JavaPlugin {
 
     private Executor pool;
     private ThreadManager threadManager;
@@ -41,7 +41,7 @@ public class KC extends JavaPlugin {
     private World world;
     private World nether;
     private World end;
-    /* modules of KC plugin */
+    /* modules of KimeCraft plugin */
     private Auth auth;
     private Fun fun;
     private Lander lander;

@@ -3,17 +3,17 @@ package me.kime.kc.Lander;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-import me.kime.kc.KC;
+import me.kime.kc.KimeCraft;
 
 public class Lander {
 
-    private KC plugin;
+    private KimeCraft plugin;
     private DataSource dataSource;
     private HashMap<Integer, HashMap<Integer, KChunk>> chunks;
     private HashMap<Integer, KLand> ownedLandById;
     private HashMap<String, KLand> ownedLandByName;
 
-    public Lander(KC instance) {
+    public Lander(KimeCraft instance) {
         this.plugin = instance;
 
         try {
@@ -36,7 +36,7 @@ public class Lander {
         return dataSource;
     }
 
-    public KC getPlugin() {
+    public KimeCraft getPlugin() {
         return plugin;
     }
 

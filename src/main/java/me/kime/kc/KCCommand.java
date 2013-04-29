@@ -12,9 +12,9 @@ import org.bukkit.entity.Player;
 
 public class KCCommand implements CommandExecutor {
 
-    private KC plugin;
+    private KimeCraft plugin;
 
-    public KCCommand(KC instance) {
+    public KCCommand(KimeCraft instance) {
         this.plugin = instance;
     }
 

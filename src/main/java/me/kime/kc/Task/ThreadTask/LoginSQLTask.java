@@ -4,16 +4,16 @@ import java.util.LinkedList;
 
 import org.bukkit.ChatColor;
 
-import me.kime.kc.KC;
+import me.kime.kc.KimeCraft;
 import me.kime.kc.KPlayer;
 import me.kime.kc.Util.KCMessager;
 
 public class LoginSQLTask extends Task {
 
-    private KC plugin;
+    private KimeCraft plugin;
     private LinkedList<KPlayer> list;
 
-    public LoginSQLTask(KC instance) {
+    public LoginSQLTask(KimeCraft instance) {
         this.list = new LinkedList<>();
         this.plugin = instance;
     }

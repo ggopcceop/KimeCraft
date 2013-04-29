@@ -1,6 +1,6 @@
 package me.kime.kc.Portal;
 
-import me.kime.kc.KC;
+import me.kime.kc.KimeCraft;
 
 /**
  *
@@ -8,15 +8,15 @@ import me.kime.kc.KC;
  */
 public class Portal {
 
-    private final KC plugin;
+    private final KimeCraft plugin;
 
-    public Portal(KC instance) {
+    public Portal(KimeCraft instance) {
         this.plugin = instance;
         
         plugin.getPluginManager().registerEvents(new PortalLinstener(this), plugin);
     }
 
-    public KC getPlugin() {
+    public KimeCraft getPlugin() {
         return plugin;
     }
 }

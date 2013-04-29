@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.Kime</groupId>
-    <artifactId>KC</artifactId>
+    <artifactId>KimeCraft</artifactId>
     <version>0.6</version>
     <packaging>jar</packaging>
 
-    <name>KC</name>
+    <name>KimeCraft</name>
     <build>
         <resources>
             <resource>

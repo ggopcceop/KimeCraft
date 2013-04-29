@@ -4,12 +4,12 @@ import java.util.HashMap;
 
 import org.bukkit.Location;
 
-import me.kime.kc.KC;
+import me.kime.kc.KimeCraft;
 import me.kime.kc.Task.ThreadTask.RedstoneCounterCleanTask;
 
 public class Fun {
 
-    private KC plugin;
+    private KimeCraft plugin;
     private HashMap<Location, RedstoneC> redstone;
     private RedstoneCounterCleanTask redstoneCounterCleanTask;
     
@@ -17,7 +17,7 @@ public class Fun {
     public final int RR = R * R;
     public final int sRR = (R - 2) * (R - 2);
 
-    public Fun(KC instance) {
+    public Fun(KimeCraft instance) {
         plugin = instance;
 
         redstone = new HashMap<>();
@@ -39,7 +39,7 @@ public class Fun {
         plugin.getPluginManager().registerEvents(new FunLinstener(this), plugin);
     }
 
-    public KC getPlugin() {
+    public KimeCraft getPlugin() {
         return plugin;
     }
 

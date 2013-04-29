@@ -1,5 +1,5 @@
 name: KimeCraft
-main: me.kime.kc.KC
+main: me.kime.kc.KimeCraft
 version: ${project.version}
 author: Kime
 load: POSTWORLD
