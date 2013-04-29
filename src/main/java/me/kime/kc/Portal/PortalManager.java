@@ -1,7 +1,5 @@
 package me.kime.kc.Portal;
 
-import org.bukkit.Location;
-import org.bukkit.TravelAgent;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
@@ -9,8 +7,6 @@ public class PortalManager {
 
     private static final int MAX_WIDTH = 4;
     private static final int MAX_HIGHT = 6;
-    private static final BlockFace[] axis = {BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
-    private static final BlockFace[] radial = {BlockFace.NORTH, BlockFace.NORTH_EAST, BlockFace.EAST, BlockFace.SOUTH_EAST, BlockFace.SOUTH, BlockFace.SOUTH_WEST, BlockFace.WEST, BlockFace.NORTH_WEST};
 
     public static boolean isPortalBase(int id) {
         switch (id) {
@@ -202,7 +198,6 @@ public class PortalManager {
         if (curr.getTypeId() == 90) {
             return findBaseBlock2(curr);
         }
-        System.out.println("ererer");
         return block;
     }
 
@@ -211,118 +206,5 @@ public class PortalManager {
             block = block.getRelative(BlockFace.DOWN);
         }
         return block;
-    }
-
-    public static boolean setTo(int typeId, Location from, Location to, TravelAgent agent, Portal portal) {
-        Block block;
-        Location newto, loc;
-        switch (typeId) {
-            case 49:
-                newto = from.clone();
-                newto.setWorld(portal.getPlugin().getNether());
-                if (from.getWorld() == newto.getWorld()) {
-                    return false;
-                }
-                agent.setCanCreatePortal(false);
-                loc = agent.findPortal(newto);
-                if (loc != null) {
-                    setToLoc(loc, to);
-                } else {
-                    BlockFace face = yawToFace(from.getYaw());
-                    createPort(newto, 45, (face == BlockFace.SOUTH || face == BlockFace.NORTH));
-                    setToLoc(newto, to);
-                }
-                return true;
-            case 48:
-                loc = portal.getPlugin().getMine().getMineWorld().getSpawnLocation();
-                if (from.getWorld() == loc.getWorld()) {
-                    return false;
-                }
-                setToLoc(loc, to);
-                return true;
-            case 45:
-                if (from.getWorld() == portal.getPlugin().getMine().getMineWorld()) {
-                    loc = portal.getPlugin().getCity();
-                    setToLoc(loc, to);
-                } else {
-                    newto = from.clone();
-                    newto.setWorld(portal.getPlugin().getDefaultWorld());
-                    if (from.getWorld() == newto.getWorld()) {
-                        return false;
-                    }
-                    loc = agent.findPortal(newto);
-                    if (loc != null) {
-                        setToLoc(loc, to);
-                    } else {
-                        block = portal.getPlugin().getDefaultWorld().getHighestBlockAt(newto);
-                        loc = block.getLocation();
-                        setToLoc(loc, to);
-                    }
-                }
-                return true;
-            default:
-                return false;
-
-        }
-    }
-
-    private static void setToLoc(Location form, Location to) {
-        to.setX(form.getX());
-        to.setY(form.getY());
-        to.setZ(form.getZ());
-        to.setWorld(form.getWorld());
-        to.setYaw(form.getYaw());
-    }
-
-    private static void createPort(Location loc, int frameId, boolean north) {
-        Block tmp = loc.getBlock();
-        int[][] port = new int[][]{{1, 1, 1, 1}, {1, 2, 2, 1}, {1, 2, 2, 1}, {1, 2, 2, 1}, {1, 1, 1, 1}};
-        for (int h = 0; h < 5; h++) {
-            for (int w = 0; w < 4; w++) {
-                if (port[h][w] == 2) {
-                    tmp.setTypeIdAndData(90, (byte) 0, false);
-                }
-                if (port[h][w] == 1) {
-                    tmp.setTypeIdAndData(frameId, (byte) 0, false);
-                }
-                if (!north) {
-                    tmp.getRelative(BlockFace.EAST).setTypeIdAndData(0, (byte) 0, false);
-                    tmp.getRelative(BlockFace.WEST).setTypeIdAndData(0, (byte) 0, false);
-                    tmp = tmp.getRelative(BlockFace.SOUTH);
-                } else {
-                    tmp.getRelative(BlockFace.SOUTH).setTypeIdAndData(0, (byte) 0, false);
-                    tmp.getRelative(BlockFace.NORTH).setTypeIdAndData(0, (byte) 0, false);
-                    tmp = tmp.getRelative(BlockFace.EAST);
-                }
-            }
-            tmp = loc.getBlock().getRelative(BlockFace.UP, (h + 1));
-        }
-    }
-
-    /**
-     * Gets the horizontal Block Face from a given yaw angle<br>
-     * This includes the NORTH_WEST faces
-     *
-     * @param yaw angle
-     * @return The Block Face of the angle
-     */
-    private static BlockFace yawToFace(float yaw) {
-        return yawToFace(yaw, true);
-    }
-
-    /**
-     * Gets the horizontal Block Face from a given yaw angle
-     *
-     * @param yaw angle
-     * @param useSubCardinalDirections setting, True to allow NORTH_WEST to be
-     * returned
-     * @return The Block Face of the angle
-     */
-    private static BlockFace yawToFace(float yaw, boolean useSubCardinalDirections) {
-        if (useSubCardinalDirections) {
-            return radial[Math.round(yaw / 45f) & 0x7];
-        } else {
-            return axis[Math.round(yaw / 90f) & 0x3];
-        }
     }
 }
