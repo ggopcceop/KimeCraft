@@ -53,7 +53,11 @@ public class PortalLinstener implements Listener {
                             event.setCancelled(true);
                             break;
                         case 48:
-                            to.setWorld(portal.getPlugin().getDefaultWorld());
+                            if (from.getWorld() == portal.getPlugin().getMine().getMineWorld()) {
+                                to = portal.getPlugin().getCity();
+                            } else {
+                                to.setWorld(portal.getPlugin().getDefaultWorld());
+                            }
                             player.teleport(to);
                             event.setCancelled(true);
                             break;
