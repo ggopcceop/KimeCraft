@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import me.kime.kc.Admin.Admin;
 
 import me.kime.kc.Auth.Auth;
 import me.kime.kc.ChopTree.ChopTree;
@@ -42,6 +43,7 @@ public class KimeCraft extends JavaPlugin {
     private World nether;
     private World end;
     /* modules of KimeCraft plugin */
+    private Admin admin;
     private Auth auth;
     private Fun fun;
     private Lander lander;
@@ -89,6 +91,9 @@ public class KimeCraft extends JavaPlugin {
         end = getServer().getWorld("world_the_end");
         end.setDifficulty(Difficulty.HARD);
 
+        if (config.getBoolean("admin.enable", true)) {
+            admin = new Admin(this);
+        }
         if (config.getBoolean("noob.enable", true)) {
             noob = new Noob(this);
         }

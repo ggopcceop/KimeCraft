@@ -1,6 +1,5 @@
 package me.kime.kc.SignTP;
 
-import java.util.Iterator;
 import me.kime.kc.Task.ThreadTask.SignTPTask;
 
 import me.kime.kc.Util.KCMessager;
@@ -8,7 +7,6 @@ import me.kime.kc.Util.KCTPer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -17,8 +15,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class SignTPListener implements Listener {
@@ -61,54 +59,7 @@ public class SignTPListener implements Listener {
                     event.setCancelled(true);
                 }
             }
-        } else if (!checkSign(blockBroken, BlockFace.NORTH)
-                || !checkSign(blockBroken, BlockFace.SOUTH)
-                || !checkSign(blockBroken, BlockFace.WEST)
-                || !checkSign(blockBroken, BlockFace.EAST)
-                || !checkSign(blockBroken, BlockFace.UP)) {
-            KCMessager.sentError(player, "You have to destory TP sign first");
-            event.setCancelled(true);
         }
-
-
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onEntityExplode(EntityExplodeEvent event) {
-        Iterator<Block> destory = event.blockList().iterator();
-        while (destory.hasNext()) {
-            Block block = destory.next();
-            if (!checkSign(block, BlockFace.NORTH)
-                    || !checkSign(block, BlockFace.SOUTH)
-                    || !checkSign(block, BlockFace.WEST)
-                    || !checkSign(block, BlockFace.EAST)
-                    || !checkSign(block, BlockFace.UP)) {
-                event.setCancelled(true);
-                return;
-            }
-        }
-    }
-
-    private boolean checkSign(Block blockBroken, BlockFace face) {
-        Material dir = blockBroken.getRelative(face).getType();
-        if (face == BlockFace.UP) {
-            if (dir == Material.SIGN_POST) {
-                Sign sign = (Sign) blockBroken.getRelative(face).getState();
-                if (sign.getLine(0).toLowerCase().startsWith("signtp")) {
-                    return false;
-                }
-            }
-        } else if (dir == Material.WALL_SIGN) {
-            Sign sign = (Sign) blockBroken.getRelative(face).getState();
-            if (((org.bukkit.material.Sign) sign.getData())
-                    .getAttachedFace().getOppositeFace() == face
-                    && sign.getLine(0).toLowerCase().startsWith("signtp")) {
-                return false;
-            }
-
-
-        }
-        return true;
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -201,5 +152,18 @@ public class SignTPListener implements Listener {
                 event.setCancelled(true);
             }
         }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockPhysics(BlockPhysicsEvent event) {
+        Block block = event.getBlock();
+        if (block.getState() instanceof Sign) {
+            Sign sign = (Sign) block.getState();
+            String line = sign.getLine(0).toLowerCase();
+            if(line.startsWith("signtp") || line.startsWith("itemchest")){
+                event.setCancelled(true);
+            }
+        }
+
     }
 }
