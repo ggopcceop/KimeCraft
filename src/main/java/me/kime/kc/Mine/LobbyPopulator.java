@@ -35,7 +35,7 @@ public class LobbyPopulator extends BlockPopulator {
             for (int y = 0; y <= h; y++) {
                 if (Math.abs(x) == w || (y == 0 || y == h)) {
                     Vector position = center.clone().add(new Vector(x, y, 0));
-                    world.getBlockAt(position.toLocation(world)).setTypeId(Material.BRICK.getId(), false);
+                    world.getBlockAt(position.toLocation(world)).setTypeId(Material.MOSSY_COBBLESTONE.getId(), false);
                 } else {
                     Vector position = center.clone().add(new Vector(x, y, 0));
                     world.getBlockAt(position.toLocation(world)).setTypeId(Material.PORTAL.getId(), false);
