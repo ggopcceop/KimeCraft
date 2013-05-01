@@ -12,7 +12,6 @@ public class Fun {
     private KimeCraft plugin;
     private HashMap<Location, RedstoneC> redstone;
     private RedstoneCounterCleanTask redstoneCounterCleanTask;
-    
     public final int R = 300;
     public final int RR = R * R;
     public final int sRR = (R - 2) * (R - 2);
@@ -31,7 +30,9 @@ public class Fun {
                 redstoneCounterCleanTask.queue();
             }
         }, 305L, 6001L);
-
+        
+        KCraftingRecipe kCraftingRecipe = new KCraftingRecipe(this);
+        
         FunCommand funCommand = new FunCommand(this);
         plugin.getCommand("skull").setExecutor(funCommand);
         plugin.getCommand("roll").setExecutor(funCommand);
