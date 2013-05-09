@@ -99,37 +99,29 @@ public class FunLinstener implements Listener {
                 case UP:
                     Block block = event.getBlock().getRelative(BlockFace.UP, 2);
                     if (isRail(block.getTypeId())) {
-                        block.getWorld().spawn(block.getLocation(), Minecart.class);
+                        spawnMinecart(block, block.getLocation());
                         event.setCancelled(true);
-                    }
-                    break;
-                case DOWN:
-                    block = event.getBlock().getRelative(BlockFace.DOWN);
-                    if (isRail(block.getTypeId())) {
-                        block.getWorld().spawn(block.getLocation(), Minecart.class);
-                        event.setCancelled(true);
-                    } else {
-                        block = block.getRelative(BlockFace.DOWN);
-                        if (isRail(block.getTypeId())) {
-                            block.getWorld().spawn(block.getLocation(), Minecart.class);
-                            event.setCancelled(true);
-                        }
                     }
                     break;
                 default:
                     block = event.getBlock().getRelative(dispenser.getFacing());
-                    if (isRail(block.getTypeId())) {
-                        block.getWorld().spawn(block.getLocation(), Minecart.class);
-                        event.setCancelled(true);
-                    } else {
-                        block = block.getRelative(BlockFace.DOWN);
+                    for (int i = 0; i < 2; i++) {
                         if (isRail(block.getTypeId())) {
-                            block.getWorld().spawn(block.getLocation(), Minecart.class);
+                            spawnMinecart(block, block.getLocation());
                             event.setCancelled(true);
+                            break;
                         }
+                        block = block.getRelative(BlockFace.DOWN);
                     }
             }
+        }
+    }
 
+    private void spawnMinecart(Block rail, Location loc) {
+        if (rail.getData() <= 0x1) {
+            rail.getWorld().spawn(loc.add(0.5, 0, 0.5), Minecart.class);
+        } else {
+            rail.getWorld().spawn(loc.add(0.5, 0.5, 0.5), Minecart.class);
         }
     }
 
