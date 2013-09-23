@@ -165,6 +165,10 @@ public class FunLinstener implements Listener {
         Block block = event.getBlock();
         switch (block.getTypeId()) {
             case 55:
+            case 75:
+            case 76:
+            case 93:
+            case 94:
                 Location loc = block.getLocation();
                 if (fun.getRedstone().containsKey(loc)) {
                     RedstoneC red = fun.getRedstone().get(loc);
@@ -335,6 +339,10 @@ public class FunLinstener implements Listener {
             case 10:
             case 75:
             case 76:
+            case 93:
+            case 94:
+            case 149:
+            case 150:
             case 356:
                 return false;
             case 52:
