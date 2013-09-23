@@ -15,7 +15,7 @@ public class PlayerCache {
     private int foodLevel;
     private float exp;
     private int level;
-    private double health;
+    private int health;
     //private int gameMode;
     private ItemStack[] contents;
     private ItemStack[] armor;
@@ -48,7 +48,7 @@ public class PlayerCache {
 
         player.setExp(0);
         if (health != 0) {
-            player.setHealth(20d);
+            player.setHealth(20);
         } else {
             health = -1;
         }

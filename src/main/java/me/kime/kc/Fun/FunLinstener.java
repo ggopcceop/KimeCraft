@@ -302,7 +302,7 @@ public class FunLinstener implements Listener {
         }
     }
 
-    @EventHandler
+    /*@EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
         if (event.isNewChunk()) {
             Chunk chunk = event.getChunk();
@@ -312,7 +312,7 @@ public class FunLinstener implements Listener {
                 chunk.unload(false, false);
             }
         }
-    }
+    }*/
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent event) {
