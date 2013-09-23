@@ -18,7 +18,7 @@ public class ChopTreeBlockListener
         implements Listener {
 
     public static Player pubplayer = null;
-    private ChopTree chopTree;
+    private final ChopTree chopTree;
 
     public ChopTreeBlockListener(ChopTree chopTree) {
         this.chopTree = chopTree;
@@ -134,13 +134,13 @@ public class ChopTreeBlockListener
     }
 
     private void getBranches(Block block, List<Block> blocks, Block other) {
-        if ((!blocks.contains(other)) && (other.getType() == Material.LOG)) {
+        if ((!blocks.contains(other)) && (other.getType() == Material.LOG && other.getData() != 3)) {
             getBlocksToChop(other, getHighestLog(other), blocks);
         }
     }
 
     private Block getHighestLog(Block block) {
-        while (block.getRelative(BlockFace.UP).getType() == Material.LOG) {
+        while (block.getRelative(BlockFace.UP).getType() == Material.LOG && block.getRelative(BlockFace.UP).getData() != 3) {
             block = block.getRelative(BlockFace.UP);
         }
         return block;
