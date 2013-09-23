@@ -1,6 +1,7 @@
 package me.kime.kc.Noob;
 
 import me.kime.kc.KPlayer;
+import me.kime.kc.Util.KCMessager;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.World;
@@ -11,6 +12,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.ExpBottleEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
@@ -19,7 +21,7 @@ import org.bukkit.inventory.PlayerInventory;
 
 public class NoobListener implements Listener {
 
-    private Noob noob;
+    private final Noob noob;
 
     public NoobListener(Noob noob) {
         this.noob = noob;
@@ -128,6 +130,14 @@ public class NoobListener implements Listener {
                 inv.addItem(new ItemStack(17, 10));
                 inv.addItem(new ItemStack(50, 20));
             }
+        }
+    }
+    
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerBedEnter(PlayerBedEnterEvent event){
+        if(event.getPlayer().getWorld() == noob.getNoobWorld()){
+            event.setCancelled(true);
+            KCMessager.sentError(event.getPlayer(), "You can NOT sleep at noob world");
         }
     }
 }
