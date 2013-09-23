@@ -43,8 +43,8 @@ import org.bukkit.material.Dispenser;
 
 public class FunLinstener implements Listener {
 
-    private Fun fun;
-    private EntityFunTask entityFunTask;
+    private final Fun fun;
+    private final EntityFunTask entityFunTask;
     private final int BreedLimit = 8;
 
     public FunLinstener(Fun fun) {
@@ -85,7 +85,6 @@ public class FunLinstener implements Listener {
                 event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(340));
                 break;
         }
-
 
     }
 
@@ -201,6 +200,27 @@ public class FunLinstener implements Listener {
                     if (!isOn) {
                         event.setNewCurrent(0);
                     }
+                }
+                break;
+            case 87:
+                if (event.getNewCurrent() == 0) {
+                    if (block.getRelative(BlockFace.UP).getTypeId() == 51) {
+                        block.getRelative(BlockFace.UP).setType(Material.AIR);
+                    }
+                } else {
+                    if (block.getRelative(BlockFace.UP).getTypeId() == 0) {
+                        block.getRelative(BlockFace.UP).setType(Material.FIRE);
+                    }
+                }
+                break;
+            case 86:
+                if (event.getNewCurrent() > 0) {
+                    block.setTypeId(91);
+                }
+                break;
+            case 91:
+                if (event.getNewCurrent() == 0) {
+                    block.setTypeId(86);
                 }
                 break;
             default:
