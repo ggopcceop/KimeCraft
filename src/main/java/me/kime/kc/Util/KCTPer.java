@@ -4,18 +4,26 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 public class KCTPer {
 
     public static boolean tp(Player player, Location loc) {
+        return tp(player, loc, TeleportCause.PLUGIN);
+    }
+
+    public static boolean tp(Player player, Location loc, TeleportCause cause) {
+        if (cause == null) {
+            cause = TeleportCause.PLUGIN;
+        }
         if (hasSpace(loc)) {
-            player.teleport(loc);
+            player.teleport(loc, cause);
             return true;
         } else if (hasSpace(loc.add(0, 1, 0))) {
-            player.teleport(loc);
+            player.teleport(loc, cause);
             return true;
         } else if (hasSpace(loc.add(0, 1, 0))) {
-            player.teleport(loc);
+            player.teleport(loc, cause);
             return true;
         }
         return false;

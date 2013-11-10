@@ -18,12 +18,20 @@ public class Mine {
     private KimeCraft plugin;
     private World mineWorld;
     private MinePaymentTask minePaymentTask;
+    private final MineDataSource datasource;
 
     public Mine(KimeCraft instance) {
         this.plugin = instance;
-        
+
+        int max = plugin.getConfig().getInt("mine.mysql.maxconection", 2);
+        String host = plugin.getConfig().getString("mine.mysql.host", "localhost");
+        String user = plugin.getConfig().getString("mine.mysql.username", "minecraft");
+        String pass = plugin.getConfig().getString("mine.mysql.password", "123456");
+        String db = plugin.getConfig().getString("mine.mysql.database", "minecraft");
+        datasource = new MineDataSource(host, user, pass, db, max, this);
+
         plugin.getPluginManager().registerEvents(new MineLinstener(this), plugin);
-        
+
         //delete mine world every Sunday 
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
@@ -57,7 +65,10 @@ public class Mine {
         MineCommand mineCommand = new MineCommand(this);
         plugin.getCommand("mine").setExecutor(mineCommand);
 
+    }
 
+    public MineDataSource getDataSource() {
+        return datasource;
     }
 
     public KimeCraft getPlugin() {

@@ -37,7 +37,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.vehicle.VehicleBlockCollisionEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
-import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Dispenser;
 
@@ -75,14 +74,14 @@ public class FunLinstener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onBlockBreak(BlockBreakEvent event) {
-        int id = event.getBlock().getTypeId();
+        Material id = event.getBlock().getType();
         switch (id) {
-            case 144:
-                event.getBlock().setTypeId(0);
+            case SKULL:
+                event.getBlock().setType(Material.AIR);
                 break;
-            case 47:
-                event.getBlock().setTypeId(0);
-                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(340));
+            case BOOKSHELF:
+                event.getBlock().setType(Material.AIR);
+                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.BOOK));
                 break;
         }
 

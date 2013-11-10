@@ -1,5 +1,8 @@
 package me.kime.kc.Mine;
 
+import me.kime.kc.KPlayer;
+import me.kime.kc.Task.ThreadTask.MineLocationEnterTask;
+import me.kime.kc.Task.ThreadTask.MineLocationLeaveTask;
 import me.kime.kc.Task.ThreadTask.MinePayTask;
 
 import org.bukkit.GameMode;
@@ -11,18 +14,26 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.world.WorldInitEvent;
 
 public class MineLinstener implements Listener {
 
-    private Mine mine;
-    private MinePayTask minePayTask;
+    private final Mine mine;
+    private final MinePayTask minePayTask;
+    private final MineLocationEnterTask mineEnterTask;
+    private final MineLocationLeaveTask mineLeaveTask;
 
     public MineLinstener(Mine mine) {
         this.mine = mine;
 
+        mineEnterTask = new MineLocationEnterTask(mine);
+        mineLeaveTask = new MineLocationLeaveTask(mine);
         minePayTask = new MinePayTask(mine, 0.1);
 
+        mine.getPlugin().registerTask(mineEnterTask);
+        mine.getPlugin().registerTask(mineLeaveTask);
         mine.getPlugin().registerTask(minePayTask);
     }
 
@@ -93,6 +104,18 @@ public class MineLinstener implements Listener {
             event.getWorld().getPopulators().add(new EnderCrystalPopulator());
             event.getWorld().getPopulators().add(new ArenaPopulator());
             event.getWorld().getPopulators().add(new LobbyPopulator());
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerTeleport(PlayerTeleportEvent event) {
+        if (event.getFrom().getWorld() == mine.getMineWorld()) {
+            if (event.getCause() == TeleportCause.NETHER_PORTAL) {
+                mineLeaveTask.queue(event.getPlayer());
+                event.setCancelled(true);
+            }
+        } else if (event.getTo().getWorld() == mine.getMineWorld()) {
+            mineEnterTask.queue(event.getPlayer());
         }
     }
 }

@@ -10,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 public class MineCommand implements CommandExecutor {
 
@@ -29,7 +30,7 @@ public class MineCommand implements CommandExecutor {
         Player player = (Player) sender;
         if (split.length == 0) {
             if (player.getWorld().equals(mine.getPlugin().getDefaultWorld())) {
-                player.teleport(mine.getMineWorld().getSpawnLocation());
+                player.teleport(mine.getMineWorld().getSpawnLocation(), TeleportCause.COMMAND);
                 KCMessager.sentMessage(player, "welcome to mine world, this is a temp world for mining olny", ChatColor.GREEN);
             } else {
                 KCMessager.sentMessage(player, "You can only enter mine world from the main wolrd", ChatColor.RED);

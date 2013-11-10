@@ -49,7 +49,7 @@ public class PortalLinstener implements Listener {
                     Location to = from.clone();
                     switch (block.getTypeId()) {
                         case 45:
-                            player.teleport(portal.getPlugin().getMine().getMineWorld().getSpawnLocation());
+                            player.teleport(portal.getPlugin().getMine().getMineWorld().getSpawnLocation(), TeleportCause.NETHER_PORTAL);
                             event.setCancelled(true);
                             break;
                         case 48:
@@ -58,12 +58,12 @@ public class PortalLinstener implements Listener {
                             } else {
                                 to.setWorld(portal.getPlugin().getDefaultWorld());
                             }
-                            player.teleport(to);
+                            player.teleport(to, TeleportCause.NETHER_PORTAL);
                             event.setCancelled(true);
                             break;
                         case 49:
                             to.setWorld(portal.getPlugin().getNether());
-                            player.teleport(to);
+                            player.teleport(to, TeleportCause.NETHER_PORTAL);
                             player.setNoDamageTicks(60);
                             event.setCancelled(true);
                             break;
@@ -83,7 +83,7 @@ public class PortalLinstener implements Listener {
                 Location to = from.clone();
                 switch (block.getTypeId()) {
                     case 45:
-                        entity.teleport(portal.getPlugin().getMine().getMineWorld().getSpawnLocation());
+                        entity.teleport(portal.getPlugin().getMine().getMineWorld().getSpawnLocation(), TeleportCause.NETHER_PORTAL);
                         event.setCancelled(true);
                         break;
                     case 48:
@@ -92,12 +92,12 @@ public class PortalLinstener implements Listener {
                         } else {
                             to.setWorld(portal.getPlugin().getDefaultWorld());
                         }
-                        entity.teleport(to);
+                        entity.teleport(to, TeleportCause.NETHER_PORTAL);
                         event.setCancelled(true);
                         break;
                     case 49:
                         to.setWorld(portal.getPlugin().getNether());
-                        entity.teleport(to);
+                        entity.teleport(to, TeleportCause.NETHER_PORTAL);
                         event.setCancelled(true);
                         break;
                 }

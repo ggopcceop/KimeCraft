@@ -10,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 public class KCCommand implements CommandExecutor {
     
@@ -39,7 +40,7 @@ public class KCCommand implements CommandExecutor {
         if (time >= cooldown) {
             if (world.equals(plugin.getDefaultWorld()) || world.equals(plugin.getMine().getMineWorld())) {
                 Location loc = new Location(plugin.getDefaultWorld(), -308, 216, 22, 0, 0);
-                player.getPlayer().teleport(loc);
+                player.getPlayer().teleport(loc, TeleportCause.COMMAND);
                 KCMessager.sentMessage(player, "You are in City!", ChatColor.YELLOW);
                 cd.setCityCD(System.currentTimeMillis());
             } else {

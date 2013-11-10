@@ -22,3 +22,9 @@ chopTree:
   enable: true
 mine:
   enable: true
+  mysql:
+    maxconection: 2
+    host: localhost
+    database: minecraft
+    username: minecraft
+    password: password    
