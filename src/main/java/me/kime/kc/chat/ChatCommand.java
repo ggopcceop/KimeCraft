@@ -17,6 +17,8 @@
 package me.kime.kc.chat;
 
 import me.kime.kc.KPlayer;
+import me.kime.kc.util.KMessager;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -44,21 +46,22 @@ public class ChatCommand implements CommandExecutor {
 
         if (split.length == 1) {
             int channelNumber;
-            try {
-                channelNumber = Integer.parseInt(split[0]);
-            } catch (NumberFormatException e) {
-                switch (split[0].toLowerCase()) {
-                    case "normal":
-                        channelNumber = 0;
-                        break;
-                    case "public":
-                        channelNumber = 1;
-                        break;
-                    default:
-                        channelNumber = 2;
-                        break;
-                }
+            switch (split[0].toLowerCase()) {
+                case "0":
+                case "normal":
+                    channelNumber = 0;
+                    KMessager.sendMessage(kPlayer, ChatColor.DARK_GREEN, "chat_chattingChannel", kPlayer.getLocale().phrase("chat_normal"));
+                    break;
+                case "1":
+                case "public":
+                    channelNumber = 1;
+                    KMessager.sendMessage(kPlayer, ChatColor.DARK_GREEN, "chat_chattingChannel", kPlayer.getLocale().phrase("chat_public"));
+                    break;
+                default:
+                    channelNumber = 0;
+                    break;
             }
+
             kPlayer.currentChannel = channelNumber;
 
             return true;

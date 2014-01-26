@@ -26,7 +26,9 @@ Language:
     fun_readchBorder: "你到達了邊界！"
     
     #for chat addon
-    chat_public: "[公共]"
+    chat_public: "公共"
+    chat_normal: "普通"
+    chat_chattingChannel: "你使用%1頻道中"
     
     #for mine addon
     mine_welcome: "歡迎來到礦界,這是只用於挖礦的臨時世界"

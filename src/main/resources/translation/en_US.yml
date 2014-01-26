@@ -26,7 +26,9 @@ Language:
     fun_readchBorder: "You have reached the border!"
     
     #for chat addon
-    chat_public: "[public]"
+    chat_public: "public"
+    chat_normal: "normal"
+    chat_chattingChannel: "You are chatting in channel %1"
     
     #for mine addon
     mine_welcome: "Welcome to mine world, this is a temporary world for mining purposes only"

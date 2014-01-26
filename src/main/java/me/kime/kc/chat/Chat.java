@@ -70,7 +70,7 @@ public class Chat extends Addon {
         }
     }
 
-    public void publicChat(Entity sender, String message) {
+    public void publicChat(Player sender, String message) {
         Player[] players = Bukkit.getOnlinePlayers();
         for (Player player : players) {
             StringBuilder result = new StringBuilder();
@@ -82,9 +82,10 @@ public class Chat extends Addon {
             }
 
             result.append(ChatColor.GOLD.toString());
-            result.append(locale.phrase("chat_public"));
             result.append("[");
-            result.append(player.getName());
+            result.append(locale.phrase("chat_public"));
+            result.append("][");
+            result.append(sender.getName());
             result.append("]: ");
             result.append(message);
 
