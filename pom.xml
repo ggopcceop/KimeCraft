@@ -4,7 +4,7 @@
 
     <groupId>me.Kime</groupId>
     <artifactId>KimeCraft</artifactId>
-    <version>0.6.1</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>KimeCraft</name>

@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import me.kime.kc.Util.KCLogger;
+import me.kime.kc.util.KLogger;
 
 /**
  * SQL connecter to Auth
@@ -49,7 +49,7 @@ public class DataSource {
                 id = rs.getInt("land");
             }
         } catch (SQLException e) {
-            KCLogger.showError("Lander DataSource getOnwerError: " + e.getMessage());
+            KLogger.showError("Lander DataSource getOnwerError: " + e.getMessage());
         } finally {
             close(rs);
             close(pst);
@@ -70,7 +70,7 @@ public class DataSource {
             pst.setString(3, owner.toLowerCase());
             pst.executeUpdate();
         } catch (SQLException e) {
-            KCLogger.showError("Lander DataSource setOnwerError: " + e.getMessage());
+            KLogger.showError("Lander DataSource setOnwerError: " + e.getMessage());
         } finally {
             close(pst);
             connectionPool.release(conn);
@@ -94,7 +94,7 @@ public class DataSource {
                 kLand = new KLand(id, owner, name);
             }
         } catch (SQLException e) {
-            KCLogger.showError("Lander DataSource getLandError: " + e.getMessage());
+            KLogger.showError("Lander DataSource getLandError: " + e.getMessage());
         } finally {
             close(rs);
             close(pst);
@@ -114,7 +114,7 @@ public class DataSource {
             pst.setInt(3, id);
             pst.executeUpdate();
         } catch (SQLException e) {
-            KCLogger.showError("Lander DataSource addChunkError: " + e.getMessage());
+            KLogger.showError("Lander DataSource addChunkError: " + e.getMessage());
         } finally {
             close(pst);
             connectionPool.release(conn);
@@ -137,7 +137,7 @@ public class DataSource {
                 id = rs.getInt(1);
             }
         } catch (SQLException e) {
-            KCLogger.showError("Lander DataSource addLandError: " + e.getMessage());
+            KLogger.showError("Lander DataSource addLandError: " + e.getMessage());
         } finally {
             close(pst);
             close(rs);
@@ -151,7 +151,7 @@ public class DataSource {
             try {
                 st.close();
             } catch (SQLException ex) {
-                KCLogger.showError(ex.getMessage());
+                KLogger.showError(ex.getMessage());
             }
         }
     }
@@ -161,7 +161,7 @@ public class DataSource {
             try {
                 rs.close();
             } catch (SQLException ex) {
-                KCLogger.showError(ex.getMessage());
+                KLogger.showError(ex.getMessage());
             }
         }
     }

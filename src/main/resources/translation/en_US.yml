@@ -1,0 +1,56 @@
+#Default language flie
+Language:
+    test: "Test"
+    error: "An error ocurred; Please contact the admins"
+    NotFound: "%1 not found"
+    notSpace: "Don't have enough space"
+    
+    #for city
+    city_cooldown: "City cooldown in %1 seconds!"
+    city_disallow: "You can only go back to city from main or mine world!"
+    city_success: "You are in City!"
+
+    #for admin addon
+    admin_signFormatIncorrect: "Incorrect sign format"
+    
+    #for auth addon
+    auth_AskLogin: "Type '/login [password]' to login"
+    auth_commandUsage: "Usage: /login [password]"
+    auth_alreadyLogin: "You have already logged in!"
+    auth_askRegister: "Please register at www.e7play.co!"
+    auth_bannedUser: "You are NOT an active user!"
+    auth_successfulLogin: "Successful login!"
+    auth_wrongPassword: "Wrong password!"
+    
+    #for fun addon
+    fun_readchBorder: "You have reached the border!"
+    
+    #for chat addon
+    chat_public: "[public]"
+    
+    #for mine addon
+    mine_welcome: "Welcome to mine world, this is a temporary world for mining purposes only"
+    mine_disallowEnter: "You can only enter mine world from the main world"
+    mine_salaryEarned: "You have earned $%1"
+    mine_salaryEarnedTotal: "You have earned $%1 since login"    
+    mine_salaryUsage: "Usage: /mine salary"
+    
+    #for noob addon
+    noob_newPlayer: "New player %1 has joined the server!"
+    noob_disallowSleep: "You CANNOT sleep at noob world"
+    noob_notLogin: "%1 is not login!"
+    noob_toCity: "%1 is in City now!"   
+    
+    #for signtp addon
+    signtp_noPermissionDestory: "You don't have permission to destory sign TP"
+    signtp_noPermissionCreate: "You don't have permission to create sign TP"
+    signtp_sneakDestory: "You have to sneak to break the TP sign"
+    signtp_notFoundUp: "Up sign not found!"
+    signtp_notFoundDown: "Down sign not found!"
+    signtp_hub: "This is a hub sign"
+    signtp_createHub: "Added %1 to the Hub List"
+    signtp_hubAlreadyExist: "That hub already exists, please destroy the old one first."
+    
+    
+    
+    

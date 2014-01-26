@@ -1,7 +1,7 @@
 package me.kime.kc.Lander;
 
-import me.kime.kc.Task.ThreadTask.LanderChunkLoadTask;
-import me.kime.kc.Util.KCMessager;
+import me.kime.kc.task.threadTask.LanderChunkLoadTask;
+import me.kime.kc.util.KMessager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -38,36 +38,36 @@ public class LanderLinstener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOW)
-    public void onBlockBreak(BlockBreakEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-        Chunk chunk = event.getBlock().getLocation().getChunk();
-        KChunk kChunk = lander.getKChunk(chunk.getX(), chunk.getZ());
-        if (kChunk == null) {
-            return;
-        }
-        if (event.getPlayer().getName().equalsIgnoreCase(kChunk.getOwner())) {
-            KCMessager.sentMessage(event.getPlayer(), "Your block", ChatColor.GREEN);
-        }
-    }
+    /* @EventHandler(priority = EventPriority.LOW)
+     public void onBlockBreak(BlockBreakEvent event) {
+     if (event.isCancelled()) {
+     return;
+     }
+     Chunk chunk = event.getBlock().getLocation().getChunk();
+     KChunk kChunk = lander.getKChunk(chunk.getX(), chunk.getZ());
+     if (kChunk == null) {
+     return;
+     }
+     if (event.getPlayer().getName().equalsIgnoreCase(kChunk.getOwner())) {
+     KMessager.sentMessage(event.getPlayer(), "Your block", ChatColor.GREEN);
+     }
+     }
 
-    @EventHandler
-    public void onChunkLoad(ChunkLoadEvent event) {
-        if ("world".equalsIgnoreCase(event.getWorld().getName())) {
-            task.queue(event.getChunk());
-        }
-    }
+     @EventHandler
+     public void onChunkLoad(ChunkLoadEvent event) {
+     if ("world".equalsIgnoreCase(event.getWorld().getName())) {
+     task.queue(event.getChunk());
+     }
+     }
 
-    @EventHandler
-    public void onWorldLoad(WorldLoadEvent event) {
-        if ("world".equalsIgnoreCase(event.getWorld().getName())) {
-            Chunk[] chunks = event.getWorld().getLoadedChunks();
-            for (int i = 0; i < chunks.length; i++) {
-                task.queue(chunks[i]);
-            }
-        }
+     @EventHandler
+     public void onWorldLoad(WorldLoadEvent event) {
+     if ("world".equalsIgnoreCase(event.getWorld().getName())) {
+     Chunk[] chunks = event.getWorld().getLoadedChunks();
+     for (int i = 0; i < chunks.length; i++) {
+     task.queue(chunks[i]);
+     }
+     }
 
-    }
+     }*/
 }

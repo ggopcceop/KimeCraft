@@ -1,27 +1,43 @@
+/*
+ * Copyright (C) 2014 Kime
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package me.kime.kc;
 
 import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import me.kime.kc.Admin.Admin;
-
-import me.kime.kc.Auth.Auth;
-import me.kime.kc.ChopTree.ChopTree;
-import me.kime.kc.Fun.Fun;
-import me.kime.kc.Lander.Lander;
-import me.kime.kc.Mine.Mine;
-import me.kime.kc.Noob.Noob;
-import me.kime.kc.Portal.Portal;
-import me.kime.kc.SignTP.SignTP;
-import me.kime.kc.Task.ThreadTask.Task;
-import me.kime.kc.Task.ThreadTask.ThreadManager;
-import me.kime.kc.Util.KCLogFilter;
-import me.kime.kc.Util.KCLogger;
+import me.kime.kc.admin.Admin;
+import me.kime.kc.chopTree.ChopTree;
+import me.kime.kc.fun.Fun;
+import me.kime.kc.mine.Mine;
+import me.kime.kc.noob.Noob;
+import me.kime.kc.portal.Portal;
+import me.kime.kc.signTP.SignTP;
+import me.kime.kc.auth.Auth;
+import me.kime.kc.chat.Chat;
+import me.kime.kc.motd.MOTD;
+import me.kime.kc.task.threadTask.Task;
+import me.kime.kc.task.threadTask.ThreadManager;
+import me.kime.kc.util.KLogFilter;
+import me.kime.kc.util.KLogger;
 import net.milkbowl.vault.economy.Economy;
+import org.apache.logging.log4j.LogManager;
 import org.bukkit.Difficulty;
 import org.bukkit.Location;
-
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
@@ -38,23 +54,13 @@ public class KimeCraft extends JavaPlugin {
 
     private Executor pool;
     private ThreadManager threadManager;
-    private static HashMap<String, KPlayer> onlineList = new HashMap<>();
+    private static final HashMap<String, KPlayer> onlineList = new HashMap<>();
     private World world;
     private World nether;
     private World end;
-    /* modules of KimeCraft plugin */
-    private Admin admin;
-    private Auth auth;
-    private Fun fun;
-    private Lander lander;
-    private Noob noob;
-    private SignTP signTP;
-    private ChopTree chopTree;
-    private Portal portal;
-    private Mine mine;
     private Random rand;
     private static Economy economy = null;
-    private FileConfiguration config;
+    public FileConfiguration config;
 
     @Override
     public void onDisable() {
@@ -68,7 +74,7 @@ public class KimeCraft extends JavaPlugin {
         }
 
         //pool.close();
-        KCLogger.info("KimeCraft! Disabled");
+        KLogger.info("KimeCraft! Disabled");
     }
 
     @Override
@@ -91,41 +97,26 @@ public class KimeCraft extends JavaPlugin {
         end = getServer().getWorld("world_the_end");
         end.setDifficulty(Difficulty.HARD);
 
-        if (config.getBoolean("admin.enable", true)) {
-            admin = new Admin(this);
-        }
-        if (config.getBoolean("noob.enable", true)) {
-            noob = new Noob(this);
-        }
-        if (config.getBoolean("auth.enable", true)) {
-            auth = new Auth(this);
-        }
-        if (config.getBoolean("fun.enable", true)) {
-            fun = new Fun(this);
-        }
-        if (config.getBoolean("signTP.enable", true)) {
-            signTP = new SignTP(this);
-        }
-        if (config.getBoolean("chopTree.enable", true)) {
-            chopTree = new ChopTree(this);
-        }
-        if (config.getBoolean("portal.enable", true)) {
-            portal = new Portal(this);
-        }
-        if (config.getBoolean("mine.enable", true)) {
-            mine = new Mine(this);
-        }
+        //enable addons
+        registerAddon(new Admin(this));
+        registerAddon(new Noob(this));
+        registerAddon(new Auth(this));
+        registerAddon(new MOTD(this));
+        registerAddon(new Chat(this));
+        registerAddon(new Fun(this));
+        registerAddon(new SignTP(this));
+        registerAddon(new ChopTree(this));
+        registerAddon(new Portal(this));
+        registerAddon(new Mine(this));
 
-        this.getServer().getLogger().setFilter(new KCLogFilter());
+        ((org.apache.logging.log4j.core.Logger) LogManager.getRootLogger()).addFilter(new KLogFilter());
 
-        getServer().getLogger().setFilter(new KCLogFilter());
-
-        getPluginManager().registerEvents(new KCLinstener(this, onlineList), this);
+        getPluginManager().registerEvents(new KCListener(this, onlineList), this);
 
         KCCommand kcCommand = new KCCommand(this);
         getCommand("city").setExecutor(kcCommand);
 
-        KCLogger.info("KimeCraft Loaded!");
+        KLogger.info("KimeCraft Loaded!");
     }
 
     private boolean setupEconomy() {
@@ -150,40 +141,37 @@ public class KimeCraft extends JavaPlugin {
         return getServer().getPluginManager();
     }
 
-    public Auth getAuth() {
-        return auth;
-    }
-
-    public Fun getFun() {
-        return fun;
-    }
-
-    public Lander getLander() {
-        return lander;
-    }
-
-    public Noob getNoob() {
-        return noob;
-    }
-
-    public SignTP getSignTP() {
-        return signTP;
-    }
-
-    public ChopTree getChopTree() {
-        return chopTree;
-    }
-
-    public Mine getMine() {
-        return mine;
-    }
-
-    public Portal getPortal() {
-        return portal;
-    }
-
+    //======== thread tasks =======//
     public void registerTask(Task task) {
         threadManager.registerTask(task);
+    }
+
+    //==== addons ======//
+    private final HashMap<String, Addon> Addons = new HashMap<>();
+
+    public void registerAddon(Addon addon) {
+        if (addon != null) {
+            String name = addon.getAddonName().toLowerCase();
+            boolean enable = config.getBoolean(name + ".enable", false);
+            if (enable) {
+                addon.onEnable();
+                Addons.put(name, addon);
+            }
+        }
+    }
+
+    public void reloadAddons() {
+        for (String name : Addons.keySet()) {
+            Addon addon = Addons.get(name);
+            addon.onReload();
+        }
+    }
+
+    public Addon getAddon(String name) {
+        if (name != null) {
+            return Addons.get(name.toLowerCase());
+        }
+        return null;
     }
 
     public Location getCity() {

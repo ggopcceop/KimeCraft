@@ -1,0 +1,52 @@
+#Simplified Chinese translation
+Language:
+    test: "测试"
+    error: "发生未知错误,请联系管理员"
+    NotFound: "未找到%1"
+    notSpace: "没有足够的空间"
+    
+    #for city
+    city_cooldown: "/city的冷却时间还剩%1秒！"
+    city_disallow: "你只能在主世界或矿界内回到主城"
+    city_success: "欢迎来到主城！"
+
+    #for admin addon
+    admin_signFormatIncorrect: "告示牌格式错误"
+    
+    #for auth addon
+    auth_AskLogin: "输入 '/login [密码]' 来登陆"
+    auth_commandUsage: "指令为 /login [密码] "
+    auth_alreadyLogin: "你已经登陆过了！"
+    auth_askRegister: "请先前去 www.e7play.co 注册账号！"
+    auth_bannedUser: "这不是一个活跃账户！"
+    auth_successfulLogin: "登陆成功!"
+    auth_wrongPassword: "密码错误!"
+    
+    #for fun addon
+    fun_readchBorder: "你到达了边界！"
+    
+    #for chat addon
+    chat_public: "[公共]"
+    
+    #for mine addon
+    mine_welcome: "欢迎来到矿界，这是个只用于挖矿的临时世界"
+    mine_disallowEnter: "你只能在主世界内进入矿界"
+    mine_salaryEarned: "你赚了$%1"
+    mine_salaryEarnedTotal: "自登陆以来你赚了$%1 "    
+    mine_salaryUsage: "用法：/mine salary"
+    
+    #for noob addon
+    noob_newPlayer: "新玩家 %1 加入了服务器！"
+    noob_disallowSleep: "你不能在新手世界睡觉！"
+    noob_notLogin: "%1没登陆！"
+    noob_toCity: "%1到达了City！"   
+    
+    #for signtp addon
+    signtp_noPermissionDestory: "你没有破坏传送牌的权限"
+    signtp_noPermissionCreate: "你没有创建传送牌的权限"
+    signtp_sneakDestory: "你必须在潜行时才能破坏传送牌"
+    signtp_notFoundUp: "未找到up告示牌！"
+    signtp_notFoundDown: "未找到down告示牌！"
+    signtp_hub: "这是一个传送枢纽牌"
+    signtp_createHub: "已将%1加入传送枢纽列表"
+    signtp_hubAlreadyExist: "此传送枢纽已经存在，请先破坏旧有枢纽。"
