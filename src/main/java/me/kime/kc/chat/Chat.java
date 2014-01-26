@@ -34,6 +34,8 @@ import org.bukkit.entity.Player;
  */
 public class Chat extends Addon {
 
+    private int normalChatRange;
+
     public Chat(KimeCraft plugin) {
         super(plugin);
     }
@@ -45,6 +47,8 @@ public class Chat extends Addon {
 
     @Override
     public void onEnable() {
+        normalChatRange = plugin.config.getInt("chat.normalChatRange", 40);
+
         ChatCommand command = new ChatCommand(this);
         plugin.getCommand("chat").setExecutor(command);
 
@@ -95,5 +99,9 @@ public class Chat extends Addon {
 
     public void channelChat(Entity sender, String channel, String message) {
 
+    }
+
+    public int getNormalChatRange() {
+        return normalChatRange;
     }
 }

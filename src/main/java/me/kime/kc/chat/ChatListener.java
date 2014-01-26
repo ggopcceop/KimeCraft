@@ -29,12 +29,9 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class ChatListener implements Listener {
 
     private final Chat addon;
-    private int normalChatRange;
 
     public ChatListener(Chat addon) {
         this.addon = addon;
-
-        normalChatRange = addon.getPlugin().config.getInt("chat.normalChatRange", 40);
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
@@ -43,7 +40,7 @@ public class ChatListener implements Listener {
         switch (kPlayer.currentChannel) {
             case 0:
                 String message = "[" + kPlayer.player.getName() + "]: " + event.getMessage();
-                addon.rangeChat(event.getPlayer(), normalChatRange, message);
+                addon.rangeChat(event.getPlayer(), addon.getNormalChatRange(), message);
                 event.setCancelled(true);
                 break;
             case 1:

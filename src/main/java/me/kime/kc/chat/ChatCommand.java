@@ -43,26 +43,39 @@ public class ChatCommand implements CommandExecutor {
         }
         Player player = (Player) sender;
         KPlayer kPlayer = addon.getPlugin().getOnlinePlayer(player.getName());
-
-        if (split.length == 1) {
-            int channelNumber;
+        if (split.length == 0) {
+            switch (kPlayer.currentChannel) {
+                case 0:
+                    KMessager.sendMessage(kPlayer, ChatColor.DARK_GREEN, "chat_chattingChannel", kPlayer.getLocale().phrase("chat_normal"));
+                    break;
+                case 1:
+                    KMessager.sendMessage(kPlayer, ChatColor.DARK_GREEN, "chat_chattingChannel", kPlayer.getLocale().phrase("chat_public"));
+                    break;
+            }
+        } else {
             switch (split[0].toLowerCase()) {
                 case "0":
                 case "normal":
-                    channelNumber = 0;
-                    KMessager.sendMessage(kPlayer, ChatColor.DARK_GREEN, "chat_chattingChannel", kPlayer.getLocale().phrase("chat_normal"));
+                    if (split.length == 1) {
+                        kPlayer.currentChannel = 0;
+                        KMessager.sendMessage(kPlayer, ChatColor.DARK_GREEN, "chat_chattingChannel", kPlayer.getLocale().phrase("chat_normal"));
+                    } else {
+                        String message = "[" + kPlayer.player.getName() + "]: " + split[1];
+                        addon.rangeChat(player, addon.getNormalChatRange(), message);
+                    }
                     break;
                 case "1":
                 case "public":
-                    channelNumber = 1;
-                    KMessager.sendMessage(kPlayer, ChatColor.DARK_GREEN, "chat_chattingChannel", kPlayer.getLocale().phrase("chat_public"));
+                    if (split.length == 1) {
+                        kPlayer.currentChannel = 1;
+                        KMessager.sendMessage(kPlayer, ChatColor.DARK_GREEN, "chat_chattingChannel", kPlayer.getLocale().phrase("chat_public"));
+                    } else {
+                        addon.publicChat(player, split[1]);
+                    }
                     break;
                 default:
-                    channelNumber = 0;
                     break;
             }
-
-            kPlayer.currentChannel = channelNumber;
 
             return true;
         }
