@@ -9,8 +9,8 @@ import org.bukkit.Chunk;
 
 public class LanderChunkLoadTask extends Task {
 
-    private LinkedList<Chunk> list;
-    private Lander lander;
+    private final LinkedList<Chunk> list;
+    private final Lander lander;
 
     public LanderChunkLoadTask(Lander lander) {
         this.lander = lander;

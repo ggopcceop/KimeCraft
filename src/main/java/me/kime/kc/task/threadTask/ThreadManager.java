@@ -6,8 +6,8 @@ import me.kime.kc.util.KLogger;
 
 public class ThreadManager extends Thread {
     
-    private Executor pool;
-    private LinkedList<Task> taskList;
+    private final Executor pool;
+    private final LinkedList<Task> taskList;
     private final Byte lock;
     
     public ThreadManager(Executor pool) {

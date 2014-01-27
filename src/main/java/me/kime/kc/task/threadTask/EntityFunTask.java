@@ -9,8 +9,8 @@ import org.bukkit.entity.Sheep;
 
 public class EntityFunTask extends Task {
 
-    private LinkedList<Entity> list;
-    private Random rnd;
+    private final LinkedList<Entity> list;
+    private final Random rnd;
 
     public EntityFunTask() {
         list = new LinkedList<>();

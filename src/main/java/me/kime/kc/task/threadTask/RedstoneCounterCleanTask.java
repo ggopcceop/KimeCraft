@@ -11,7 +11,7 @@ import org.bukkit.Location;
 
 public class RedstoneCounterCleanTask extends Task {
 
-    private Fun fun;
+    private final Fun fun;
     private int count = 0;
 
     public RedstoneCounterCleanTask(Fun fun) {

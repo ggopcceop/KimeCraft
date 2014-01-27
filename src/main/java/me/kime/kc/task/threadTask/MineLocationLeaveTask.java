@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import me.kime.kc.mine.Mine;
 import me.kime.kc.util.KMessager;
 import me.kime.kc.util.KCTPer;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
