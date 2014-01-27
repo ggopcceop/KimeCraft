@@ -16,11 +16,15 @@
  */
 package me.kime.kc.chat;
 
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import me.kime.kc.Addon;
 import me.kime.kc.KPlayer;
 import me.kime.kc.KimeCraft;
 import me.kime.kc.locale.Locale;
 import me.kime.kc.locale.LocaleManager;
+import me.kime.kc.util.KLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -47,7 +51,7 @@ public class Chat extends Addon {
 
     @Override
     public void onEnable() {
-        normalChatRange = plugin.config.getInt("chat.normalChatRange", 40);
+        normalChatRange = plugin.config.getInt("chat.normalChatRange", 50);
 
         ChatCommand command = new ChatCommand(this);
         plugin.getCommand("chat").setExecutor(command);
@@ -60,18 +64,23 @@ public class Chat extends Addon {
 
     }
 
-    public void rangeChat(Entity sender, int range, String message) {
-        World currentWorld = sender.getWorld();
-        Location centerLocation = sender.getLocation();
+    public void registerDynmapChatEvent() {
+        plugin.getPluginManager().registerEvents(new DynmapChatListener(this), plugin);
+    }
+
+    public void rangeChat(String sender, Location loc, int range, String message) {
+        World currentWorld = loc.getWorld();
         Player[] players = Bukkit.getOnlinePlayers();
         int squaredRange = range * range;
+        String msgString = "[" + sender + "]: " + message;
         for (Player player : players) {
             if (player.getWorld() == currentWorld) {
-                if (centerLocation.distanceSquared(player.getLocation()) <= squaredRange) {
-                    player.sendMessage(message);
+                if (loc.distanceSquared(player.getLocation()) <= squaredRange) {
+                    player.sendMessage(msgString);
                 }
             }
         }
+        KLogger.info("[nor][" + sender + "]: " + message);
     }
 
     public void publicChat(Player sender, String message) {
@@ -95,6 +104,35 @@ public class Chat extends Addon {
 
             player.sendMessage(result.toString());
         }
+        KLogger.info("[pub][" + sender.getName() + "]: " + message);
+
+        if (plugin.dynampIntegration) {
+            plugin.getDynmap().sendBroadcastToWeb(sender.getName(), message);
+        }
+    }
+
+    public void webChat(String sender, String message) {
+        Player[] players = Bukkit.getOnlinePlayers();
+        for (Player player : players) {
+            StringBuilder result = new StringBuilder();
+            KPlayer kPlayer = plugin.getOnlinePlayer(player.getName());
+            Locale locale = kPlayer.getLocale();
+
+            if (locale == null) {
+                locale = LocaleManager.getDefauLocale();
+            }
+
+            result.append(ChatColor.GOLD.toString());
+            result.append("[");
+            result.append(locale.phrase("chat_web"));
+            result.append("][");
+            result.append(sender);
+            result.append("]: ");
+            result.append(message);
+
+            player.sendMessage(result.toString());
+        }
+        KLogger.info("[web][" + sender + "]: " + message);
     }
 
     public void channelChat(Entity sender, String channel, String message) {

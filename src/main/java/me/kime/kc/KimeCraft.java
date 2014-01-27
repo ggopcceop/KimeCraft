@@ -21,15 +21,15 @@ import java.util.Random;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import me.kime.kc.admin.Admin;
+import me.kime.kc.auth.Auth;
+import me.kime.kc.chat.Chat;
 import me.kime.kc.chopTree.ChopTree;
 import me.kime.kc.fun.Fun;
 import me.kime.kc.mine.Mine;
+import me.kime.kc.motd.MOTD;
 import me.kime.kc.noob.Noob;
 import me.kime.kc.portal.Portal;
 import me.kime.kc.signTP.SignTP;
-import me.kime.kc.auth.Auth;
-import me.kime.kc.chat.Chat;
-import me.kime.kc.motd.MOTD;
 import me.kime.kc.task.threadTask.Task;
 import me.kime.kc.task.threadTask.ThreadManager;
 import me.kime.kc.util.KLogFilter;
@@ -40,9 +40,11 @@ import org.bukkit.Difficulty;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.dynmap.DynmapAPI;
 
 /**
  * KimeCraft plugin
@@ -108,6 +110,8 @@ public class KimeCraft extends JavaPlugin {
         registerAddon(new ChopTree(this));
         registerAddon(new Portal(this));
         registerAddon(new Mine(this));
+        
+        setupDynmap();
 
         ((org.apache.logging.log4j.core.Logger) LogManager.getRootLogger()).addFilter(new KLogFilter());
 
@@ -139,6 +143,30 @@ public class KimeCraft extends JavaPlugin {
 
     public PluginManager getPluginManager() {
         return getServer().getPluginManager();
+    }
+    //======== dynmap  ==========//
+    public boolean dynampIntegration = false;
+    private DynmapAPI dynmap;
+
+    public boolean setupDynmap() {
+        Plugin p = getPluginManager().getPlugin("dynmap");
+        if (p != null && p.isEnabled()) {
+            setDynmap((DynmapAPI) p);
+            dynampIntegration = true;
+            Addon chat = getAddon("chat");
+            if (chat != null) {
+                ((Chat) chat).registerDynmapChatEvent();
+            }
+        }
+        return dynampIntegration;
+    }
+
+    public DynmapAPI getDynmap() {
+        return dynmap;
+    }
+
+    public void setDynmap(DynmapAPI dynmap) {
+        this.dynmap = dynmap;
     }
 
     //======== thread tasks =======//

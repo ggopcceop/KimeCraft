@@ -45,6 +45,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.server.PluginEnableEvent;
+import org.bukkit.plugin.Plugin;
 
 /**
  *
@@ -71,6 +73,17 @@ public class KCListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
         onlineList.remove(event.getPlayer().getName().toLowerCase());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPluginEnable(PluginEnableEvent event) {
+        if (plugin.getDynmap() == null) {
+            Plugin p = event.getPlugin();
+            String name = p.getDescription().getName();
+            if (name.equals("dynmap")) {
+                plugin.setupDynmap();
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

@@ -28,6 +28,7 @@ Language:
     #for chat addon
     chat_public: "public"
     chat_normal: "normal"
+    chat_web: "web"
     chat_chattingChannel: "You are chatting in channel %1"
     
     #for mine addon

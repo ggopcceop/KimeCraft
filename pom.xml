@@ -71,6 +71,10 @@
             <id>vault-repo</id>
             <url>http://ci.herocraftonline.com/plugin/repository/everything</url>
         </repository>
+        <repository>
+            <id>dynmap-repo</id>
+            <url>http://repo.mikeprimm.com/</url>
+        </repository>
     </repositories>
     <dependencies>
         <!-- Dependency information -->
@@ -83,7 +87,13 @@
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>Vault</artifactId>
-            <version>1.2.27-SNAPSHOT</version>
+            <version>1.2.30</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.dynmap</groupId>
+            <artifactId>dynmap-api</artifactId>
+            <version>1.9</version>
             <type>jar</type>
         </dependency>
     </dependencies>

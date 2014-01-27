@@ -33,12 +33,15 @@ public class KCCommand implements CommandExecutor {
     private final KimeCraft plugin;
     private final long cooldown = 30 * 60 * 1000;
     private final HashMap<String, CD> cooldownData;
-    private final World mineWorld;
+    private World mineWorld;
 
     public KCCommand(KimeCraft instance) {
         this.plugin = instance;
         cooldownData = new HashMap<>();
-        mineWorld = ((Mine) plugin.getAddon("Mine")).getMineWorld();
+        Mine mine = (Mine) plugin.getAddon("Mine");
+        if (mine != null) {
+            mineWorld = mine.getMineWorld();
+        }
     }
 
     @Override

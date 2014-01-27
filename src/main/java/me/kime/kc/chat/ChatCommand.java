@@ -60,8 +60,7 @@ public class ChatCommand implements CommandExecutor {
                         kPlayer.currentChannel = 0;
                         KMessager.sendMessage(kPlayer, ChatColor.DARK_GREEN, "chat_chattingChannel", kPlayer.getLocale().phrase("chat_normal"));
                     } else {
-                        String message = "[" + kPlayer.player.getName() + "]: " + split[1];
-                        addon.rangeChat(player, addon.getNormalChatRange(), message);
+                        addon.rangeChat(player.getName(), player.getLocation(), addon.getNormalChatRange(), split[1]);
                     }
                     break;
                 case "1":

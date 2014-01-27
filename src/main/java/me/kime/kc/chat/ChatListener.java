@@ -39,8 +39,7 @@ public class ChatListener implements Listener {
         KPlayer kPlayer = addon.getPlugin().getOnlinePlayer(event.getPlayer().getName());
         switch (kPlayer.currentChannel) {
             case 0:
-                String message = "[" + kPlayer.player.getName() + "]: " + event.getMessage();
-                addon.rangeChat(event.getPlayer(), addon.getNormalChatRange(), message);
+                addon.rangeChat(event.getPlayer().getName(), event.getPlayer().getLocation(), addon.getNormalChatRange(), event.getMessage());
                 event.setCancelled(true);
                 break;
             case 1:
@@ -51,4 +50,5 @@ public class ChatListener implements Listener {
                 break;
         }
     }
+
 }

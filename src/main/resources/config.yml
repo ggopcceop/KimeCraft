@@ -10,7 +10,7 @@ noob:
   enable: true
 fun:
   enable: true
-signTP:
+signtp:
   enable: true
   mysql:
     maxconection: 2
@@ -18,7 +18,7 @@ signTP:
     database: minecraft
     username: minecraft
     password: password    
-chopTree:
+choptree:
   enable: true
 mine:
   enable: true

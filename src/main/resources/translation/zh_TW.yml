@@ -28,6 +28,7 @@ Language:
     #for chat addon
     chat_public: "公共"
     chat_normal: "普通"
+    chat_web: "網絡"
     chat_chattingChannel: "你使用%1頻道中"
     
     #for mine addon
