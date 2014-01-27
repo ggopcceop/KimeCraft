@@ -40,7 +40,7 @@ public class NoobListener implements Listener {
                 @Override
                 public void run() {
                     KPlayer kp = noob.getPlugin().getOnlinePlayer(name);
-                    if (kp.getPlayer().isOnline()) {
+                    if (kp != null && kp.getPlayer().isOnline()) {
                         kp.getPlayer().teleport(noob.getNoobWorld().getSpawnLocation());
                         kp.getPlayer().setGameMode(GameMode.CREATIVE);
                     }
