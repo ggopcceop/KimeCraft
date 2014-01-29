@@ -52,7 +52,7 @@ public class SignTPTask extends Task {
 
             } else if (t.type == 1) {
                 if (dataSource.insertLocation(t.player.getLocation(), t.name)) {
-                    KMessager.sendMessage(signtp.getPlugin().getOnlinePlayer(t.player.getName()), ChatColor.GREEN, "signtp_createHub");
+                    KMessager.sendMessage(signtp.getPlugin().getOnlinePlayer(t.player.getName()), ChatColor.GREEN, "signtp_createHub", t.name);
                 } else {
                     KMessager.sendError(signtp.getPlugin().getOnlinePlayer(t.player.getName()), "signtp_hubAlreadyExist");
                 }
