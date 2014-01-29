@@ -43,7 +43,7 @@ public class SignTPListener implements Listener {
     public SignTPListener(SignTP signTP) {
         this.signTP = signTP;
 
-        task = new SignTPTask(signTP, signTP.getDataSource());
+        task = new SignTPTask(signTP);
         signTP.getPlugin().registerTask(task);
     }
 

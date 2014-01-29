@@ -2,7 +2,6 @@ package me.kime.kc.task.threadTask;
 
 import java.util.LinkedList;
 import me.kime.kc.signTP.SignTP;
-import me.kime.kc.signTP.SignTpDataSource;
 import me.kime.kc.util.KMessager;
 import me.kime.kc.util.KCTPer;
 import org.bukkit.ChatColor;
@@ -16,13 +15,12 @@ import org.bukkit.entity.Player;
 public class SignTPTask extends Task {
 
     private final LinkedList<subTask> list;
-    private final SignTpDataSource dataSource;
     private final SignTP signtp;
 
-    public SignTPTask(SignTP signtp, SignTpDataSource dataSource) {
+    public SignTPTask(SignTP signtp) {
         list = new LinkedList();
         this.signtp = signtp;
-        this.dataSource = dataSource;
+
     }
 
     @Override
@@ -35,7 +33,7 @@ public class SignTPTask extends Task {
         synchronized (lock) {
             final subTask t = list.remove();
             if (t.type == 0) {
-                Location loc = dataSource.getLocationByName(t.name);
+                Location loc = signtp.getDataSource().getLocationByName(t.name);
                 if (loc == null) {
                     KMessager.sendError(signtp.getPlugin().getOnlinePlayer(t.player.getName()), "notFound", t.name);
                 } else {
@@ -51,13 +49,13 @@ public class SignTPTask extends Task {
                 }
 
             } else if (t.type == 1) {
-                if (dataSource.insertLocation(t.player.getLocation(), t.name)) {
+                if (signtp.getDataSource().insertLocation(t.player.getLocation(), t.name)) {
                     KMessager.sendMessage(signtp.getPlugin().getOnlinePlayer(t.player.getName()), ChatColor.GREEN, "signtp_createHub", t.name);
                 } else {
                     KMessager.sendError(signtp.getPlugin().getOnlinePlayer(t.player.getName()), "signtp_hubAlreadyExist");
                 }
             } else {
-                dataSource.removeLocation(t.name);
+                signtp.getDataSource().removeLocation(t.name);
                 t.player.sendMessage("Removed " + t.name + " from the Hub List");
             }
         }
