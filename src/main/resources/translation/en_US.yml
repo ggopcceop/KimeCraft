@@ -4,6 +4,7 @@ Language:
     error: "An error ocurred; Please contact the admins"
     NotFound: "%1 not found"
     notSpace: "Don't have enough space"
+    reload: "Plugin reloaded"
     
     #for city
     city_cooldown: "City cooldown in %1 seconds!"

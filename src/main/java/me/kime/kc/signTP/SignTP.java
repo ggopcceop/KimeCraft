@@ -22,6 +22,7 @@ import me.kime.kc.KimeCraft;
 public class SignTP extends Addon {
 
     private SignTpDataSource datasource;
+    private String databaseKey;
 
     public SignTP(KimeCraft plugin) {
         super(plugin);
@@ -34,18 +35,26 @@ public class SignTP extends Addon {
 
     @Override
     public void onEnable() {
-        int max = plugin.getConfig().getInt("signtp.mysql.maxconection", 2);
-        String host = plugin.getConfig().getString("signtp.mysql.host", "localhost");
-        String user = plugin.getConfig().getString("signtp.mysql.username", "minecraft");
-        String pass = plugin.getConfig().getString("signtp.mysql.password", "123456");
-        String db = plugin.getConfig().getString("signtp.mysql.database", "minecraft");
-        datasource = new SignTpDataSource(host, user, pass, db, max, this);
+        loadConfig();
+
+        datasource = new SignTpDataSource(databaseKey, this);
+
+        datasource.initTable();
 
         plugin.getServer().getPluginManager().registerEvents(new SignTPListener(this), plugin);
     }
 
     @Override
     public void onDisable() {
+    }
+
+    @Override
+    public void onReload() {
+        loadConfig();
+    }
+
+    private void loadConfig() {
+        databaseKey = plugin.getConfig().getString("signtp.mysql", "minecraft");
     }
 
     public SignTpDataSource getDataSource() {

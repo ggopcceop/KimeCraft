@@ -21,6 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import me.kime.kc.database.DataSource;
+import me.kime.kc.database.DataSourceManager;
 import me.kime.kc.util.KLogger;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -29,14 +30,44 @@ import org.bukkit.World;
  *
  * @author Kime
  */
-public class SignTpDataSource extends DataSource {
+public class SignTpDataSource {
 
     private final SignTP signtp;
+    private final DataSource dataSource;
 
-    public SignTpDataSource(String host, String user, String pass, String db
-            , int maxConnections, SignTP signtp) {
-        super(host, user, pass, db, maxConnections);
+    public SignTpDataSource(String key, SignTP signtp) {
+        dataSource = DataSourceManager.getDataSource(key);
+        if (dataSource == null) {
+            KLogger.showError("Sign TP fail to get data source " + key);
+        }
         this.signtp = signtp;
+        
+       
+    }
+
+    public void initTable() {
+        Connection conn = null;
+        PreparedStatement pst = null;
+        try {
+            conn = dataSource.getConnection();
+            pst = conn.prepareStatement("CREATE TABLE IF NOT EXISTS `kc_signtp` (\n"
+                    + "  `id` int(11) NOT NULL AUTO_INCREMENT,\n"
+                    + "  `name` varchar(30) NOT NULL,\n"
+                    + "  `world` varchar(20) CHARACTER SET latin1 NOT NULL,\n"
+                    + "  `x` double NOT NULL,\n"
+                    + "  `y` double NOT NULL,\n"
+                    + "  `z` double NOT NULL,\n"
+                    + "  `yaw` double NOT NULL,\n"
+                    + "  PRIMARY KEY (`id`),\n"
+                    + "  UNIQUE KEY `name` (`name`)\n"
+                    + ") ENGINE=InnoDB  DEFAULT CHARSET=utf8");
+            pst.executeUpdate();
+        } catch (SQLException e) {
+            KLogger.showError(e.getMessage());
+        } finally {
+            dataSource.close(conn);
+            dataSource.close(pst);
+        }
     }
 
     public Location getLocationByName(String name) {
@@ -44,7 +75,7 @@ public class SignTpDataSource extends DataSource {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            conn = pool.getValidConnection();
+            conn = dataSource.getConnection();
             pst = conn.prepareStatement("SELECT * FROM kc_signtp WHERE name = ?");
             pst.setString(1, name);
             rs = pst.executeQuery();
@@ -62,9 +93,9 @@ public class SignTpDataSource extends DataSource {
             KLogger.showError(e.getMessage());
             return null;
         } finally {
-            close(conn);
-            close(pst);
-            close(rs);
+            dataSource.close(conn);
+            dataSource.close(pst);
+            dataSource.close(rs);
         }
     }
 
@@ -72,7 +103,7 @@ public class SignTpDataSource extends DataSource {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = pool.getValidConnection();
+            conn = dataSource.getConnection();
             pst = conn.prepareStatement("INSERT INTO kc_signtp values(DEFAULT, ?, ?, ?, ?, ?, ?)");
             pst.setString(1, name.toLowerCase());
             pst.setString(2, loc.getWorld().getName());
@@ -86,8 +117,8 @@ public class SignTpDataSource extends DataSource {
             KLogger.showError(e.getMessage());
             return false;
         } finally {
-            close(conn);
-            close(pst);
+            dataSource.close(conn);
+            dataSource.close(pst);
         }
     }
 
@@ -95,15 +126,15 @@ public class SignTpDataSource extends DataSource {
         Connection conn = null;
         PreparedStatement pst = null;
         try {
-            conn = pool.getValidConnection();
+            conn = dataSource.getConnection();
             pst = conn.prepareStatement("DELETE FROM kc_signtp WHERE name = ?");
             pst.setString(1, name.toLowerCase());
             pst.executeUpdate();
         } catch (SQLException e) {
             KLogger.showError(e.getMessage());
         } finally {
-            close(conn);
-            close(pst);
+            dataSource.close(conn);
+            dataSource.close(pst);
         }
     }
 }

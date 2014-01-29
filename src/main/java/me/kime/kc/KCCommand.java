@@ -17,7 +17,9 @@
 package me.kime.kc;
 
 import java.util.HashMap;
+import me.kime.kc.locale.LocaleManager;
 import me.kime.kc.mine.Mine;
+import me.kime.kc.util.KLogger;
 import me.kime.kc.util.KMessager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -46,33 +48,52 @@ public class KCCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] split) {
-        if (!(sender instanceof Player)) {
-            return true;
-        }
-        Player player = (Player) sender;
-        World world = player.getLocation().getWorld();
-        KPlayer kPlayer = plugin.getOnlinePlayer(player.getName());
-        CD cd = cooldownData.get(player.getName().toLowerCase());
-        if (cd == null) {
-            cd = new CD();
-            cooldownData.put(player.getName().toLowerCase(), cd);
-        }
 
-        long time = System.currentTimeMillis() - cd.getCityCD();
-        if (time >= cooldown) {
-            if (world.equals(plugin.getDefaultWorld()) || world.equals(mineWorld)) {
-                Location loc = new Location(plugin.getDefaultWorld(), -308, 216, 22, 0, 0);
-                player.getPlayer().teleport(loc, TeleportCause.COMMAND);
+        switch (command.getName()) {
+            case "city":
+                if (!(sender instanceof Player)) {
+                    return true;
+                }
+                Player player = (Player) sender;
+                KPlayer kPlayer = plugin.getOnlinePlayer(player.getName());
+                World world = player.getLocation().getWorld();
 
-                KMessager.sendMessage(kPlayer, ChatColor.YELLOW, "city_success");
-                cd.setCityCD(System.currentTimeMillis());
-            } else {
-                KMessager.sendError(kPlayer, "city_disallow");
-            }
-        } else {
-            KMessager.sendError(kPlayer, "city_cooldown", "" + (((cooldown - time) / 1000)));
+                CD cd = cooldownData.get(player.getName().toLowerCase());
+                if (cd == null) {
+                    cd = new CD();
+                    cooldownData.put(player.getName().toLowerCase(), cd);
+                }
+
+                long time = System.currentTimeMillis() - cd.getCityCD();
+                if (time >= cooldown) {
+                    if (world.equals(plugin.getDefaultWorld()) || world.equals(mineWorld)) {
+                        Location loc = new Location(plugin.getDefaultWorld(), -308, 216, 22, 0, 0);
+                        player.getPlayer().teleport(loc, TeleportCause.COMMAND);
+
+                        KMessager.sendMessage(kPlayer, ChatColor.YELLOW, "city_success");
+                        cd.setCityCD(System.currentTimeMillis());
+                    } else {
+                        KMessager.sendError(kPlayer, "city_disallow");
+                    }
+                } else {
+                    KMessager.sendError(kPlayer, "city_cooldown", "" + (((cooldown - time) / 1000)));
+                }
+                break;
+            case "kimecraft":
+                if (split.length == 1 && split[0].equalsIgnoreCase("reload")) {
+                    if (sender.hasPermission("kc.admin.reload")) {
+                        plugin.reloadAddons();
+                        if (sender instanceof Player) {
+                            kPlayer = plugin.getOnlinePlayer(sender.getName());
+                            KMessager.sendMessage(kPlayer, ChatColor.GREEN, "reload");
+                        } else {
+                            KLogger.info(LocaleManager.getDefauLocale().phrase("reload"));
+                        }
+
+                    }
+                }
+                break;
         }
-
         return true;
     }
 

@@ -16,9 +16,6 @@
  */
 package me.kime.kc.chat;
 
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import me.kime.kc.Addon;
 import me.kime.kc.KPlayer;
 import me.kime.kc.KimeCraft;
@@ -137,6 +134,11 @@ public class Chat extends Addon {
 
     public void channelChat(Entity sender, String channel, String message) {
 
+    }
+    
+    public Channel registerChannel(String name){
+        Channel channel = new Channel(name);
+        return channel;
     }
 
     public int getNormalChatRange() {

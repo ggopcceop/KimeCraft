@@ -30,6 +30,7 @@ public class Auth extends Addon {
 
     private final long sessionTime = 1000 * 120;
     private AuthDataSource dataSource = null;
+    private String databaseKey;
 
     public Auth(KimeCraft plugin) {
         super(plugin);
@@ -55,13 +56,9 @@ public class Auth extends Addon {
     @Override
     public void onEnable() {
         //start sql connection
-        String db = plugin.getConfig().getString("auth.mysql.database");
-        String host = plugin.getConfig().getString("auth.mysql.host");
-        String user = plugin.getConfig().getString("auth.mysql.username");
-        String pass = plugin.getConfig().getString("auth.mysql.password");
-        int max = plugin.getConfig().getInt("auth.mysql.maxconection", 2);
+        databaseKey = plugin.getConfig().getString("auth.mysql", "auth");
 
-        dataSource = new AuthDataSource(host, user, pass, db, max);
+        dataSource = new AuthDataSource(databaseKey);
 
         //login command executor
         AuthCommand command = new AuthCommand(this);
@@ -79,6 +76,6 @@ public class Auth extends Addon {
 
     @Override
     public void onReload() {
-
+        databaseKey = plugin.getConfig().getString("auth.mysql", "auth");
     }
 }

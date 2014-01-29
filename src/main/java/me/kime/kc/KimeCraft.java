@@ -24,10 +24,12 @@ import me.kime.kc.admin.Admin;
 import me.kime.kc.auth.Auth;
 import me.kime.kc.chat.Chat;
 import me.kime.kc.chopTree.ChopTree;
+import me.kime.kc.database.DataSourceManager;
 import me.kime.kc.fun.Fun;
 import me.kime.kc.mine.Mine;
 import me.kime.kc.motd.MOTD;
 import me.kime.kc.noob.Noob;
+import me.kime.kc.party.Party;
 import me.kime.kc.portal.Portal;
 import me.kime.kc.signTP.SignTP;
 import me.kime.kc.task.threadTask.Task;
@@ -39,6 +41,7 @@ import org.apache.logging.log4j.LogManager;
 import org.bukkit.Difficulty;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -67,6 +70,8 @@ public class KimeCraft extends JavaPlugin {
     @Override
     public void onDisable() {
 
+        disableAddons();
+
         long time = System.currentTimeMillis();
         while (!threadManager.isDone()) {
             long curr = System.currentTimeMillis();
@@ -89,6 +94,19 @@ public class KimeCraft extends JavaPlugin {
         threadManager = new ThreadManager(pool);
         threadManager.start();
 
+        //setup database
+        ConfigurationSection database = config.getConfigurationSection("database");
+        for (String key : database.getKeys(false)) {
+            int max = database.getInt(key + ".maxconection", 2);
+            String host = database.getString(key + ".host", "localhost");
+            String user = database.getString(key + ".username", "minecraft");
+            String pass = database.getString(key + ".password", "123456");
+            String db = database.getString(key + ".database", "minecraft");
+
+            DataSourceManager.createDataSource(key, host, user, pass, db, max);
+            KLogger.info("Connecting to database key " + key);
+        }
+
         rand = new Random();
 
         setupEconomy();
@@ -110,7 +128,8 @@ public class KimeCraft extends JavaPlugin {
         registerAddon(new ChopTree(this));
         registerAddon(new Portal(this));
         registerAddon(new Mine(this));
-        
+        registerAddon(new Party(this));
+
         setupDynmap();
 
         ((org.apache.logging.log4j.core.Logger) LogManager.getRootLogger()).addFilter(new KLogFilter());
@@ -119,6 +138,7 @@ public class KimeCraft extends JavaPlugin {
 
         KCCommand kcCommand = new KCCommand(this);
         getCommand("city").setExecutor(kcCommand);
+        getCommand("kimecraft").setExecutor(kcCommand);
 
         KLogger.info("KimeCraft Loaded!");
     }
@@ -189,6 +209,9 @@ public class KimeCraft extends JavaPlugin {
     }
 
     public void reloadAddons() {
+        this.reloadConfig();
+        config = this.getConfig();
+        
         for (String name : Addons.keySet()) {
             Addon addon = Addons.get(name);
             addon.onReload();
@@ -202,6 +225,14 @@ public class KimeCraft extends JavaPlugin {
         return null;
     }
 
+    private void disableAddons() {
+        for (String name : Addons.keySet()) {
+            Addon addon = Addons.get(name);
+            addon.onDisable();
+        }
+    }
+
+    /* ======== others ===============*/
     public Location getCity() {
         return new Location(world, -308, 216, 22, 0, 0);
     }

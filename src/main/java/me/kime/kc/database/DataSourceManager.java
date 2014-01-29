@@ -15,24 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.kime.kc.chat;
+package me.kime.kc.database;
 
 import java.util.HashMap;
-import me.kime.kc.KPlayer;
 
 /**
  *
  * @author Kime
  */
-public class Channel {
-    public final String name;
-    public ChannelType type;
-    public String owner;
-    public int id;
-    public HashMap<String, KPlayer> members;
-    
-    public Channel(String name){
-        this.name = name;
-        type = ChannelType.NORMAL;
+public class DataSourceManager {
+
+    private final static HashMap<String, DataSource> dataSources = new HashMap<>();
+
+    public static DataSource createDataSource(String key, String host, String user, String pass, String db, int maxConnections) {
+        DataSource dataSource = dataSources.get(key);
+        if (dataSource == null) {
+            dataSource = new DataSource(host, user, pass, db, maxConnections);
+            dataSources.put(key, dataSource);
+        }
+        return dataSource;
+    }
+
+    public static DataSource getDataSource(String key) {
+        return dataSources.get(key);
     }
 }

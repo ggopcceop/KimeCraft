@@ -20,9 +20,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import me.kime.kc.KPlayer;
 import me.kime.kc.database.DataSource;
 
-import me.kime.kc.KPlayer;
+import me.kime.kc.database.DataSourceManager;
 import me.kime.kc.util.KLogger;
 
 /**
@@ -31,10 +32,15 @@ import me.kime.kc.util.KLogger;
  * @author Kime
  *
  */
-public class AuthDataSource extends DataSource {
+public class AuthDataSource {
 
-    public AuthDataSource(String host, String user, String pass, String db, int max) {
-        super(host, user, pass, db, max);
+    private final DataSource dataSource;
+
+    public AuthDataSource(String key) {
+        dataSource = DataSourceManager.getDataSource(key);
+        if (dataSource == null) {
+            KLogger.showError("Auth fail to get data source " + key);
+        }
     }
 
     public void getAuth(KPlayer kPlayer) {
@@ -44,7 +50,7 @@ public class AuthDataSource extends DataSource {
         PreparedStatement pst = null;
         ResultSet rs = null;
         try {
-            con = pool.getValidConnection();
+            con = dataSource.getConnection();
             pst = con.prepareStatement("SELECT pre_ucenter_members.username, "
                     + "pre_ucenter_members.password, pre_ucenter_members.salt, "
                     + "pre_common_member.groupid, pre_ucenter_members.lloginip, "
@@ -70,9 +76,9 @@ public class AuthDataSource extends DataSource {
         } catch (SQLException ex) {
             KLogger.showError(ex.getMessage());
         } finally {
-            close(con);
-            close(rs);
-            close(pst);
+            dataSource.close(con);
+            dataSource.close(rs);
+            dataSource.close(pst);
         }
 
     }
@@ -81,7 +87,7 @@ public class AuthDataSource extends DataSource {
         Connection con = null;
         PreparedStatement pst = null;
         try {
-            con = pool.getValidConnection();
+            con = dataSource.getConnection();
             pst = con.prepareStatement("UPDATE pre_ucenter_members SET lloginip = ?,"
                     + " llogindate = ? WHERE username = ?;");
             pst.setString(1, kPlayer.player.getAddress().getHostString());
@@ -92,8 +98,8 @@ public class AuthDataSource extends DataSource {
             KLogger.showError(e.getMessage());
             return false;
         } finally {
-            close(con);
-            close(pst);
+            dataSource.close(con);
+            dataSource.close(pst);
         }
         return true;
     }

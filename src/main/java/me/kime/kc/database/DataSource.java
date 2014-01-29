@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2014 Kime
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package me.kime.kc.database;
 
 import biz.source_code.miniConnectionPoolManager.MiniConnectionPoolManager;
@@ -29,6 +45,10 @@ public class DataSource {
         this.pool = pool;
     }
 
+    public Connection getConnection() {
+        return pool.getValidConnection();
+    }
+
     public void close() {
         try {
             pool.dispose();
@@ -37,7 +57,7 @@ public class DataSource {
         }
     }
 
-    protected void close(Connection conn) {
+    public void close(Connection conn) {
         if (conn != null) {
             try {
                 conn.close();
@@ -47,7 +67,7 @@ public class DataSource {
         }
     }
 
-    protected void close(ResultSet rs) {
+    public void close(ResultSet rs) {
         if (rs != null) {
             try {
                 rs.close();
@@ -57,7 +77,7 @@ public class DataSource {
         }
     }
 
-    protected void close(Statement st) {
+    public void close(Statement st) {
         if (st != null) {
             try {
                 st.close();

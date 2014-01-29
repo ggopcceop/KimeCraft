@@ -17,22 +17,10 @@
 
 package me.kime.kc.chat;
 
-import java.util.HashMap;
-import me.kime.kc.KPlayer;
-
 /**
  *
  * @author Kime
  */
-public class Channel {
-    public final String name;
-    public ChannelType type;
-    public String owner;
-    public int id;
-    public HashMap<String, KPlayer> members;
+public class ChannelManager {
     
-    public Channel(String name){
-        this.name = name;
-        type = ChannelType.NORMAL;
-    }
 }

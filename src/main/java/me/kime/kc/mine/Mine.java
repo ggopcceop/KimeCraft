@@ -34,6 +34,7 @@ public class Mine extends Addon {
     private World mineWorld;
     private MinePaymentTask minePaymentTask;
     private MineDataSource datasource;
+    private String databaseKey;
 
     public Mine(KimeCraft instance) {
         super(instance);
@@ -46,12 +47,10 @@ public class Mine extends Addon {
 
     @Override
     public void onEnable() {
-        int max = plugin.getConfig().getInt("mine.mysql.maxconection", 2);
-        String host = plugin.getConfig().getString("mine.mysql.host", "localhost");
-        String user = plugin.getConfig().getString("mine.mysql.username", "minecraft");
-        String pass = plugin.getConfig().getString("mine.mysql.password", "123456");
-        String db = plugin.getConfig().getString("mine.mysql.database", "minecraft");
-        datasource = new MineDataSource(host, user, pass, db, max, this);
+
+        databaseKey = plugin.getConfig().getString("mine.mysql", "minecraft");
+        datasource = new MineDataSource(databaseKey, this);
+        datasource.initTable();
 
         plugin.getPluginManager().registerEvents(new MineLinstener(this), plugin);
 
@@ -91,6 +90,15 @@ public class Mine extends Addon {
 
     @Override
     public void onDisable() {
+    }
+
+    @Override
+    public void onReload() {
+        reloadConfig();
+    }
+
+    private void reloadConfig() {
+        databaseKey = plugin.getConfig().getString("mine.mysql", "minecraft");
     }
 
     public MineDataSource getDataSource() {

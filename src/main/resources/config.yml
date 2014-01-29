@@ -1,28 +1,26 @@
 auth:
   enable: true
-  mysql:
-    maxconection: 2
-    host: localhost
-    database: bbs    
-    username: bbs
-    password: password
+  mysql: auth
 noob:
   enable: true
 fun:
   enable: true
 signtp:
   enable: true
-  mysql:
-    maxconection: 2
-    host: localhost
-    database: minecraft
-    username: minecraft
-    password: password    
+  mysql: minecraft 
 choptree:
   enable: true
 mine:
   enable: true
-  mysql:
+  mysql: minecraft 
+database:
+  auth:
+    maxconection: 2
+    host: localhost
+    database: bbs    
+    username: bbs
+    password: password
+  minecraft:
     maxconection: 2
     host: localhost
     database: minecraft

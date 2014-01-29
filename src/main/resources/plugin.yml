@@ -29,3 +29,6 @@ commands:
         description: chatting channels
         aliases: c
         usage: /chat channel
+    party:
+        description: create parties
+        usage: /party
