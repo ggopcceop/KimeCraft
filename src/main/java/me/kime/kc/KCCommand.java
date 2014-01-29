@@ -85,11 +85,24 @@ public class KCCommand implements CommandExecutor {
                         plugin.reloadAddons();
                         if (sender instanceof Player) {
                             kPlayer = plugin.getOnlinePlayer(sender.getName());
-                            KMessager.sendMessage(kPlayer, ChatColor.GREEN, "reload");
+                            KMessager.sendMessage(kPlayer, ChatColor.GREEN, "reload", "KimeCraft");
                         } else {
-                            KLogger.info(LocaleManager.getDefauLocale().phrase("reload"));
+                            KLogger.info(LocaleManager.getDefauLocale().phrase("reload", "KimeCraft"));
                         }
 
+                    }
+                } else if (split.length == 2 && split[0].equalsIgnoreCase("reload")) {
+                    if (sender.hasPermission("kc.admin.reload")) {
+                        Addon addon = plugin.getAddon(split[1].toLowerCase());
+                        if (addon != null) {
+                            addon.onReload();
+                            if (sender instanceof Player) {
+                                kPlayer = plugin.getOnlinePlayer(sender.getName());
+                                KMessager.sendMessage(kPlayer, ChatColor.GREEN, "reload", addon.getAddonName());
+                            } else {
+                                KLogger.info(LocaleManager.getDefauLocale().phrase("reload", addon.getAddonName()));
+                            }
+                        }
                     }
                 }
                 break;

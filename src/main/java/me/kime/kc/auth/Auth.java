@@ -19,6 +19,9 @@ package me.kime.kc.auth;
 import me.kime.kc.Addon;
 import me.kime.kc.KPlayer;
 import me.kime.kc.KimeCraft;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.event.HandlerList;
 
 /**
  * Auth plugin
@@ -31,21 +34,15 @@ public class Auth extends Addon {
     private final long sessionTime = 1000 * 120;
     private AuthDataSource dataSource = null;
     private String databaseKey;
+    private final AuthListener authListener;
+    private final AuthCommand authCommand;
+    private CommandExecutor defaultCommandExecutor;
+    private TabCompleter defaultTabCompleter;
 
     public Auth(KimeCraft plugin) {
         super(plugin);
-    }
-
-    public KPlayer getOnlinePlayer(String name) {
-        return plugin.getOnlinePlayer(name);
-    }
-
-    public AuthDataSource getDataSource() {
-        return dataSource;
-    }
-
-    public long getSessionTime() {
-        return sessionTime;
+        authListener = new AuthListener(this);
+        authCommand = new AuthCommand(this);
     }
 
     @Override
@@ -61,21 +58,38 @@ public class Auth extends Addon {
         dataSource = new AuthDataSource(databaseKey);
 
         //login command executor
-        AuthCommand command = new AuthCommand(this);
-        plugin.getCommand("login").setExecutor(command);
-        plugin.getCommand("login").setTabCompleter(command);
+        defaultCommandExecutor = plugin.getCommand("login").getExecutor();
+        defaultTabCompleter = plugin.getCommand("login").getTabCompleter();
+        
+        plugin.getCommand("login").setExecutor(authCommand);
+        plugin.getCommand("login").setTabCompleter(authCommand);
 
         //login event
-        plugin.getPluginManager().registerEvents(new AuthListener(this), plugin);
+        plugin.getPluginManager().registerEvents(authListener, plugin);
     }
 
     @Override
     public void onDisable() {
-
+        HandlerList.unregisterAll(authListener);
+        plugin.getCommand("login").setExecutor(defaultCommandExecutor);
+        plugin.getCommand("login").setTabCompleter(defaultTabCompleter);
     }
 
     @Override
     public void onReload() {
         databaseKey = plugin.getConfig().getString("auth.mysql", "auth");
     }
+
+    public KPlayer getOnlinePlayer(String name) {
+        return plugin.getOnlinePlayer(name);
+    }
+
+    public AuthDataSource getDataSource() {
+        return dataSource;
+    }
+
+    public long getSessionTime() {
+        return sessionTime;
+    }
+
 }

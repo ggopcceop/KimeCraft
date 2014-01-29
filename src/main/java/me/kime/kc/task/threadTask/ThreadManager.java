@@ -5,21 +5,29 @@ import java.util.concurrent.Executor;
 import me.kime.kc.util.KLogger;
 
 public class ThreadManager extends Thread {
-    
+
     private final Executor pool;
     private final LinkedList<Task> taskList;
     private final Byte lock;
-    
+
     public ThreadManager(Executor pool) {
         this.lock = Byte.MAX_VALUE;
         this.pool = pool;
         taskList = new LinkedList<>();
     }
-    
+
     public void registerTask(Task task) {
-        taskList.add(task);
+        synchronized (lock) {
+            taskList.add(task);
+        }
     }
-    
+
+    public void unRegisterTask(Task task) {
+        synchronized (lock) {
+            taskList.remove(task);
+        }
+    }
+
     @Override
     public void run() {
         boolean hasTask;
@@ -43,7 +51,7 @@ public class ThreadManager extends Thread {
             }
         }
     }
-    
+
     public boolean isDone() {
         synchronized (lock) {
             for (Task task : taskList) {

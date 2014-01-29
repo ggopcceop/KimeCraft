@@ -23,6 +23,7 @@ import me.kime.kc.KimeCraft;
 import me.kime.kc.locale.Locale;
 import me.kime.kc.task.MOTDBoradcastTask;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.HandlerList;
 import org.bukkit.scheduler.BukkitTask;
 
 /**
@@ -33,18 +34,12 @@ public class MOTD extends Addon {
 
     public HashMap<String, Locale> motd;
     public HashMap<String, Locale> rules;
+    private BukkitTask boradcastTaskID;
+    private final MOTDListener motdListener;
 
     public MOTD(KimeCraft plugin) {
         super(plugin);
-    }
-
-    private HashMap<String, Locale> getLocales(ConfigurationSection config) {
-        HashMap<String, Locale> result = new HashMap<>();
-        Set<String> keys = config.getKeys(false);
-        for (String key : keys) {
-            result.put(key, new Locale(config.getConfigurationSection(key), key));
-        }
-        return result;
+        motdListener = new MOTDListener(this);
     }
 
     @Override
@@ -59,13 +54,29 @@ public class MOTD extends Addon {
 
         int boardcastInterval = plugin.config.getInt("motd.boardcastInterval", 300) * 20;
 
-        BukkitTask timeoutTaskId = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new MOTDBoradcastTask(this), 0, boardcastInterval);
+        boradcastTaskID = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new MOTDBoradcastTask(this), 0, boardcastInterval);
 
-        plugin.getPluginManager().registerEvents(new MOTDListener(this), plugin);
+        plugin.getPluginManager().registerEvents(motdListener, plugin);
+    }
+
+    @Override
+    public void onReload() {
+        onDisable();
+        onEnable();
     }
 
     @Override
     public void onDisable() {
+        plugin.getServer().getScheduler().cancelTask(boradcastTaskID.getTaskId());
+        HandlerList.unregisterAll(motdListener);
+    }
 
+    private HashMap<String, Locale> getLocales(ConfigurationSection config) {
+        HashMap<String, Locale> result = new HashMap<>();
+        Set<String> keys = config.getKeys(false);
+        for (String key : keys) {
+            result.put(key, new Locale(config.getConfigurationSection(key), key));
+        }
+        return result;
     }
 }

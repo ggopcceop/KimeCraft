@@ -22,11 +22,10 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 public class PortalLinstener implements Listener {
 
     private final Portal portal;
-    private final World mineWorld;
+    private World mineWorld;
 
     PortalLinstener(Portal portal) {
         this.portal = portal;
-        mineWorld = ((Mine) portal.getPlugin().getAddon("Mine")).getMineWorld();
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -53,10 +52,16 @@ public class PortalLinstener implements Listener {
                     Location to = from.clone();
                     switch (block.getTypeId()) {
                         case 45:
+                            if (mineWorld == null) {
+                                mineWorld = ((Mine) portal.getPlugin().getAddon("Mine")).getMineWorld();
+                            }
                             player.teleport(mineWorld.getSpawnLocation(), TeleportCause.NETHER_PORTAL);
                             event.setCancelled(true);
                             break;
                         case 48:
+                            if (mineWorld == null) {
+                                mineWorld = ((Mine) portal.getPlugin().getAddon("Mine")).getMineWorld();
+                            }
                             if (from.getWorld() == mineWorld) {
                                 to = portal.getPlugin().getCity();
                             } else {

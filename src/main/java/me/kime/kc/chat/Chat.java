@@ -26,8 +26,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 
 /**
  *
@@ -36,9 +38,14 @@ import org.bukkit.entity.Player;
 public class Chat extends Addon {
 
     private int normalChatRange;
+    private final ChatListener chatListener;
+    private final ChatCommand chatCommand;
+    private CommandExecutor defaultCommandExecutor;
 
     public Chat(KimeCraft plugin) {
         super(plugin);
+        chatListener = new ChatListener(this);
+        chatCommand = new ChatCommand(this);
     }
 
     @Override
@@ -50,15 +57,16 @@ public class Chat extends Addon {
     public void onEnable() {
         normalChatRange = plugin.config.getInt("chat.normalChatRange", 50);
 
-        ChatCommand command = new ChatCommand(this);
-        plugin.getCommand("chat").setExecutor(command);
+        defaultCommandExecutor = plugin.getCommand("chat").getExecutor();
+        plugin.getCommand("chat").setExecutor(chatCommand);
 
-        plugin.getPluginManager().registerEvents(new ChatListener(this), plugin);
+        plugin.getPluginManager().registerEvents(chatListener, plugin);
     }
 
     @Override
     public void onDisable() {
-
+        HandlerList.unregisterAll(chatListener);
+        plugin.getCommand("chat").setExecutor(defaultCommandExecutor);
     }
 
     public void registerDynmapChatEvent() {
@@ -135,8 +143,8 @@ public class Chat extends Addon {
     public void channelChat(Entity sender, String channel, String message) {
 
     }
-    
-    public Channel registerChannel(String name){
+
+    public Channel registerChannel(String name) {
         Channel channel = new Channel(name);
         return channel;
     }

@@ -42,6 +42,7 @@ public class MOTDBoradcastTask implements Runnable {
     @Override
     public void run() {
         Player[] players = Bukkit.getServer().getOnlinePlayers();
+        line = addon.getPlugin().getRandom().nextInt(maxline);
         for (Player player : players) {
             KPlayer kPlayer = addon.getPlugin().getOnlinePlayer(player.getName());
             String language;
@@ -57,8 +58,6 @@ public class MOTDBoradcastTask implements Runnable {
             String rule = locale.phrase(line + "");
             player.sendMessage(ChatColor.BLUE + rule);
         }
-
-        line = (line + 1) % maxline;
     }
 
 }

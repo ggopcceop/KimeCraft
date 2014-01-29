@@ -18,14 +18,17 @@ package me.kime.kc.signTP;
 
 import me.kime.kc.Addon;
 import me.kime.kc.KimeCraft;
+import org.bukkit.event.HandlerList;
 
 public class SignTP extends Addon {
 
     private SignTpDataSource datasource;
     private String databaseKey;
+    private final SignTPListener signTPListener;
 
     public SignTP(KimeCraft plugin) {
         super(plugin);
+        signTPListener = new SignTPListener(this);
     }
 
     @Override
@@ -41,11 +44,12 @@ public class SignTP extends Addon {
 
         datasource.initTable();
 
-        plugin.getServer().getPluginManager().registerEvents(new SignTPListener(this), plugin);
+        plugin.getServer().getPluginManager().registerEvents(signTPListener, plugin);
     }
 
     @Override
     public void onDisable() {
+        HandlerList.unregisterAll(signTPListener);
     }
 
     @Override

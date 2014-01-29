@@ -18,15 +18,18 @@ package me.kime.kc.admin;
 
 import me.kime.kc.Addon;
 import me.kime.kc.KimeCraft;
+import org.bukkit.event.HandlerList;
 
 /**
  *
  * @author Kime
  */
 public class Admin extends Addon {
+    private final AdminLinstener adminListener;
 
     public Admin(KimeCraft instance) {
         super(instance);
+        adminListener = new AdminLinstener(this);
     }
 
     @Override
@@ -36,10 +39,11 @@ public class Admin extends Addon {
 
     @Override
     public void onEnable() {
-        plugin.getPluginManager().registerEvents(new AdminLinstener(this), plugin);
+        plugin.getPluginManager().registerEvents(adminListener, plugin);
     }
 
     @Override
     public void onDisable() {
+        HandlerList.unregisterAll(adminListener);
     }
 }

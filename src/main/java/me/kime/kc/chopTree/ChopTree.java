@@ -18,6 +18,7 @@ package me.kime.kc.chopTree;
 
 import me.kime.kc.Addon;
 import me.kime.kc.KimeCraft;
+import org.bukkit.event.HandlerList;
 
 public class ChopTree extends Addon {
 
@@ -26,9 +27,11 @@ public class ChopTree extends Addon {
     private final boolean isPopLeaves = true;
     private final boolean isInterruptIfToolBreaks = true;
     private final boolean isMoreDamageToTools = true;
+    private final ChopTreeBlockListener chopTreeBlockListener;
 
     public ChopTree(KimeCraft kc) {
         super(kc);
+        chopTreeBlockListener = new ChopTreeBlockListener(this);
     }
 
     @Override
@@ -38,11 +41,12 @@ public class ChopTree extends Addon {
 
     @Override
     public void onEnable() {
-        plugin.getPluginManager().registerEvents(new ChopTreeBlockListener(this), plugin);
+        plugin.getPluginManager().registerEvents(chopTreeBlockListener, plugin);
     }
 
     @Override
     public void onDisable() {
+        HandlerList.unregisterAll(chopTreeBlockListener);
     }
 
     public String[] getAllowedTools() {

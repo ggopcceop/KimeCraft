@@ -14,31 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.kime.kc;
+package me.kime.kc.party;
+
+import org.bukkit.event.Listener;
 
 /**
  *
  * @author Kime
  */
-public abstract class Addon {
+public class PartyListener implements Listener {
 
-    protected final KimeCraft plugin;
-    public boolean enable = false;
-
-    public Addon(KimeCraft instance) {
-        plugin = instance;
+    PartyListener(Party aThis) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public abstract String getAddonName();
-
-    public abstract void onEnable();
-
-    public abstract void onDisable();
-
-    public void onReload() {
-    }
-
-    public KimeCraft getPlugin() {
-        return plugin;
-    }
 }

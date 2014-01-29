@@ -6,13 +6,21 @@ import me.kime.kc.task.FireworkDelayTask;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.event.HandlerList;
 
 public class Noob extends Addon {
 
     private World noobWorld;
+    private final NoobListener noobListener;
+    private final NoobCommand noobCommand;
+    private CommandExecutor defaultPUCommand;
+    private CommandExecutor defaultPDCommand;
 
     public Noob(KimeCraft instance) {
         super(instance);
+        noobListener = new NoobListener(this);
+        noobCommand = new NoobCommand(this);
     }
 
     @Override
@@ -27,17 +35,26 @@ public class Noob extends Addon {
         Location loc = noobWorld.getSpawnLocation();
         noobWorld.loadChunk(loc.getChunk().getX(), loc.getChunk().getZ());
 
-        NoobCommand noobCommand = new NoobCommand(this);
+        defaultPUCommand = plugin.getCommand("pu").getExecutor();
+        defaultPDCommand = plugin.getCommand("pd").getExecutor();
 
         plugin.getCommand("pu").setExecutor(noobCommand);
         plugin.getCommand("pd").setExecutor(noobCommand);
 
-        plugin.getPluginManager().registerEvents(new NoobListener(this), plugin);
+        plugin.getPluginManager().registerEvents(noobListener, plugin);
     }
 
     @Override
     public void onDisable() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        HandlerList.unregisterAll(noobListener);
+        
+        plugin.getCommand("pu").setExecutor(defaultPUCommand);
+        plugin.getCommand("pd").setExecutor(defaultPDCommand);
+    }
+
+    @Override
+    public void onReload() {
+
     }
 
     public World getNoobWorld() {

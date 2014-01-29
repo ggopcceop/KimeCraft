@@ -21,17 +21,29 @@ import me.kime.kc.Addon;
 import me.kime.kc.KimeCraft;
 import me.kime.kc.task.threadTask.RedstoneCounterCleanTask;
 import org.bukkit.Location;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.event.HandlerList;
 
 public class Fun extends Addon {
 
-    private HashMap<Location, RedstoneC> redstone;
-    private RedstoneCounterCleanTask redstoneCounterCleanTask;
+    private final HashMap<Location, RedstoneC> redstone = new HashMap<>();
+    ;
+    private final RedstoneCounterCleanTask redstoneCounterCleanTask;
     public final int R = 300;
     public final int RR = R * R;
     public final int sRR = (R - 2) * (R - 2);
+    private int repeatingTaskID;
+    private final FunCommand funCommand;
+    private CommandExecutor defaultSkullExecutor;
+    private CommandExecutor defaultRollExecutor;
+    private final FunLinstener funListener;
 
     public Fun(KimeCraft instance) {
         super(instance);
+        redstoneCounterCleanTask = new RedstoneCounterCleanTask(this);
+        funCommand = new FunCommand(this);
+
+        funListener = new FunLinstener(this);
 
     }
 
@@ -42,12 +54,10 @@ public class Fun extends Addon {
 
     @Override
     public void onEnable() {
-        redstone = new HashMap<>();
 
-        redstoneCounterCleanTask = new RedstoneCounterCleanTask(this);
         plugin.registerTask(redstoneCounterCleanTask);
 
-        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+        repeatingTaskID = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
                 redstoneCounterCleanTask.queue();
@@ -56,16 +66,24 @@ public class Fun extends Addon {
 
         KCraftingRecipe kCraftingRecipe = new KCraftingRecipe(this);
 
-        FunCommand funCommand = new FunCommand(this);
+        defaultSkullExecutor = plugin.getCommand("skull").getExecutor();
+        defaultRollExecutor = plugin.getCommand("roll").getExecutor();
+
         plugin.getCommand("skull").setExecutor(funCommand);
         plugin.getCommand("roll").setExecutor(funCommand);
 
-        plugin.getPluginManager().registerEvents(new FunLinstener(this), plugin);
+        plugin.getPluginManager().registerEvents(funListener, plugin);
     }
 
     @Override
     public void onDisable() {
+        plugin.unRegisterTask(redstoneCounterCleanTask);
+        plugin.getServer().getScheduler().cancelTask(repeatingTaskID);
 
+        plugin.getCommand("skull").setExecutor(defaultSkullExecutor);
+        plugin.getCommand("roll").setExecutor(defaultRollExecutor);
+
+        HandlerList.unregisterAll(funListener);
     }
 
     public HashMap<Location, RedstoneC> getRedstone() {

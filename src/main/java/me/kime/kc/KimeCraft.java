@@ -143,6 +143,8 @@ public class KimeCraft extends JavaPlugin {
         KLogger.info("KimeCraft Loaded!");
     }
 
+    
+    
     private boolean setupEconomy() {
         RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
         if (economyProvider != null) {
@@ -194,6 +196,10 @@ public class KimeCraft extends JavaPlugin {
         threadManager.registerTask(task);
     }
 
+    public void unRegisterTask(Task task) {
+        threadManager.unRegisterTask(task);
+    }
+
     //==== addons ======//
     private final HashMap<String, Addon> Addons = new HashMap<>();
 
@@ -203,18 +209,33 @@ public class KimeCraft extends JavaPlugin {
             boolean enable = config.getBoolean(name + ".enable", false);
             if (enable) {
                 addon.onEnable();
-                Addons.put(name, addon);
+                addon.enable = true;
             }
+            Addons.put(name, addon);
         }
     }
 
     public void reloadAddons() {
         this.reloadConfig();
         config = this.getConfig();
-        
+
         for (String name : Addons.keySet()) {
             Addon addon = Addons.get(name);
-            addon.onReload();
+            boolean enable = config.getBoolean(name + ".enable", false);
+            if (addon.enable) {
+                if (!enable) {
+                    addon.onDisable();
+                    addon.enable = false;
+                } else {
+                    addon.onReload();
+                }
+            } else {
+                if (enable) {
+                    addon.onEnable();
+                    addon.enable = true;
+                }
+            }
+
         }
     }
 
@@ -228,7 +249,10 @@ public class KimeCraft extends JavaPlugin {
     private void disableAddons() {
         for (String name : Addons.keySet()) {
             Addon addon = Addons.get(name);
-            addon.onDisable();
+            if (addon.enable) {
+                addon.onDisable();
+                addon.enable = false;
+            }
         }
     }
 

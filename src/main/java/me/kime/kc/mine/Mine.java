@@ -28,16 +28,24 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
+import org.bukkit.event.HandlerList;
 
 public class Mine extends Addon {
 
     private World mineWorld;
-    private MinePaymentTask minePaymentTask;
+    private final MinePaymentTask minePaymentTask;
     private MineDataSource datasource;
     private String databaseKey;
+    private final MineLinstener mineListener;
+    private int minePayTask;
+    private final MineCommand mineCommand;
 
     public Mine(KimeCraft instance) {
         super(instance);
+        mineListener = new MineLinstener(this);
+        mineCommand = new MineCommand(this);
+        
+        minePaymentTask = new MinePaymentTask(plugin);
     }
 
     @Override
@@ -52,7 +60,7 @@ public class Mine extends Addon {
         datasource = new MineDataSource(databaseKey, this);
         datasource.initTable();
 
-        plugin.getPluginManager().registerEvents(new MineLinstener(this), plugin);
+        plugin.getPluginManager().registerEvents(mineListener, plugin);
 
         //delete mine world every Sunday 
         Calendar c = Calendar.getInstance();
@@ -74,22 +82,25 @@ public class Mine extends Addon {
         mineWorld.setSpawnFlags(true, false);
         mineWorld.setDifficulty(Difficulty.HARD);
 
-        minePaymentTask = new MinePaymentTask(plugin);
+        
         plugin.registerTask(minePaymentTask);
 
-        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+        minePayTask = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
                 minePaymentTask.queue();
             }
         }, 305L, 1200L);
 
-        MineCommand mineCommand = new MineCommand(this);
         plugin.getCommand("mine").setExecutor(mineCommand);
     }
 
     @Override
     public void onDisable() {
+        HandlerList.unregisterAll(mineListener);
+        plugin.getServer().getScheduler().cancelTask(minePayTask);
+        
+        plugin.unRegisterTask(minePaymentTask);
     }
 
     @Override
