@@ -31,7 +31,11 @@ public class LocaleManager {
         Locale locale = locales.get(localeString);
         if (locale == null) {
             locale = LocaleLoader.loadLocale(localeString);
-            locales.put(localeString, locale);
+            if (locale != null) {
+                locales.put(localeString, locale);
+            } else {
+                locale = getDefauLocale();
+            }
         }
         return locale;
     }

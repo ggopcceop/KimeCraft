@@ -14,11 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package me.kime.kc.locale;
 
 import java.io.InputStream;
-import me.kime.kc.util.KLogger;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -27,15 +25,14 @@ import org.bukkit.configuration.file.YamlConfiguration;
  * @author Kime
  */
 public class LocaleLoader {
-    
+
     public static Locale loadLocale(String locale) {
         if (locale != null) {
             InputStream fileStream = LocaleLoader.class.getResourceAsStream("/translation/" + locale + ".yml");
-            if (fileStream == null) {
-                KLogger.info("Error while loading translation " + locale);
+            if (fileStream != null) {
+                FileConfiguration translation = YamlConfiguration.loadConfiguration(fileStream);
+                return new Locale(translation.getConfigurationSection("Language"), locale);
             }
-            FileConfiguration translation = YamlConfiguration.loadConfiguration(fileStream);
-            return new Locale(translation.getConfigurationSection("Language"), locale);
         }
         return null;
     }
