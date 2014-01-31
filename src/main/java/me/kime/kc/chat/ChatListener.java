@@ -17,10 +17,14 @@
 package me.kime.kc.chat;
 
 import me.kime.kc.KPlayer;
+import me.kime.kc.task.threadTask.LoadCurrentChannelTask;
+import me.kime.kc.task.threadTask.SaveCurrentChannelTask;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  *
@@ -29,9 +33,29 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 public class ChatListener implements Listener {
 
     private final Chat addon;
+    private final SaveCurrentChannelTask saveChannelTask;
+    private final LoadCurrentChannelTask loadChannelTask;
 
     public ChatListener(Chat addon) {
         this.addon = addon;
+
+        saveChannelTask = new SaveCurrentChannelTask(addon);
+        loadChannelTask = new LoadCurrentChannelTask(addon);
+
+        addon.getPlugin().registerTask(saveChannelTask);
+        addon.getPlugin().registerTask(loadChannelTask);
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        KPlayer player = addon.getPlugin().getOnlinePlayer(event.getPlayer().getName());
+        loadChannelTask.queue(player);
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        KPlayer player = addon.getPlugin().getOnlinePlayer(event.getPlayer().getName());
+        saveChannelTask.queue(player);
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

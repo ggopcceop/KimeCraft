@@ -41,6 +41,8 @@ public class Chat extends Addon {
     private final ChatListener chatListener;
     private final ChatCommand chatCommand;
     private CommandExecutor defaultCommandExecutor;
+    private String databaseKey;
+    private ChatDataSource datasource;
 
     public Chat(KimeCraft plugin) {
         super(plugin);
@@ -55,6 +57,9 @@ public class Chat extends Addon {
 
     @Override
     public void onEnable() {
+        databaseKey = plugin.getConfig().getString("chat.mysql", "minecraft");
+        datasource = new ChatDataSource(databaseKey, this);
+        
         normalChatRange = plugin.config.getInt("chat.normalChatRange", 50);
 
         defaultCommandExecutor = plugin.getCommand("chat").getExecutor();
@@ -151,5 +156,9 @@ public class Chat extends Addon {
 
     public int getNormalChatRange() {
         return normalChatRange;
+    }
+
+    public ChatDataSource getDataSource() {
+        return datasource;
     }
 }
