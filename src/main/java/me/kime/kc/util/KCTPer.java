@@ -30,10 +30,7 @@ public class KCTPer {
     }
 
     private static boolean hasSpace(Location loc) {
-        if (!isSolid(loc.getBlock()) && !isSolid(loc.getBlock().getRelative(BlockFace.UP))) {
-            return true;
-        }
-        return false;
+        return !isSolid(loc.getBlock()) && !isSolid(loc.getBlock().getRelative(BlockFace.UP));
     }
 
     private static boolean isSolid(Block block) {

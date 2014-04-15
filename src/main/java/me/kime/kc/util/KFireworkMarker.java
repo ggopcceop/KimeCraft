@@ -23,6 +23,7 @@ public class KFireworkMarker {
      * @param world
      * @param loc
      * @param fe
+     * @param power
      */
     public static void playFirework(World world, Location loc, FireworkEffect fe, int power) {
         Firework fw = (Firework) world.spawnEntity(loc, EntityType.FIREWORK);

@@ -18,8 +18,8 @@ package me.kime.kc;
 
 import java.util.List;
 import me.kime.kc.auth.PlayerCache;
-import me.kime.kc.util.KCTPer;
 import me.kime.kc.locale.Locale;
+import me.kime.kc.util.KCTPer;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -32,30 +32,12 @@ import org.bukkit.entity.Player;
 public class KPlayer {
 
     public final Player player;
-    private int lastMineId = -1;
-    private double payRate = 0;
-    private double salary = 0;
-    private double totalSalary = 0;
-    private int borderCheckTaskId;
-    private double lastX;
-    private double lastY;
-    private double lastZ;
-    private float lastYaw;
-    private float lastPitch;
 
     public KPlayer(Player player) {
         this.player = player;
         isAuth = false;
         borderCheckTaskId = -1;
         timeoutTaskId = -1;
-    }
-
-    public boolean isAuth() {
-        return isAuth;
-    }
-
-    public void setAuth(boolean auth) {
-        isAuth = auth;
     }
 
     public Player getPlayer() {
@@ -65,6 +47,12 @@ public class KPlayer {
     public String getNameLowCase() {
         return player.getName().toLowerCase();
     }
+
+    //=============== the mining pay ================//
+    private int lastMineId = -1;
+    private double payRate = 0;
+    private double salary = 0;
+    private double totalSalary = 0;
 
     public void setLastMine(int id) {
         lastMineId = id;
@@ -99,6 +87,14 @@ public class KPlayer {
         return totalSalary;
     }
 
+    //=============== the border checking ================//
+    private int borderCheckTaskId;
+    private double lastX;
+    private double lastY;
+    private double lastZ;
+    private float lastYaw;
+    private float lastPitch;
+
     public void setBorderCheckTaskId(int borderCheckTaskId) {
         this.borderCheckTaskId = borderCheckTaskId;
     }
@@ -120,7 +116,7 @@ public class KPlayer {
         Location loc = new Location(player.getWorld(), lastX, lastY, lastZ, lastYaw, lastPitch);
         KCTPer.tp(player, loc);
     }
-    
+
     //=============== the locale of the player================//
     private Locale locale;
 
@@ -141,7 +137,7 @@ public class KPlayer {
     public Locale getLocale() {
         return locale;
     }
-    
+
     //============== auth functions of player ==============//
     public boolean isAuth;
     public String LoginIp;
@@ -154,6 +150,14 @@ public class KPlayer {
 
     private StringBuilder TypedPassword;
     private int TypedPasswordLenght = 0;
+
+    public boolean isAuth() {
+        return isAuth;
+    }
+
+    public void setAuth(boolean auth) {
+        isAuth = auth;
+    }
 
     public void cache() {
         cache = new PlayerCache();
@@ -224,7 +228,7 @@ public class KPlayer {
             return p;
         }
     }
-    
+
     //=========== chating functions ================//
     public int currentChannel = 0;
     private List<Integer> reigsteredChannels;

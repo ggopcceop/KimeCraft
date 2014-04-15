@@ -212,8 +212,8 @@ public class ChopTreeBlockListener
     private void popLogs(Block block, List<Block> blocks, World world, Player player) {
         ItemStack item = new ItemStack(1, 1, (short) 0);
         item.setAmount(1);
-        for (int counter = 0; counter < blocks.size(); counter++) {
-            block = (Block) blocks.get(counter);
+        for (Block b : blocks) {
+            block = (Block) b;
             item.setType(block.getType());
             item.setDurability((short) block.getData());
             block.breakNaturally();

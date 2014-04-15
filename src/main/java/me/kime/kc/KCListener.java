@@ -31,9 +31,6 @@
  */
 package me.kime.kc;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import me.kime.kc.locale.Locale;
 import me.kime.kc.locale.LocaleManager;
@@ -91,7 +88,7 @@ public class KCListener implements Listener {
         KPlayer kPlayer = plugin.getOnlinePlayer(event.getPlayer().getName());
         if (kPlayer != null) {
             if (kPlayer.getLocale() == null) {
-                Locale locale = LocaleManager.getLocale(getLanguage(event.getPlayer()));
+                Locale locale = LocaleManager.getLocale(event.getPlayer().spigot().getLocale());
                 kPlayer.setLocale(locale);
             }
         }
@@ -102,30 +99,9 @@ public class KCListener implements Listener {
         KPlayer kPlayer = plugin.getOnlinePlayer(event.getPlayer().getName());
         if (kPlayer != null) {
             if (kPlayer.getLocale() == null) {
-                Locale locale = LocaleManager.getLocale(getLanguage(event.getPlayer()));
+                Locale locale = LocaleManager.getLocale(event.getPlayer().spigot().getLocale());
                 kPlayer.setLocale(locale);
             }
         }
-    }
-
-    private String getLanguage(Player p) {
-        try {
-            Object ep = getMethod("getHandle", p.getClass()).invoke(p, (Object[]) null);
-            Field f = ep.getClass().getDeclaredField("locale");
-            f.setAccessible(true);
-            String language = (String) f.get(ep);
-            return language;
-        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException | InvocationTargetException ex) {
-            return "en_US";
-        }
-    }
-
-    private Method getMethod(String name, Class<?> clazz) {
-        for (Method m : clazz.getDeclaredMethods()) {
-            if (m.getName().equals(name)) {
-                return m;
-            }
-        }
-        return null;
     }
 }

@@ -16,6 +16,16 @@
  */
 package me.kime.kc;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.Executor;
@@ -86,6 +96,7 @@ public class KimeCraft extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        loadDependency();
         //config
         config();
 
@@ -143,8 +154,36 @@ public class KimeCraft extends JavaPlugin {
         KLogger.info("KimeCraft Loaded!");
     }
 
-    
-    
+    private void loadDependency() {
+        KLogger.info("Loading Drivers!");
+        File dependency = new File("plugins/KimeCraft/mongo-java-driver.jar");
+
+        if (!dependency.exists()) {
+            try {
+                URL website = new URL("http://central.maven.org/maven2/org/mongodb/mongo-java-driver/2.12.0/mongo-java-driver-2.12.0.jar");
+                try (ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+                        FileOutputStream fos = new FileOutputStream(dependency)) {
+                    fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                } catch (IOException ex) {
+                    KLogger.showError("Error while downloading drivers");
+                }
+            } catch (MalformedURLException ex) {
+                KLogger.showError("Error while downloading drivers");
+            }
+        }
+
+        try {
+            URLClassLoader urlbukkitloader = (URLClassLoader) getClassLoader();
+            final Class<URLClassLoader> sysclass = URLClassLoader.class;
+            Method method = sysclass.getDeclaredMethod("addURL", new Class[]{URL.class});
+            method.setAccessible(true);
+            method.invoke(urlbukkitloader, new Object[]{dependency.toURI().toURL()});
+            KLogger.info(" Drivers Loaded!");
+        } catch (MalformedURLException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+            KLogger.showError("Error while loading drivers");
+        }
+    }
+
     private boolean setupEconomy() {
         RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
         if (economyProvider != null) {

@@ -7,8 +7,8 @@ import me.kime.kc.mine.Mine;
 
 public class MinePayTask extends Task {
 
-    private LinkedList<MineData> list;
-    private Mine mine;
+    private final LinkedList<MineData> list;
+    private final Mine mine;
     private final double payPerItem;
 
     public MinePayTask(Mine mine, double payPerItem) {

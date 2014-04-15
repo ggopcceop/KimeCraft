@@ -38,11 +38,11 @@ public class DeathCache {
 
     public void dropCache(Location location) {
         World world = location.getWorld();
-        for (int i = 0; i < item.length; i++) {
-            world.dropItemNaturally(location, item[i]);
+        for (ItemStack i : item) {
+            world.dropItemNaturally(location, i);
         }
-        for (int i = 0; i < armor.length; i++) {
-            world.dropItemNaturally(location, armor[i]);
+        for (ItemStack a : armor) {
+            world.dropItemNaturally(location, a);
         }
     }
 }
