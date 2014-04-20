@@ -14,10 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package me.kime.kc.database;
 
 import java.util.HashMap;
+import me.kime.kc.KimeCraft;
+import me.kime.kc.database.mongodb.MongoDataSource;
+import me.kime.kc.database.mysql.MysqlDataSource;
 
 /**
  *
@@ -25,18 +27,38 @@ import java.util.HashMap;
  */
 public class DataSourceManager {
 
-    private final static HashMap<String, DataSource> dataSources = new HashMap<>();
+    private final static HashMap<String, MysqlDataSource> mysqldataSources = new HashMap<>();
+    private final static HashMap<String, MongoDataSource> mongodbdataSources = new HashMap<>();
+    private static KimeCraft plugin;
 
-    public static DataSource createDataSource(String key, String host, String user, String pass, String db, int maxConnections) {
-        DataSource dataSource = dataSources.get(key);
+    public static void init(KimeCraft p) {
+        plugin = p;
+    }
+
+    public static MysqlDataSource createMysqlDataSource(String key, String host, String user, String pass, String db, int maxConnections) {
+        MysqlDataSource dataSource = mysqldataSources.get(key);
         if (dataSource == null) {
-            dataSource = new DataSource(host, user, pass, db, maxConnections);
-            dataSources.put(key, dataSource);
+            dataSource = new MysqlDataSource(plugin, host, user, pass, db, maxConnections);
+            mysqldataSources.put(key, dataSource);
         }
         return dataSource;
     }
 
-    public static DataSource getDataSource(String key) {
-        return dataSources.get(key);
+    public static MongoDataSource createMongodbDataSource(String key, String host, String user, String pass, String db, int maxConnections) {
+        MongoDataSource dataSource = mongodbdataSources.get(key);
+        if (dataSource == null) {
+            dataSource = new MongoDataSource(plugin, host, user, pass, db, maxConnections);
+            mongodbdataSources.put(key, dataSource);
+        }
+        return dataSource;
     }
+
+    public static MysqlDataSource getMysqlDataSource(String key) {
+        return mysqldataSources.get(key);
+    }
+
+    public static MongoDataSource getMongolDataSource(String key) {
+        return mongodbdataSources.get(key);
+    }
+
 }

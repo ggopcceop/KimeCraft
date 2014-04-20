@@ -28,22 +28,23 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import me.kime.kc.admin.Admin;
-import me.kime.kc.auth.Auth;
-import me.kime.kc.chat.Chat;
-import me.kime.kc.chopTree.ChopTree;
+import me.kime.kc.addon.admin.Admin;
+import me.kime.kc.addon.auth.Auth;
+import me.kime.kc.addon.chat.Chat;
+import me.kime.kc.addon.chopTree.ChopTree;
 import me.kime.kc.database.DataSourceManager;
-import me.kime.kc.fun.Fun;
-import me.kime.kc.mine.Mine;
-import me.kime.kc.motd.MOTD;
-import me.kime.kc.noob.Noob;
-import me.kime.kc.party.Party;
-import me.kime.kc.portal.Portal;
-import me.kime.kc.signTP.SignTP;
-import me.kime.kc.task.threadTask.Task;
-import me.kime.kc.task.threadTask.ThreadManager;
+import me.kime.kc.database.mysql.MysqlDataSource;
+import me.kime.kc.addon.fun.Fun;
+import me.kime.kc.addon.mine.Mine;
+import me.kime.kc.addon.motd.MOTD;
+import me.kime.kc.addon.noob.Noob;
+import me.kime.kc.addon.party.Party;
+import me.kime.kc.addon.portal.Portal;
+import me.kime.kc.addon.signTP.SignTP;
+import me.kime.kc.task.async.Caller;
+import me.kime.kc.task.async.async;
 import me.kime.kc.util.KLogFilter;
 import me.kime.kc.util.KLogger;
 import net.milkbowl.vault.economy.Economy;
@@ -67,8 +68,7 @@ import org.dynmap.DynmapAPI;
  */
 public class KimeCraft extends JavaPlugin {
 
-    private Executor pool;
-    private ThreadManager threadManager;
+    private ExecutorService pool;
     private static final HashMap<String, KPlayer> onlineList = new HashMap<>();
     private World world;
     private World nether;
@@ -82,14 +82,6 @@ public class KimeCraft extends JavaPlugin {
 
         disableAddons();
 
-        long time = System.currentTimeMillis();
-        while (!threadManager.isDone()) {
-            long curr = System.currentTimeMillis();
-            if (curr - time > 10000) {
-                break;
-            }
-        }
-
         //pool.close();
         KLogger.info("KimeCraft! Disabled");
     }
@@ -102,20 +94,36 @@ public class KimeCraft extends JavaPlugin {
 
         //thread pool for maxmize cpu performce
         pool = Executors.newFixedThreadPool(8);
-        threadManager = new ThreadManager(pool);
-        threadManager.start();
+        async.init(pool, this);
 
         //setup database
-        ConfigurationSection database = config.getConfigurationSection("database");
-        for (String key : database.getKeys(false)) {
-            int max = database.getInt(key + ".maxconection", 2);
-            String host = database.getString(key + ".host", "localhost");
-            String user = database.getString(key + ".username", "minecraft");
-            String pass = database.getString(key + ".password", "123456");
-            String db = database.getString(key + ".database", "minecraft");
+        DataSourceManager.init(this);
+        ConfigurationSection database = config.getConfigurationSection("database.mysql");
+        if (database != null) {
+            for (String key : database.getKeys(false)) {
+                int max = database.getInt(key + ".maxconection", 2);
+                String host = database.getString(key + ".host", "localhost");
+                String user = database.getString(key + ".username", "minecraft");
+                String pass = database.getString(key + ".password", "123456");
+                String db = database.getString(key + ".database", "minecraft");
 
-            DataSourceManager.createDataSource(key, host, user, pass, db, max);
-            KLogger.info("Connecting to database key " + key);
+                DataSourceManager.createMysqlDataSource(key, host, user, pass, db, max);
+                KLogger.info("Connecting to mysql key " + key);
+            }
+        }
+
+        database = config.getConfigurationSection("database.mongodb");
+        if (database != null) {
+            for (String key : database.getKeys(false)) {
+                int max = database.getInt(key + ".maxconection", 2);
+                String host = database.getString(key + ".host", "localhost");
+                String user = database.getString(key + ".username", "minecraft");
+                String pass = database.getString(key + ".password", "123456");
+                String db = database.getString(key + ".database", "minecraft");
+
+                DataSourceManager.createMongodbDataSource(key, host, user, pass, db, max);
+                KLogger.info("Connecting to mongodb key " + key);
+            }
         }
 
         rand = new Random();
@@ -152,6 +160,45 @@ public class KimeCraft extends JavaPlugin {
         getCommand("kimecraft").setExecutor(kcCommand);
 
         KLogger.info("KimeCraft Loaded!");
+
+        MysqlDataSource data = DataSourceManager.getMysqlDataSource("test");
+
+        data.query(q -> {
+            return q.prepareStatement("SELECT * FROM ttad").executeQuery();
+        }).onDone(r -> {
+            while (r.next()) {
+                System.out.print(r.getString("name") + " " + r.getString("emmm") + " ");
+            }
+            System.out.println();
+        }).execute();
+
+        async.on().call(() -> {
+            System.out.println("Hello");
+        }).done(() -> {
+            System.out.println("World");
+        }).execute();
+
+        async.on().call(t -> {
+            t.put("1", "Worldsx");
+            System.out.println("Hellosx");
+        }).done(t -> {
+            System.out.println(t.get("1"));
+        }).execute();
+
+        async.on("Test1").call(t -> {
+            t.put("1", "111");
+            t.put("1", "222");
+            System.out.println("Hellosx3");
+        }).done(t -> {
+            System.out.println("World 3 " + t.get("1"));
+        });
+
+        Caller caller = async.listen("Test1");
+        caller.call();
+        caller.call();
+
+        async.on().execute();
+
     }
 
     private void loadDependency() {
@@ -176,21 +223,31 @@ public class KimeCraft extends JavaPlugin {
             URLClassLoader urlbukkitloader = (URLClassLoader) getClassLoader();
             final Class<URLClassLoader> sysclass = URLClassLoader.class;
             Method method = sysclass.getDeclaredMethod("addURL", new Class[]{URL.class});
-            method.setAccessible(true);
-            method.invoke(urlbukkitloader, new Object[]{dependency.toURI().toURL()});
-            KLogger.info(" Drivers Loaded!");
+
+            method.setAccessible(
+                    true);
+            method.invoke(urlbukkitloader,
+                    new Object[]{dependency.toURI().toURL()
+                    }
+            );
+            KLogger.info(
+                    " Drivers Loaded!");
         } catch (MalformedURLException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             KLogger.showError("Error while loading drivers");
+
         }
     }
 
     private boolean setupEconomy() {
-        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-        if (economyProvider != null) {
+        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class
+        );
+        if (economyProvider
+                != null) {
             economy = economyProvider.getProvider();
         }
 
-        return (economy != null);
+        return (economy
+                != null);
     }
 
     private void config() {
@@ -230,15 +287,6 @@ public class KimeCraft extends JavaPlugin {
         this.dynmap = dynmap;
     }
 
-    //======== thread tasks =======//
-    public void registerTask(Task task) {
-        threadManager.registerTask(task);
-    }
-
-    public void unRegisterTask(Task task) {
-        threadManager.unRegisterTask(task);
-    }
-
     //==== addons ======//
     private final HashMap<String, Addon> Addons = new HashMap<>();
 
@@ -258,7 +306,7 @@ public class KimeCraft extends JavaPlugin {
         this.reloadConfig();
         config = this.getConfig();
 
-        for (String name : Addons.keySet()) {
+        Addons.keySet().stream().forEach((name) -> {
             Addon addon = Addons.get(name);
             boolean enable = config.getBoolean(name + ".enable", false);
             if (addon.enable) {
@@ -274,8 +322,7 @@ public class KimeCraft extends JavaPlugin {
                     addon.enable = true;
                 }
             }
-
-        }
+        });
     }
 
     public Addon getAddon(String name) {
@@ -286,13 +333,12 @@ public class KimeCraft extends JavaPlugin {
     }
 
     private void disableAddons() {
-        for (String name : Addons.keySet()) {
-            Addon addon = Addons.get(name);
-            if (addon.enable) {
-                addon.onDisable();
-                addon.enable = false;
-            }
-        }
+        Addons.keySet().stream().map((name) -> Addons.get(name)).filter((addon) -> (addon.enable)).map((addon) -> {
+            addon.onDisable();
+            return addon;
+        }).forEach((addon) -> {
+            addon.enable = false;
+        });
     }
 
     /* ======== others ===============*/

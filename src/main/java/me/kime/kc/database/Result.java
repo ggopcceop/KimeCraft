@@ -16,20 +16,23 @@
  */
 package me.kime.kc.database;
 
-import me.kime.kc.database.functionInterface.Query;
-import me.kime.kc.database.functionInterface.Update;
+import me.kime.kc.database.functionInterface.ResponceVoid;
+import me.kime.kc.database.functionInterface.Responce;
+import me.kime.kc.database.functionInterface.Errors;
 
 /**
  *
  * @author Kime
  * @param <T>
- * @param <R>
+ * @param <U>
  */
-public interface DataSource<T, R> {
+public interface Result<T, U> {
 
-    public Result query(Query<T, R> request);
+    public Result onDone(Responce<T> responce);
 
-    public Result update(Update<T> request);
+    public Result onDone(ResponceVoid responce);
 
-    public R execute(Query<T, R> request) throws Exception;
+    public Result onError(Errors<U> error);
+
+    public void execute();
 }

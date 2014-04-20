@@ -14,26 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.kime.kc.util;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+package me.kime.kc.addon.admin;
 
 /**
- * plugin logger
  *
  * @author Kime
- *
  */
-public class KLogger {
-
-    private static final Logger log = Logger.getLogger("Minecraft");
-
-    public static void info(String msg) {
-        log.log(Level.INFO, "[KimeCraft] {0}", msg);
-    }
-
-    public static void showError(String msg) {
-        log.log(Level.SEVERE, "[KimeCraft] {0}", msg);
-    }
+public class AdminCommand {
+    
 }

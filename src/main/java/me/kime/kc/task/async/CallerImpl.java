@@ -14,22 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.kime.kc.database;
+package me.kime.kc.task.async;
 
-import me.kime.kc.database.functionInterface.Query;
-import me.kime.kc.database.functionInterface.Update;
+import java.util.concurrent.ExecutorService;
 
 /**
  *
  * @author Kime
- * @param <T>
- * @param <R>
  */
-public interface DataSource<T, R> {
+public class CallerImpl implements Caller {
 
-    public Result query(Query<T, R> request);
+    private final Task task;
+    private final ExecutorService pool;
 
-    public Result update(Update<T> request);
+    public CallerImpl(Task task, ExecutorService pool) {
+        this.task = task;
+        this.pool = pool;
+    }
 
-    public R execute(Query<T, R> request) throws Exception;
+    @Override
+    public void call() {
+        pool.submit(task);
+    }
 }

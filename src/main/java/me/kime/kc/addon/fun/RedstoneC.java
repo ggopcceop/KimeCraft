@@ -14,26 +14,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.kime.kc.util;
+package me.kime.kc.addon.fun;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+public class RedstoneC {
 
-/**
- * plugin logger
- *
- * @author Kime
- *
- */
-public class KLogger {
+    private int count;
+    private long date;
 
-    private static final Logger log = Logger.getLogger("Minecraft");
-
-    public static void info(String msg) {
-        log.log(Level.INFO, "[KimeCraft] {0}", msg);
+    public RedstoneC() {
+        count = 0;
+        date = 0L;
     }
 
-    public static void showError(String msg) {
-        log.log(Level.SEVERE, "[KimeCraft] {0}", msg);
+    public synchronized void add() {
+        count++;
+    }
+
+    public synchronized boolean isOver(long d) {
+        if (count > 15) {
+            if (((d - date) / 1000) > 8) {
+                date = d;
+                count = 0;
+                return false;
+            }
+            //System.out.print(((d - date)/1000) + " " + count);
+            return true;
+        }
+        return false;
+    }
+
+    public long getTime() {
+        return date;
+    }
+
+    public synchronized void setDate(long d) {
+        date = d;
     }
 }

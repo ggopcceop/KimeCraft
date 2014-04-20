@@ -14,22 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.kime.kc.database;
-
-import me.kime.kc.database.functionInterface.Query;
-import me.kime.kc.database.functionInterface.Update;
+package me.kime.kc.database.functionInterface;
 
 /**
  *
  * @author Kime
- * @param <T>
- * @param <R>
  */
-public interface DataSource<T, R> {
+public interface Query<T, R> {
 
-    public Result query(Query<T, R> request);
+    public R apply(T t) throws Exception;
 
-    public Result update(Update<T> request);
-
-    public R execute(Query<T, R> request) throws Exception;
 }

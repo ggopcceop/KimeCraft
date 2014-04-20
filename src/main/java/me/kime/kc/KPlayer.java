@@ -17,10 +17,11 @@
 package me.kime.kc;
 
 import java.util.List;
-import me.kime.kc.auth.PlayerCache;
+import me.kime.kc.addon.auth.PlayerCache;
 import me.kime.kc.locale.Locale;
 import me.kime.kc.util.KCTPer;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 /**
@@ -49,16 +50,16 @@ public class KPlayer {
     }
 
     //=============== the mining pay ================//
-    private int lastMineId = -1;
+    private Material lastMineId = null;
     private double payRate = 0;
     private double salary = 0;
     private double totalSalary = 0;
 
-    public void setLastMine(int id) {
-        lastMineId = id;
+    public void setLastMine(Material material) {
+        lastMineId = material;
     }
 
-    public int getLastMine() {
+    public Material getLastMine() {
         return lastMineId;
     }
 

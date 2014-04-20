@@ -18,7 +18,7 @@ package me.kime.kc;
 
 import java.util.HashMap;
 import me.kime.kc.locale.LocaleManager;
-import me.kime.kc.mine.Mine;
+import me.kime.kc.addon.mine.Mine;
 import me.kime.kc.util.KLogger;
 import me.kime.kc.util.KMessager;
 import org.bukkit.ChatColor;

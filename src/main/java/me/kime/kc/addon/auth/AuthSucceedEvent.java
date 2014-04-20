@@ -14,22 +14,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.kime.kc.database;
+package me.kime.kc.addon.auth;
 
-import me.kime.kc.database.functionInterface.Query;
-import me.kime.kc.database.functionInterface.Update;
+import me.kime.kc.KPlayer;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 /**
  *
  * @author Kime
- * @param <T>
- * @param <R>
  */
-public interface DataSource<T, R> {
+public class AuthSucceedEvent extends Event {
 
-    public Result query(Query<T, R> request);
+    private static final HandlerList handlers = new HandlerList();
+    private final KPlayer player;
 
-    public Result update(Update<T> request);
+    public AuthSucceedEvent(KPlayer player) {
+        this.player = player;
+    }
 
-    public R execute(Query<T, R> request) throws Exception;
+    public KPlayer getPlayer() {
+        return player;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
 }

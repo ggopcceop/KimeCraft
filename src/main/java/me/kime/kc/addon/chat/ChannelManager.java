@@ -14,22 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.kime.kc.database;
 
-import me.kime.kc.database.functionInterface.Query;
-import me.kime.kc.database.functionInterface.Update;
+package me.kime.kc.addon.chat;
 
 /**
  *
  * @author Kime
- * @param <T>
- * @param <R>
  */
-public interface DataSource<T, R> {
-
-    public Result query(Query<T, R> request);
-
-    public Result update(Update<T> request);
-
-    public R execute(Query<T, R> request) throws Exception;
+public class ChannelManager {
+    
 }

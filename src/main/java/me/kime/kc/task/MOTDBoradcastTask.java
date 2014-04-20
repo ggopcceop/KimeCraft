@@ -18,7 +18,7 @@ package me.kime.kc.task;
 
 import me.kime.kc.KPlayer;
 import me.kime.kc.locale.Locale;
-import me.kime.kc.motd.MOTD;
+import me.kime.kc.addon.motd.MOTD;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

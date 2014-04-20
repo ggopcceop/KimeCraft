@@ -1,7 +1,7 @@
 package me.kime.kc.task;
 
 import me.kime.kc.KPlayer;
-import me.kime.kc.auth.Auth;
+import me.kime.kc.addon.auth.Auth;
 
 /**
  * Kick non-auth player when time out

@@ -14,26 +14,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.kime.kc.util;
+package me.kime.kc.addon.admin;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import me.kime.kc.Addon;
+import me.kime.kc.KimeCraft;
+import org.bukkit.event.HandlerList;
 
 /**
- * plugin logger
  *
  * @author Kime
- *
  */
-public class KLogger {
+public class Admin extends Addon {
+    private final AdminLinstener adminListener;
 
-    private static final Logger log = Logger.getLogger("Minecraft");
-
-    public static void info(String msg) {
-        log.log(Level.INFO, "[KimeCraft] {0}", msg);
+    public Admin(KimeCraft instance) {
+        super(instance);
+        adminListener = new AdminLinstener(this);
     }
 
-    public static void showError(String msg) {
-        log.log(Level.SEVERE, "[KimeCraft] {0}", msg);
+    @Override
+    public String getAddonName() {
+        return "Admin";
+    }
+
+    @Override
+    public void onEnable() {
+        plugin.getPluginManager().registerEvents(adminListener, plugin);
+    }
+
+    @Override
+    public void onDisable() {
+        HandlerList.unregisterAll(adminListener);
     }
 }

@@ -14,15 +14,18 @@ mine:
   enable: true
   mysql: minecraft 
 database:
-  auth:
-    maxconection: 2
-    host: localhost
-    database: bbs    
-    username: bbs
-    password: password
-  minecraft:
-    maxconection: 2
-    host: localhost
-    database: minecraft
-    username: minecraft
-    password: password    
+  mysql:
+    auth:
+      maxconection: 2
+      host: localhost
+      database: bbs    
+      username: bbs
+      password: password
+    minecraft:
+      maxconection: 2
+      host: localhost
+      database: minecraft
+      username: minecraft
+      password: password
+  mongodb:
+      

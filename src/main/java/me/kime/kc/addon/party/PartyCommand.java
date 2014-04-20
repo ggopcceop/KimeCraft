@@ -14,22 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package me.kime.kc.database;
+package me.kime.kc.addon.party;
 
-import me.kime.kc.database.functionInterface.Query;
-import me.kime.kc.database.functionInterface.Update;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 
 /**
  *
  * @author Kime
- * @param <T>
- * @param <R>
  */
-public interface DataSource<T, R> {
+public class PartyCommand implements CommandExecutor {
 
-    public Result query(Query<T, R> request);
+    PartyCommand(Party aThis) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-    public Result update(Update<T> request);
-
-    public R execute(Query<T, R> request) throws Exception;
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] split) {
+        return true;
+    }
 }
