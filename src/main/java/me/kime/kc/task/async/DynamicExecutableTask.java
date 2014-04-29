@@ -58,6 +58,6 @@ public class DynamicExecutableTask extends DynamicTask {
     }
 
     public void execute() {
-        new CallerImpl(this, pool).call();
+        pool.submit(this);
     }
 }

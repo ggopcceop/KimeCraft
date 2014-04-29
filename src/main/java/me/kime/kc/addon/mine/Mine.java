@@ -17,7 +17,6 @@
 package me.kime.kc.addon.mine;
 
 import java.io.File;
-import java.sql.PreparedStatement;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -69,19 +68,16 @@ public class Mine extends Addon {
             KLogger.showError("Mine fail to get data source " + databaseKey);
         }
         try {
-            dataSource.execute(c -> {
-                try (PreparedStatement pst = c.prepareStatement("CREATE TABLE IF NOT EXISTS `kc_mine_player` (\n"
-                        + "  `name` varchar(16) NOT NULL,\n"
-                        + "  `world` varchar(20) NOT NULL,\n"
-                        + "  `x` double NOT NULL,\n"
-                        + "  `y` double NOT NULL,\n"
-                        + "  `z` double NOT NULL,\n"
-                        + "  PRIMARY KEY (`name`)\n"
-                        + ") ENGINE=InnoDB DEFAULT CHARSET=latin1;")) {
-                    pst.executeUpdate();
-                    return null;
-                }
-            });
+            dataSource.execute("CREATE TABLE IF NOT EXISTS `kc_mine_player` (\n"
+                    + "  `name` varchar(16) NOT NULL,\n"
+                    + "  `world` varchar(20) NOT NULL,\n"
+                    + "  `x` double NOT NULL,\n"
+                    + "  `y` double NOT NULL,\n"
+                    + "  `z` double NOT NULL,\n"
+                    + "  PRIMARY KEY (`name`)\n"
+                    + ") ENGINE=InnoDB DEFAULT CHARSET=latin1;", pst -> {
+                        pst.executeUpdate();
+                    });
         } catch (Exception ex) {
             KLogger.showError(ex.getMessage());
         }

@@ -17,39 +17,94 @@
 package me.kime.kc.database.mysql;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import me.kime.kc.database.DataSource;
-import me.kime.kc.database.SimpleResult;
+import java.sql.SQLException;
+import me.kime.kc.database.QueryType;
+import me.kime.kc.database.Result;
 import me.kime.kc.database.functionInterface.Errors;
-import me.kime.kc.database.functionInterface.Query;
 import me.kime.kc.database.functionInterface.Responce;
 import me.kime.kc.database.functionInterface.ResponceVoid;
+import me.kime.kc.database.functionInterface.Update;
+import me.kime.kc.task.async.async;
+import me.kime.kc.util.KLogger;
 
 /**
  *
  * @author Kime
  */
-public class MysqlResult extends SimpleResult<Connection, ResultSet, String> {
-
-    public MysqlResult(Query request, DataSource source) {
-        super(request, source);
+public class MysqlResult implements Result<ResultSet, String> {
+    
+    protected final MysqlDataSource dataSource;
+    
+    private final QueryType type;
+    private final String sql;
+    
+    private final Update request;
+    private Responce responce;
+    private Errors error;
+    
+    public MysqlResult(Update request, MysqlDataSource source, QueryType type, String sql) {
+        dataSource = source;
+        
+        this.request = request;
+        
+        this.type = type;
+        this.sql = sql;
     }
-
+    
     @Override
     public MysqlResult onDone(Responce<ResultSet> responce) {
         this.responce = responce;
         return this;
     }
-
+    
     @Override
     public MysqlResult onDone(ResponceVoid responce) {
         this.responce = responce;
         return this;
     }
-
+    
     @Override
     public MysqlResult onError(Errors<String> error) {
         this.error = error;
         return this;
+    }
+    
+    @Override
+    public void execute() {
+        try {
+            Connection conn = dataSource.getConnection();
+            PreparedStatement pst = conn.prepareStatement(sql);
+            
+            async.on().call(t -> {
+                request.apply(pst);
+                if (type == QueryType.QUERY) {
+                    t.put("result", pst.executeQuery());
+                } else {
+                    pst.executeUpdate();
+                }
+            }).done(t -> {
+                ResultSet result = (ResultSet) t.get("result");
+                
+                if (responce != null) {
+                    responce.accept(result);
+                }
+                
+                dataSource.close(result);
+                dataSource.close(pst);
+                dataSource.close(conn);
+                
+            }).error(t -> {
+                if (error != null) {
+                    error.onError(t.getException().getMessage());
+                }                
+                dataSource.close(pst);
+                dataSource.close(conn);
+            }).execute();
+            
+        } catch (SQLException ex) {
+            KLogger.showError(ex.getMessage());
+        }
     }
 }

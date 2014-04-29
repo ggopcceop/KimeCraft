@@ -34,8 +34,6 @@ import me.kime.kc.addon.admin.Admin;
 import me.kime.kc.addon.auth.Auth;
 import me.kime.kc.addon.chat.Chat;
 import me.kime.kc.addon.chopTree.ChopTree;
-import me.kime.kc.database.DataSourceManager;
-import me.kime.kc.database.mysql.MysqlDataSource;
 import me.kime.kc.addon.fun.Fun;
 import me.kime.kc.addon.mine.Mine;
 import me.kime.kc.addon.motd.MOTD;
@@ -43,7 +41,7 @@ import me.kime.kc.addon.noob.Noob;
 import me.kime.kc.addon.party.Party;
 import me.kime.kc.addon.portal.Portal;
 import me.kime.kc.addon.signTP.SignTP;
-import me.kime.kc.task.async.Caller;
+import me.kime.kc.database.DataSourceManager;
 import me.kime.kc.task.async.async;
 import me.kime.kc.util.KLogFilter;
 import me.kime.kc.util.KLogger;
@@ -160,45 +158,6 @@ public class KimeCraft extends JavaPlugin {
         getCommand("kimecraft").setExecutor(kcCommand);
 
         KLogger.info("KimeCraft Loaded!");
-
-        MysqlDataSource data = DataSourceManager.getMysqlDataSource("test");
-
-        data.query(q -> {
-            return q.prepareStatement("SELECT * FROM ttad").executeQuery();
-        }).onDone(r -> {
-            while (r.next()) {
-                System.out.print(r.getString("name") + " " + r.getString("emmm") + " ");
-            }
-            System.out.println();
-        }).execute();
-
-        async.on().call(() -> {
-            System.out.println("Hello");
-        }).done(() -> {
-            System.out.println("World");
-        }).execute();
-
-        async.on().call(t -> {
-            t.put("1", "Worldsx");
-            System.out.println("Hellosx");
-        }).done(t -> {
-            System.out.println(t.get("1"));
-        }).execute();
-
-        async.on("Test1").call(t -> {
-            t.put("1", "111");
-            t.put("1", "222");
-            System.out.println("Hellosx3");
-        }).done(t -> {
-            System.out.println("World 3 " + t.get("1"));
-        });
-
-        Caller caller = async.listen("Test1");
-        caller.call();
-        caller.call();
-
-        async.on().execute();
-
     }
 
     private void loadDependency() {

@@ -19,12 +19,11 @@ package me.kime.kc.database.mysql;
 import biz.source_code.miniConnectionPoolManager.MiniConnectionPoolManager;
 import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import me.kime.kc.KimeCraft;
-import me.kime.kc.database.DataSource;
-import me.kime.kc.database.functionInterface.Query;
+import me.kime.kc.database.QueryType;
 import me.kime.kc.database.functionInterface.Update;
 import me.kime.kc.util.KLogger;
 
@@ -32,7 +31,7 @@ import me.kime.kc.util.KLogger;
  *
  * @author Kime
  */
-public class MysqlDataSource implements DataSource<Connection, ResultSet> {
+public class MysqlDataSource {
 
     protected final MiniConnectionPoolManager pool;
 
@@ -57,58 +56,40 @@ public class MysqlDataSource implements DataSource<Connection, ResultSet> {
         }
     }
 
-    public void close(Connection conn) {
-        if (conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                KLogger.showError(e.getMessage());
-            }
-        }
-    }
-
-    public void close(ResultSet rs) {
-        if (rs != null) {
-            try {
-                rs.close();
-            } catch (SQLException e) {
-                KLogger.showError(e.getMessage());
-            }
-        }
-    }
-
-    public void close(Statement st) {
-        if (st != null) {
-            try {
-                st.close();
-            } catch (SQLException e) {
-                KLogger.showError(e.getMessage());
-            }
-        }
-    }
-
-    @Override
-    public MysqlResult query(Query<Connection, ResultSet> request) {
-        MysqlResult result = new MysqlResult(request, this);
+    public MysqlResult query(String sql, Update<PreparedStatement> request) {
+        MysqlResult result = new MysqlResult(request, this, QueryType.QUERY, sql);
 
         return result;
     }
 
-    @Override
-    public MysqlResult update(Update<Connection> request) {
-        return query(t -> {
-            request.apply(t);
-            return null;
-        });
+    public MysqlResult update(String sql, Update<PreparedStatement> request) {
+        MysqlResult result = new MysqlResult(request, this, QueryType.UPDATE, sql);
+
+        return result;
     }
 
-    @Override
-    public ResultSet execute(Query<Connection, ResultSet> request) throws Exception {
-        ResultSet result;
-        try (Connection conn = pool.getConnection()) {
-            result = request.apply(conn);
+    public void execute(String sql, Update<PreparedStatement> request) throws Exception {
+        Connection con = null;
+        PreparedStatement pst = null;
+        try {
+            con = pool.getValidConnection();
+            pst = con.prepareStatement(sql);
+            request.apply(pst);
+        } catch (Exception ex) {
+
+        } finally {
+            close(con);
+            close(pst);
         }
-        return result;
+    }
+
+    public void close(AutoCloseable close) {
+        try {
+            if (close != null) {
+                close.close();
+            }
+        } catch (Exception ex) {
+        }
     }
 
 }

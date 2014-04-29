@@ -73,7 +73,6 @@ public abstract class DynamicTask implements Task {
         try {
             if (call != null) {
                 Consumer consumer = new Consumer();
-
                 call.onCall(consumer);
 
                 if (done != null) {
@@ -81,6 +80,7 @@ public abstract class DynamicTask implements Task {
                         try {
                             done.onCall(consumer);
                         } catch (Exception ex) {
+                            KLogger.showError(ex.getMessage());
                         }
                     });
                 }
@@ -89,7 +89,9 @@ public abstract class DynamicTask implements Task {
             }
         } catch (Exception ex) {
             if (error != null) {
-                error.onError(new Error(ex));
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                    error.onError(new Error(ex));
+                });
             } else {
                 KLogger.showError(ex.getMessage());
             }

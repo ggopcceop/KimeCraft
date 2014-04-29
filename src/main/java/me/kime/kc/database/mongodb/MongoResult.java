@@ -17,21 +17,29 @@
 package me.kime.kc.database.mongodb;
 
 import com.mongodb.DB;
-import me.kime.kc.database.DataSource;
-import me.kime.kc.database.SimpleResult;
+import me.kime.kc.database.Result;
 import me.kime.kc.database.functionInterface.Errors;
 import me.kime.kc.database.functionInterface.Query;
 import me.kime.kc.database.functionInterface.Responce;
 import me.kime.kc.database.functionInterface.ResponceVoid;
+import me.kime.kc.task.async.async;
 
 /**
  *
  * @author Kime
+ * @param <R>
  */
-public class MongoResult<R> extends SimpleResult<DB, R, String> {
+public class MongoResult<R> implements Result<R, String> {
 
-    public MongoResult(Query<DB, R> request, DataSource source) {
-        super(request, source);
+    private final MongoDataSource dataSource;
+
+    private final Query request;
+    private Responce responce;
+    private Errors error;
+
+    public MongoResult(Query<DB, R> request, MongoDataSource source) {
+        this.dataSource = source;
+        this.request = request;
     }
 
     @Override
@@ -50,5 +58,17 @@ public class MongoResult<R> extends SimpleResult<DB, R, String> {
     public MongoResult onError(Errors<String> error) {
         this.error = error;
         return this;
+    }
+
+    @Override
+    public void execute() {
+        async.on().call(t -> {
+            t.put("result", dataSource.execute(request));
+        }).done(t -> {
+            Object result = t.get("result");
+            responce.accept(result);
+        }).error(t -> {
+            error.onError(t.getException());
+        }).execute();
     }
 }

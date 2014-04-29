@@ -16,7 +16,6 @@
  */
 package me.kime.kc.addon.chat;
 
-import java.sql.PreparedStatement;
 import me.kime.kc.KPlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -41,16 +40,12 @@ public class ChatListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         KPlayer player = addon.getPlugin().getOnlinePlayer(event.getPlayer().getName());
 
-        addon.getDataSource().query(c -> {
-            try (PreparedStatement pst = c.prepareStatement("SELECT * FROM kc_chat_player WHERE name=?;")) {
-                pst.setString(1, player.getNameLowCase());
-                return pst.executeQuery();
-            }
+        addon.getDataSource().query("SELECT * FROM kc_chat_player WHERE name=?;", pst -> {
+            pst.setString(1, player.getNameLowCase());
         }).onDone(r -> {
             if (r.next()) {
                 player.currentChannel = r.getInt("currentChannel");
             }
-            r.close();
         }).execute();
     }
 
@@ -58,15 +53,12 @@ public class ChatListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         KPlayer player = addon.getPlugin().getOnlinePlayer(event.getPlayer().getName());
 
-        addon.getDataSource().update(c -> {
-            try (PreparedStatement pst = c.prepareStatement("INSERT INTO kc_chat_player (name, currentChannel)"
-                    + " VALUES (?, ?) ON DUPLICATE KEY UPDATE  name=VALUES(name),"
-                    + " currentChannel=VALUES(currentChannel);")) {
-                pst.setString(1, player.getNameLowCase());
-                pst.setInt(2, player.currentChannel);
-                pst.executeUpdate();
-            }
-        }).execute();
+        addon.getDataSource().update("INSERT INTO kc_chat_player (name, currentChannel)"
+                + " VALUES (?, ?) ON DUPLICATE KEY UPDATE  name=VALUES(name),"
+                + " currentChannel=VALUES(currentChannel);", pst -> {
+                    pst.setString(1, player.getNameLowCase());
+                    pst.setInt(2, player.currentChannel);
+                }).execute();
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

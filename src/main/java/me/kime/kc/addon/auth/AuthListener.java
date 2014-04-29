@@ -16,7 +16,6 @@
  */
 package me.kime.kc.addon.auth;
 
-import java.sql.PreparedStatement;
 import me.kime.kc.KPlayer;
 import me.kime.kc.task.AuthTimeoutTask;
 import me.kime.kc.util.KMessager;
@@ -104,47 +103,44 @@ public class AuthListener implements Listener {
 
         kPlayer.cache();
 
-        addon.getDataSource().query(c -> {
-            try (PreparedStatement pst = c.prepareStatement("SELECT pre_ucenter_members.username, "
-                    + "pre_ucenter_members.password, pre_ucenter_members.salt, "
-                    + "pre_common_member.groupid, pre_ucenter_members.lloginip, "
-                    + "pre_ucenter_members.llogindate FROM pre_ucenter_members,"
-                    + " pre_common_member  WHERE pre_ucenter_members.username=? "
-                    + "AND pre_common_member.username=?;")) {
-                pst.setString(1, user);
-                pst.setString(2, user);
-                return pst.executeQuery();
-            }
-        }).onDone(rs -> {
-            if (rs.next()) {
-                if (rs.getString("lloginip") == null || rs.getString("lloginip").isEmpty()) {
-                    kPlayer.LoginIp = "198.18.0.1";
-                } else {
-                    kPlayer.LoginIp = rs.getString("lloginip");
-                }
+        addon.getDataSource().query("SELECT pre_ucenter_members.username, "
+                + "pre_ucenter_members.password, pre_ucenter_members.salt, "
+                + "pre_common_member.groupid, pre_ucenter_members.lloginip, "
+                + "pre_ucenter_members.llogindate FROM pre_ucenter_members,"
+                + " pre_common_member  WHERE pre_ucenter_members.username=? "
+                + "AND pre_common_member.username=?;", pst -> {
+                    pst.setString(1, user);
+                    pst.setString(2, user);
 
-                kPlayer.password = rs.getString("password");
-                kPlayer.salt = rs.getString("salt");
-                kPlayer.groupId = rs.getInt("groupid");
-                kPlayer.LoginDate = rs.getLong("llogindate");
-            }
-            rs.close();
+                }).onDone(rs -> {
+                    if (rs.next()) {
+                        if (rs.getString("lloginip") == null || rs.getString("lloginip").isEmpty()) {
+                            kPlayer.LoginIp = "198.18.0.1";
+                        } else {
+                            kPlayer.LoginIp = rs.getString("lloginip");
+                        }
 
-            long diffTime = System.currentTimeMillis() - kPlayer.LoginDate;
+                        kPlayer.password = rs.getString("password");
+                        kPlayer.salt = rs.getString("salt");
+                        kPlayer.groupId = rs.getInt("groupid");
+                        kPlayer.LoginDate = rs.getLong("llogindate");
+                    }
 
-            if (diffTime <= addon.getSessionTime()
+                    long diffTime = System.currentTimeMillis() - kPlayer.LoginDate;
+
+                    if (diffTime <= addon.getSessionTime()
                     && kPlayer.LoginIp.equals(kPlayer.player.getAddress().getHostString())
                     && (kPlayer.groupId < 4 || kPlayer.groupId > 9)) {
 
-                kPlayer.restoreCache();
-                kPlayer.isAuth = true;
+                        kPlayer.restoreCache();
+                        kPlayer.isAuth = true;
 
-                //call motd event
-                Bukkit.getPluginManager().callEvent(new AuthSucceedEvent(kPlayer));
-            } else {
-                KMessager.sendMessage(kPlayer, ChatColor.GREEN, "auth_AskLogin");
-            }
-        }).execute();
+                        //call motd event
+                        Bukkit.getPluginManager().callEvent(new AuthSucceedEvent(kPlayer));
+                    } else {
+                        KMessager.sendMessage(kPlayer, ChatColor.GREEN, "auth_AskLogin");
+                    }
+                }).execute();
 
         //timeout task for each login player
         int timeout = 120 * 20;
@@ -173,15 +169,12 @@ public class AuthListener implements Listener {
                 addon.getPlugin().getServer().getScheduler().cancelTask(kPlayer.getTimeoutTaskId());
             }
         } else {
-            addon.getDataSource().update(c -> {
-                try (PreparedStatement pst = c.prepareStatement("UPDATE pre_ucenter_members SET lloginip = ?,"
-                        + " llogindate = ? WHERE username = ?;")) {
-                    pst.setString(1, kPlayer.player.getAddress().getHostString());
-                    pst.setLong(2, System.currentTimeMillis());
-                    pst.setString(3, kPlayer.getNameLowCase());
-                    pst.executeUpdate();
-                }
-            }).execute();
+            addon.getDataSource().update("UPDATE pre_ucenter_members SET lloginip = ?,"
+                    + " llogindate = ? WHERE username = ?;", pst -> {
+                        pst.setString(1, kPlayer.player.getAddress().getHostString());
+                        pst.setLong(2, System.currentTimeMillis());
+                        pst.setString(3, kPlayer.getNameLowCase());
+                    }).execute();
         }
     }
 

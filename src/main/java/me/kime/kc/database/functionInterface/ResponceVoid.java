@@ -24,7 +24,7 @@ public interface ResponceVoid extends Responce<Void> {
 
     @Override
     default public void accept(Void responce) throws Exception {
-
+        accept();
     }
 
     void accept() throws Exception;

@@ -16,7 +16,6 @@
  */
 package me.kime.kc.addon.mine;
 
-import java.sql.PreparedStatement;
 import me.kime.kc.KPlayer;
 import me.kime.kc.util.KCTPer;
 import me.kime.kc.util.KMessager;
@@ -128,11 +127,9 @@ public class MineLinstener implements Listener {
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         if (event.getFrom().getWorld() == mine.getMineWorld()) {
             if (event.getCause() == TeleportCause.NETHER_PORTAL) {
-                mine.getDataSource().query(c -> {
-                    try (PreparedStatement pst = c.prepareStatement("SELECT * FROM kc_mine_player WHERE name=?;")) {
-                        pst.setString(1, event.getPlayer().getName());
-                        return pst.executeQuery();
-                    }
+                mine.getDataSource().query("SELECT * FROM kc_mine_player WHERE name=?;", pst -> {
+                    pst.setString(1, event.getPlayer().getName());
+
                 }).onDone(r -> {
                     if (r.next()) {
                         World world = mine.getPlugin().getServer().getWorld(r.getString("world"));
@@ -145,20 +142,18 @@ public class MineLinstener implements Listener {
                 }).execute();
                 event.setCancelled(true);
             }
-        } else if (event.getTo().getWorld() == mine.getMineWorld()) {
+        } else if (event.getTo()
+                .getWorld() == mine.getMineWorld()) {
             Location location = event.getPlayer().getLocation().clone();
-            mine.getDataSource().update(c -> {
-                try (PreparedStatement pst = c.prepareStatement("INSERT INTO kc_mine_player (name, world, x, y, z)"
-                        + " VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE name=values(name),"
-                        + " world=VALUES(world), x=VALUES(x), y=VALUES(y), z=VALUES(z);")) {
-                    pst.setString(1, event.getPlayer().getName());
-                    pst.setString(2, location.getWorld().getName());
-                    pst.setDouble(3, location.getX());
-                    pst.setDouble(4, location.getY());
-                    pst.setDouble(5, location.getZ());
-                    pst.executeUpdate();
-                }
-            }).execute();
+            mine.getDataSource().update("INSERT INTO kc_mine_player (name, world, x, y, z)"
+                    + " VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE name=values(name),"
+                    + " world=VALUES(world), x=VALUES(x), y=VALUES(y), z=VALUES(z);", pst -> {
+                        pst.setString(1, event.getPlayer().getName());
+                        pst.setString(2, location.getWorld().getName());
+                        pst.setDouble(3, location.getX());
+                        pst.setDouble(4, location.getY());
+                        pst.setDouble(5, location.getZ());
+                    }).execute();
         }
     }
 }

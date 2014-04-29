@@ -16,7 +16,6 @@
  */
 package me.kime.kc.addon.signTP;
 
-import java.sql.PreparedStatement;
 import me.kime.kc.Addon;
 import me.kime.kc.KimeCraft;
 import me.kime.kc.database.DataSourceManager;
@@ -50,22 +49,19 @@ public class SignTP extends Addon {
         }
 
         try {
-            dataSource.execute(c -> {
-                try (PreparedStatement pst = c.prepareStatement("CREATE TABLE IF NOT EXISTS `kc_signtp` (\n"
-                        + "  `id` int(11) NOT NULL AUTO_INCREMENT,\n"
-                        + "  `name` varchar(30) NOT NULL,\n"
-                        + "  `world` varchar(20) CHARACTER SET latin1 NOT NULL,\n"
-                        + "  `x` double NOT NULL,\n"
-                        + "  `y` double NOT NULL,\n"
-                        + "  `z` double NOT NULL,\n"
-                        + "  `yaw` double NOT NULL,\n"
-                        + "  PRIMARY KEY (`id`),\n"
-                        + "  UNIQUE KEY `name` (`name`)\n"
-                        + ") ENGINE=InnoDB  DEFAULT CHARSET=utf8")) {
-                    pst.executeUpdate();
-                    return null;
-                }
-            });
+            dataSource.execute("CREATE TABLE IF NOT EXISTS `kc_signtp` (\n"
+                    + "  `id` int(11) NOT NULL AUTO_INCREMENT,\n"
+                    + "  `name` varchar(30) NOT NULL,\n"
+                    + "  `world` varchar(20) CHARACTER SET latin1 NOT NULL,\n"
+                    + "  `x` double NOT NULL,\n"
+                    + "  `y` double NOT NULL,\n"
+                    + "  `z` double NOT NULL,\n"
+                    + "  `yaw` double NOT NULL,\n"
+                    + "  PRIMARY KEY (`id`),\n"
+                    + "  UNIQUE KEY `name` (`name`)\n"
+                    + ") ENGINE=InnoDB  DEFAULT CHARSET=utf8", pst -> {
+                        pst.executeUpdate();
+                    });
         } catch (Exception ex) {
             KLogger.showError(ex.getMessage());
         }

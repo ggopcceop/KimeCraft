@@ -24,7 +24,6 @@ import com.mongodb.ServerAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import me.kime.kc.KimeCraft;
-import me.kime.kc.database.DataSource;
 import me.kime.kc.database.functionInterface.Query;
 import me.kime.kc.database.Result;
 import me.kime.kc.database.functionInterface.Update;
@@ -34,7 +33,7 @@ import me.kime.kc.util.KLogger;
  *
  * @author Kime
  */
-public class MongoDataSource implements DataSource<DB, DBObject> {
+public class MongoDataSource {
 
     private DB db;
 
@@ -48,13 +47,11 @@ public class MongoDataSource implements DataSource<DB, DBObject> {
         }
     }
 
-    @Override
     public MongoResult query(Query<DB, DBObject> request) {
         MongoResult mongoResult = new MongoResult(request, this);
         return mongoResult;
     }
 
-    @Override
     public Result update(Update<DB> request) {
         return query(t -> {
             request.apply(t);
@@ -62,7 +59,6 @@ public class MongoDataSource implements DataSource<DB, DBObject> {
         });
     }
 
-    @Override
     public DBObject execute(Query<DB, DBObject> request) throws Exception {
         return request.apply(db);
     }

@@ -16,7 +16,6 @@
  */
 package me.kime.kc.addon.signTP;
 
-import java.sql.PreparedStatement;
 import me.kime.kc.util.KCTPer;
 import me.kime.kc.util.KMessager;
 import org.bukkit.ChatColor;
@@ -59,12 +58,10 @@ public class SignTPListener implements Listener {
 
                     if (player.hasPermission("kc.admin.sign")) {
                         if (line1.equals("signtp_hub")) {
-                            signTP.getDataSource().update(c -> {
-                                try (PreparedStatement pst = c.prepareStatement("DELETE FROM kc_signtp WHERE name = ?")) {
-                                    pst.setString(1, line2.toLowerCase());
-                                    pst.executeUpdate();
-                                    player.sendMessage("Removed " + line2 + " from the Hub List");
-                                }
+                            signTP.getDataSource().update("DELETE FROM kc_signtp WHERE name = ?", pst -> {
+                                pst.setString(1, line2.toLowerCase());
+                            }).onDone(t -> {
+                                player.sendMessage("Removed " + line2 + " from the Hub List");
                             }).execute();
                         }
                     } else {
@@ -96,11 +93,8 @@ public class SignTPListener implements Listener {
 
                     if (lines[0].startsWith("signtp")) {
                         if (lines[0].endsWith("branch")) {
-                            signTP.getDataSource().query(c -> {
-                                try (PreparedStatement pst = c.prepareStatement("SELECT * FROM kc_signtp WHERE name = ?")) {
-                                    pst.setString(1, lines[1]);
-                                    return pst.executeQuery();
-                                }
+                            signTP.getDataSource().query("SELECT * FROM kc_signtp WHERE name = ?", pst -> {
+                                pst.setString(1, lines[1]);
                             }).onDone(rs -> {
                                 if (rs.next()) {
                                     String worldname = rs.getString("world");
@@ -184,20 +178,19 @@ public class SignTPListener implements Listener {
             if (event.getPlayer().hasPermission("kc.admin.sign")) {
                 if (lines[0].equals("signtp_hub")) {
                     Location loc = player.getLocation().clone();
-                    signTP.getDataSource().update(c -> {
-                        try (PreparedStatement pst = c.prepareStatement("INSERT INTO kc_signtp values(DEFAULT, ?, ?, ?, ?, ?, ?)")) {
-                            pst.setString(1, lines[1]);
-                            pst.setString(2, loc.getWorld().getName());
-                            pst.setDouble(3, loc.getX());
-                            pst.setDouble(4, loc.getY());
-                            pst.setDouble(5, loc.getZ());
-                            pst.setDouble(6, loc.getYaw() + 180F);
-                            pst.executeUpdate();
-
-                            KMessager.sendMessage(signTP.getPlugin().getOnlinePlayer(player.getName()), ChatColor.GREEN, "signtp_createHub", lines[1]);
-                        }
+                    Block block = event.getBlock();
+                    signTP.getDataSource().update("INSERT INTO kc_signtp values(DEFAULT, ?, ?, ?, ?, ?, ?)", pst -> {
+                        pst.setString(1, lines[1]);
+                        pst.setString(2, loc.getWorld().getName());
+                        pst.setDouble(3, loc.getX());
+                        pst.setDouble(4, loc.getY());
+                        pst.setDouble(5, loc.getZ());
+                        pst.setDouble(6, loc.getYaw() + 180F);
+                    }).onDone(() -> {
+                        KMessager.sendMessage(signTP.getPlugin().getOnlinePlayer(player.getName()), ChatColor.GREEN, "signtp_createHub", lines[1]);
                     }).onError(e -> {
                         KMessager.sendError(signTP.getPlugin().getOnlinePlayer(player.getName()), "signtp_hubAlreadyExist");
+                        block.breakNaturally();
                     }).execute();
                 }
             } else {
