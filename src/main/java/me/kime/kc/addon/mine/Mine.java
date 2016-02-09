@@ -106,8 +106,7 @@ public class Mine extends Addon {
 
         DecimalFormat format = new DecimalFormat("#.##");
         Caller caller = async.call().call(t -> {
-            Player[] players = plugin.getServer().getOnlinePlayers();
-            for (Player player1 : players) {
+            for (Player player1 : plugin.getServer().getOnlinePlayers()) {
                 KPlayer player = plugin.getOnlinePlayer(player1.getName());
                 if (player.getSalary(false) > 0) {
                     double mount = player.getSalary(true);

@@ -31,7 +31,6 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import me.kime.kc.addon.admin.Admin;
-import me.kime.kc.addon.auth.Auth;
 import me.kime.kc.addon.chat.Chat;
 import me.kime.kc.addon.chopTree.ChopTree;
 import me.kime.kc.addon.fun.Fun;
@@ -43,10 +42,8 @@ import me.kime.kc.addon.portal.Portal;
 import me.kime.kc.addon.signTP.SignTP;
 import me.kime.kc.database.DataSourceManager;
 import me.kime.kc.task.async.async;
-import me.kime.kc.util.KLogFilter;
 import me.kime.kc.util.KLogger;
 import net.milkbowl.vault.economy.Economy;
-import org.apache.logging.log4j.LogManager;
 import org.bukkit.Difficulty;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -137,7 +134,6 @@ public class KimeCraft extends JavaPlugin {
         //enable addons
         registerAddon(new Admin(this));
         registerAddon(new Noob(this));
-        registerAddon(new Auth(this));
         registerAddon(new MOTD(this));
         registerAddon(new Chat(this));
         registerAddon(new Fun(this));
@@ -148,8 +144,6 @@ public class KimeCraft extends JavaPlugin {
         registerAddon(new Party(this));
 
         setupDynmap();
-
-        ((org.apache.logging.log4j.core.Logger) LogManager.getRootLogger()).addFilter(new KLogFilter());
 
         getPluginManager().registerEvents(new KCListener(this, onlineList), this);
 
@@ -183,14 +177,12 @@ public class KimeCraft extends JavaPlugin {
             final Class<URLClassLoader> sysclass = URLClassLoader.class;
             Method method = sysclass.getDeclaredMethod("addURL", new Class[]{URL.class});
 
-            method.setAccessible(
-                    true);
+            method.setAccessible(true);
             method.invoke(urlbukkitloader,
                     new Object[]{dependency.toURI().toURL()
                     }
             );
-            KLogger.info(
-                    " Drivers Loaded!");
+            KLogger.info(" Drivers Loaded!");
         } catch (MalformedURLException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             KLogger.showError("Error while loading drivers");
 
@@ -198,15 +190,15 @@ public class KimeCraft extends JavaPlugin {
     }
 
     private boolean setupEconomy() {
-        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class
-        );
-        if (economyProvider
-                != null) {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
+        if (economyProvider != null) {
             economy = economyProvider.getProvider();
         }
 
-        return (economy
-                != null);
+        return (economy != null);
     }
 
     private void config() {

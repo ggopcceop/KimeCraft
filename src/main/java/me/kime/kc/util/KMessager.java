@@ -51,11 +51,10 @@ public class KMessager {
     }
 
     public static void boardcastMessage(ChatColor color, String key, String... words) {
-        Player[] players = Bukkit.getOnlinePlayers();
         if (plugin == null) {
             plugin = (KimeCraft) Bukkit.getPluginManager().getPlugin("KimeCraft");
         }
-        for (Player player : players) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             KPlayer kPlayer = plugin.getOnlinePlayer(player.getName());
             sendMessage(kPlayer, color, key, words);
         }

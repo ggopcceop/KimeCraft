@@ -41,9 +41,8 @@ public class MOTDBoradcastTask implements Runnable {
 
     @Override
     public void run() {
-        Player[] players = Bukkit.getServer().getOnlinePlayers();
         line = addon.getPlugin().getRandom().nextInt(maxline);
-        for (Player player : players) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             KPlayer kPlayer = addon.getPlugin().getOnlinePlayer(player.getName());
             String language;
             if (kPlayer.getLocale() == null) {

@@ -12,16 +12,7 @@ Language:
     city_success: "You are in City!"
 
     #for admin addon
-    admin_signFormatIncorrect: "Incorrect sign format"
-    
-    #for auth addon
-    auth_AskLogin: "Type '/login [password]' to login"
-    auth_commandUsage: "Usage: /login [password]"
-    auth_alreadyLogin: "You have already logged in!"
-    auth_askRegister: "Please register at www.e7play.co!"
-    auth_bannedUser: "You are NOT an active user!"
-    auth_successfulLogin: "Successful login!"
-    auth_wrongPassword: "Wrong password!"
+    admin_signFormatIncorrect: "Incorrect sign format
     
     #for fun addon
     fun_readchBorder: "You have reached the border!"

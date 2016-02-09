@@ -13,15 +13,6 @@ Language:
     #for admin addon
     admin_signFormatIncorrect: "告示牌格式錯誤"
     
-    #for auth addon
-    auth_AskLogin: "輸入 '/login [密碼]' 以登錄"
-    auth_commandUsage: "使用 /login [密碼]"
-    auth_alreadyLogin: "你已經登錄過了！"
-    auth_askRegister: "請到 www.e7play.co 上面註冊帳號！"
-    auth_bannedUser: "這不是一個有效的帳戶！"
-    auth_successfulLogin: "登錄成功！"
-    auth_wrongPassword: "密碼錯誤！"
-    
     #for fun addon
     fun_readchBorder: "你到達了邊界！"
     

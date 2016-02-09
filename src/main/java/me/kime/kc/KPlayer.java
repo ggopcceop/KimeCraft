@@ -17,7 +17,6 @@
 package me.kime.kc;
 
 import java.util.List;
-import me.kime.kc.addon.auth.PlayerCache;
 import me.kime.kc.locale.Locale;
 import me.kime.kc.util.KCTPer;
 import org.bukkit.Location;
@@ -36,9 +35,7 @@ public class KPlayer {
 
     public KPlayer(Player player) {
         this.player = player;
-        isAuth = false;
         borderCheckTaskId = -1;
-        timeoutTaskId = -1;
     }
 
     public Player getPlayer() {
@@ -137,97 +134,6 @@ public class KPlayer {
      */
     public Locale getLocale() {
         return locale;
-    }
-
-    //============== auth functions of player ==============//
-    public boolean isAuth;
-    public String LoginIp;
-    public String password;
-    public long LoginDate;
-    public String salt = null;
-    public int groupId = -1;
-    private PlayerCache cache;
-    private int timeoutTaskId;
-
-    private StringBuilder TypedPassword;
-    private int TypedPasswordLenght = 0;
-
-    public boolean isAuth() {
-        return isAuth;
-    }
-
-    public void setAuth(boolean auth) {
-        isAuth = auth;
-    }
-
-    public void cache() {
-        cache = new PlayerCache();
-        cache.cacheInventory(player.getInventory());
-        cache.cacheStatus(player);
-    }
-
-    public void restoreCache() {
-        if (cache != null) {
-            cache.restoreInventory(player.getInventory());
-            cache.restoreStatus(player);
-            cache = null;
-        }
-    }
-
-    public void setTimeoutTaskId(int timeoutTaskId) {
-        this.timeoutTaskId = timeoutTaskId;
-    }
-
-    public int getTimeoutTaskId() {
-        return timeoutTaskId;
-    }
-
-    /**
-     * store the login password player typed
-     *
-     * @param pass
-     * @return
-     */
-    public String setTypedPassword(String pass) {
-        if (TypedPasswordLenght == 0) {
-            this.TypedPasswordLenght = pass.length();
-            this.TypedPassword = new StringBuilder();
-            TypedPassword.append(pass);
-        } else {
-            char[] array = pass.toCharArray();
-            int i = 0;
-            while (i < TypedPasswordLenght && i < pass.length()) {
-                if (array[i] != '*') {
-                    break;
-                }
-                i++;
-            }
-            if (i < TypedPasswordLenght) {
-                TypedPassword.delete(i, TypedPassword.length());
-            }
-            while (i < pass.length()) {
-                TypedPassword.append(array[i]);
-                i++;
-            }
-
-            TypedPasswordLenght = TypedPassword.length();
-        }
-        StringBuilder replace = new StringBuilder();
-        for (int i = 0; i < pass.length(); i++) {
-            replace.append("*");
-        }
-        return replace.toString();
-    }
-
-    public String getTypedPassword() {
-        if (TypedPassword == null) {
-            return null;
-        } else {
-            String p = TypedPassword.toString();
-            TypedPassword = null;
-            TypedPasswordLenght = 0;
-            return p;
-        }
     }
 
     //=========== chating functions ================//

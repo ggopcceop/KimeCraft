@@ -85,10 +85,9 @@ public class Chat extends Addon {
 
     public void rangeChat(String sender, Location loc, int range, String message) {
         World currentWorld = loc.getWorld();
-        Player[] players = Bukkit.getOnlinePlayers();
         int squaredRange = range * range;
         String msgString = "[" + sender + "]: " + message;
-        for (Player player : players) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.getWorld() == currentWorld) {
                 if (loc.distanceSquared(player.getLocation()) <= squaredRange) {
                     player.sendMessage(msgString);
@@ -99,8 +98,7 @@ public class Chat extends Addon {
     }
 
     public void publicChat(Player sender, String message) {
-        Player[] players = Bukkit.getOnlinePlayers();
-        for (Player player : players) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             StringBuilder result = new StringBuilder();
             KPlayer kPlayer = plugin.getOnlinePlayer(player.getName());
             Locale locale = kPlayer.getLocale();
@@ -127,8 +125,7 @@ public class Chat extends Addon {
     }
 
     public void webChat(String sender, String message) {
-        Player[] players = Bukkit.getOnlinePlayers();
-        for (Player player : players) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             StringBuilder result = new StringBuilder();
             KPlayer kPlayer = plugin.getOnlinePlayer(player.getName());
             Locale locale = kPlayer.getLocale();

@@ -43,20 +43,11 @@ public class DynmapChatListener implements Listener {
             return;
         }        
         KPlayer kPlayer = addon.getPlugin().getOnlinePlayer(event.getName());
-        if (kPlayer == null || kPlayer.isAuth()) {
+        if (kPlayer != null) {
             event.setProcessed();
             addon.webChat(event.getName(), event.getMessage());
         } else {
             event.setCancelled(true);
         }
-    }
-    
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        KPlayer kPlayer = addon.getPlugin().getOnlinePlayer(event.getPlayer().getName());
-        if (!kPlayer.isAuth()) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "dynmap del-id-for-ip " + kPlayer.player.getName() + " " + kPlayer.player.getAddress().getHostString());
-            KLogger.info("Remove " + kPlayer.player.getName() + " from web chat list");
-        }        
     }
 }

@@ -30,11 +30,8 @@ public class NoobCommand implements CommandExecutor {
                 if (split.length == 1) {
                     KPlayer p = noob.getPlugin().getOnlinePlayer(split[0]);
                     if (p != null) {
-                        if (p.isAuth()) {
-                            p.getPlayer().teleport(noob.getNoobWorld().getSpawnLocation());
-                        } else {
-                            KMessager.sendError(kSender, "noob_notLogin", p.player.getName());
-                        }
+                        p.getPlayer().teleport(noob.getNoobWorld().getSpawnLocation());
+
                         return true;
                     }
                     KMessager.sendError(kSender, "notFound", split[0]);
@@ -44,18 +41,15 @@ public class NoobCommand implements CommandExecutor {
                 if (split.length == 1) {
                     KPlayer p = noob.getPlugin().getOnlinePlayer(split[0]);
                     if (p != null) {
-                        if (p.isAuth()) {
-                            Location loc = new Location(noob.getPlugin().getDefaultWorld(), -308, 216, 22, 0, 0);
-                            p.getPlayer().teleport(loc);
+                        Location loc = new Location(noob.getPlugin().getDefaultWorld(), -308, 216, 22, 0, 0);
+                        p.getPlayer().teleport(loc);
 
-                            loc = new Location(noob.getPlugin().getDefaultWorld(), -308, 216, 30, 0, 0);
-                            //play firework to welcome noobs
-                            noob.playFirework(loc, 20);
+                        loc = new Location(noob.getPlugin().getDefaultWorld(), -308, 216, 30, 0, 0);
+                        //play firework to welcome noobs
+                        noob.playFirework(loc, 20);
 
-                            KMessager.sendMessage(kSender, ChatColor.YELLOW, "noob_toCity", p.player.getName());
-                        } else {
-                            KMessager.sendError(kSender, "noob_notLogin", p.player.getName());
-                        }
+                        KMessager.sendMessage(kSender, ChatColor.YELLOW, "noob_toCity", p.player.getName());
+
                         return true;
                     }
                     KMessager.sendError(kSender, "notFound", split[0]);

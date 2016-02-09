@@ -16,7 +16,12 @@
  */
 package me.kime.kc.locale;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -30,8 +35,22 @@ public class LocaleLoader {
         if (locale != null) {
             InputStream fileStream = LocaleLoader.class.getResourceAsStream("/translation/" + locale + ".yml");
             if (fileStream != null) {
-                FileConfiguration translation = YamlConfiguration.loadConfiguration(fileStream);
-                return new Locale(translation.getConfigurationSection("Language"), locale);
+                InputStreamReader fileReader = null;
+                try {
+                    fileReader = new InputStreamReader(fileStream, "UTF8");
+                    FileConfiguration translation = YamlConfiguration.loadConfiguration(fileReader);
+                    return new Locale(translation.getConfigurationSection("Language"), locale);
+                } catch (UnsupportedEncodingException ex) {
+                    Logger.getLogger(LocaleLoader.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    try {
+                        if (fileReader != null) {
+                            fileReader.close();
+                        }
+                    } catch (IOException ex) {
+                        Logger.getLogger(LocaleLoader.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         }
         return null;

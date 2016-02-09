@@ -17,12 +17,12 @@
 package me.kime.kc.addon.motd;
 
 import me.kime.kc.KPlayer;
-import me.kime.kc.addon.auth.AuthSucceedEvent;
 import me.kime.kc.locale.Locale;
 import me.kime.kc.locale.LocaleManager;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 /**
  *
@@ -37,8 +37,8 @@ public class MOTDListener implements Listener {
     }
 
     @EventHandler
-    public void onAuthSucceed(AuthSucceedEvent event) {
-        KPlayer player = event.getPlayer();
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        KPlayer player = addon.getPlugin().getOnlinePlayer(event.getPlayer().getName());
 
         String language;
         if (player.getLocale() == null) {
