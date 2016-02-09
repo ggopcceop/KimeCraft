@@ -18,11 +18,13 @@ package me.kime.kc.addon.chopTree;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -35,9 +37,12 @@ public class ChopTreeBlockListener
 
     public static Player pubplayer = null;
     private final ChopTree chopTree;
+    private final Random random;
 
     public ChopTreeBlockListener(ChopTree chopTree) {
         this.chopTree = chopTree;
+
+        random = new Random();
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -246,44 +251,73 @@ public class ChopTreeBlockListener
 
     private boolean breaksTool(Player player, ItemStack item) {
         if ((item != null)
-                && (isTool(item.getTypeId()))) {
-            short damage = item.getDurability();
-            if (isAxe(item.getTypeId())) {
-                damage = (short) (damage + 1);
-            } else {
-                damage = (short) (damage + 2);
+                && (isTool(item))) {
+            short durability = item.getDurability();
+            short damage = 0;
+            int level = item.getEnchantmentLevel(Enchantment.DURABILITY);
+            if (random.nextInt(100) <= (100.0 / (level + 1))) {
+                if (isAxe(item)) {
+                    damage = 1;
+                } else {
+                    damage = 2;
+                }
             }
-            if (damage >= item.getType().getMaxDurability()) {
+
+            durability += damage;
+            if (durability >= item.getType().getMaxDurability()) {
                 return true;
             }
-            item.setDurability(damage);
+            item.setDurability(durability);
         }
 
         return false;
     }
 
-    private boolean isTool(int ID) {
-        return (ID == 256) || (ID == 257) || (ID == 258) || (ID == 267) || (ID == 268) || (ID == 269) || (ID == 270) || (ID == 271) || (ID == 272) || (ID == 273) || (ID == 274) || (ID == 275) || (ID == 276) || (ID == 277) || (ID == 278) || (ID == 279) || (ID == 283) || (ID == 284) || (ID == 285) || (ID == 286);
+    private boolean isTool(ItemStack item) {
+        switch (item.getType()) {
+            case WOOD_AXE:
+            case WOOD_HOE:
+            case WOOD_PICKAXE:
+            case WOOD_SPADE:
+
+            case STONE_AXE:
+            case STONE_HOE:
+            case STONE_PICKAXE:
+            case STONE_SPADE:
+
+            case IRON_AXE:
+            case IRON_HOE:
+            case IRON_PICKAXE:
+            case IRON_SPADE:
+
+            case GOLD_AXE:
+            case GOLD_HOE:
+            case GOLD_PICKAXE:
+            case GOLD_SPADE:
+
+            case DIAMOND_AXE:
+            case DIAMOND_HOE:
+            case DIAMOND_PICKAXE:
+            case DIAMOND_SPADE:
+                return true;
+            default:
+                return false;
+
+        }
     }
 
-    private boolean isAxe(int ID) {
-        return (ID == 258) || (ID == 271) || (ID == 275) || (ID == 278) || (ID == 286);
-    }
+    private boolean isAxe(ItemStack item) {
+        switch (item.getType()) {
+            case WOOD_AXE:
+            case STONE_AXE:
+            case IRON_AXE:
+            case GOLD_AXE:
+            case DIAMOND_AXE:
+                return true;
+            default:
+                return false;
 
-    private boolean isLoneLog(Block block) {
-        if (block.getRelative(BlockFace.UP).getType() == Material.LOG) {
-            return false;
         }
-        if (block.getRelative(BlockFace.DOWN).getType() != Material.AIR) {
-            return false;
-        }
-        if (hasHorizontalCompany(block)) {
-            return false;
-        }
-        if (hasHorizontalCompany(block.getRelative(BlockFace.UP))) {
-            return false;
-        }
-        return !hasHorizontalCompany(block.getRelative(BlockFace.DOWN));
     }
 
     private boolean hasHorizontalCompany(Block block) {
