@@ -3,7 +3,6 @@ main: me.kime.kc.KimeCraft
 version: ${project.version}
 author: Kime
 load: POSTWORLD
-depend: [Vault]
 commands:
     login:
         description: Login into a account
