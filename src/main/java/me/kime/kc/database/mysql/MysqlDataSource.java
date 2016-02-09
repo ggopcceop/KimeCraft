@@ -20,7 +20,6 @@ import biz.source_code.miniConnectionPoolManager.MiniConnectionPoolManager;
 import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import me.kime.kc.KimeCraft;
 import me.kime.kc.database.QueryType;
