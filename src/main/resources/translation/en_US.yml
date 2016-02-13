@@ -12,7 +12,7 @@ Language:
     city_success: "You are in City!"
 
     #for admin addon
-    admin_signFormatIncorrect: "Incorrect sign format
+    admin_signFormatIncorrect: "Incorrect sign format"
     
     #for fun addon
     fun_readchBorder: "You have reached the border!"
